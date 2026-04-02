@@ -1,0 +1,243 @@
+/* Admin - ZuKizZ Light Theme */
+body { background: transparent; }
+
+.panel {
+    border: 1px solid rgba(99,102,241,0.08);
+    border-radius: var(--zk-radius);
+    box-shadow: var(--zk-shadow);
+    background: var(--zk-card);
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+}
+.panel-heading {
+    background: var(--zk-card) !important;
+    border-bottom: 1px solid var(--zk-border);
+    padding: 14px 18px;
+}
+.panel-title { font-weight: 700; color: var(--zk-text); }
+.panel-footer { background: rgba(99,102,241,0.04); border-top: 1px solid var(--zk-border); padding: 10px 18px; }
+.panel-footer a { color: var(--zk-primary); }
+
+.panel-primary > .panel-heading { background: var(--zk-gradient) !important; }
+.panel-primary > .panel-heading .panel-title,
+.panel-primary > .panel-heading .huge { color: #fff !important; }
+
+.panel-green { border-color: rgba(16,185,129,0.2); }
+.panel-green > .panel-heading { background: linear-gradient(135deg, #34d399, #10b981) !important; border: none; }
+.panel-green > .panel-heading .panel-title, .panel-green > .panel-heading .huge { color: #fff !important; }
+.panel-green > .panel-footer { background: rgba(52,211,153,0.08); }
+
+.panel-yellow { border-color: rgba(245,158,11,0.2); }
+.panel-yellow > .panel-heading { background: linear-gradient(135deg, #fbbf24, #f59e0b) !important; border: none; }
+.panel-yellow > .panel-heading .panel-title, .panel-yellow > .panel-heading .huge { color: #fff !important; }
+.panel-yellow > .panel-footer { background: rgba(251,191,36,0.08); }
+
+.panel-red { border-color: rgba(244,114,182,0.2); }
+.panel-red > .panel-heading { background: linear-gradient(135deg, #f472b6, #ec4899) !important; border: none; }
+.panel-red > .panel-heading .panel-title, .panel-red > .panel-heading .huge { color: #fff !important; }
+.panel-red > .panel-footer { background: rgba(244,114,182,0.08); }
+
+.panel-info > .panel-heading { background: var(--zk-gradient) !important; }
+.panel-info > .panel-heading .panel-title { color: #fff !important; }
+.panel-success > .panel-heading { background: linear-gradient(135deg, #34d399, #10b981) !important; }
+.panel-success > .panel-heading .panel-title { color: #fff !important; }
+
+.huge { font-size: 32px; font-weight: 800; line-height: 1.2; color: var(--zk-text); }
+
+.list-group-item { border-color: var(--zk-border); padding: 11px 18px; font-size: 13px; color: var(--zk-text); background: transparent; }
+.list-group-item b { color: var(--zk-text); }
+
+.table > thead > tr > th {
+    background: rgba(99,102,241,0.04);
+    color: var(--zk-text-sub);
+    border-bottom: 1px solid var(--zk-border);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.setting-section {
+    background: var(--zk-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--zk-border);
+    border-radius: var(--zk-radius);
+    padding: 22px;
+    margin-bottom: 18px;
+}
+.setting-section h4 { font-weight: 700; color: var(--zk-primary); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--zk-border); }
+
+@media (max-width:767px) {
+    /* Admin sidebar mobile */
+    .admin-sidebar { 
+        position: fixed;
+        top: 0;
+        left: -280px !important;
+        width: 280px !important;
+        height: 100%;
+        z-index: 10001;
+        transition: left 0.3s ease;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .admin-sidebar.open {
+        left: 0 !important;
+    }
+    .mobile-menu-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 10000;
+    }
+    .mobile-menu-overlay.open {
+        display: block;
+    }
+    .admin-sidebar .nav-pills > li > a {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+    .admin-sidebar .sidebar-brand {
+        font-size: 15px;
+        padding-bottom: 15px;
+    }
+    
+    /* Admin content mobile */
+    .admin-content { 
+        margin-left: 0; 
+        padding: 10px;
+    }
+    
+    /* Panels mobile */
+    .panel {
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    .panel-heading {
+        padding: 12px 14px;
+    }
+    .panel-title {
+        font-size: 14px;
+    }
+    .panel-body {
+        padding: 12px;
+    }
+    
+    /* Stat cards mobile */
+    .stat-card {
+        padding: 14px;
+        margin-bottom: 10px;
+    }
+    .stat-num {
+        font-size: 24px;
+    }
+    .stat-label {
+        font-size: 11px;
+    }
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    /* Tables mobile */
+    .table-responsive {
+        font-size: 12px;
+        border: none;
+    }
+    .table > thead > tr > th {
+        font-size: 10px;
+        padding: 8px 6px;
+    }
+    .table > tbody > tr > td {
+        padding: 8px 6px;
+    }
+    
+    /* Forms mobile */
+    .form-group {
+        margin-bottom: 12px;
+    }
+    .form-horizontal .control-label {
+        text-align: left;
+        padding-bottom: 5px;
+    }
+    .form-control {
+        height: 38px;
+        font-size: 14px;
+    }
+    textarea.form-control {
+        height: auto;
+    }
+    
+    /* Buttons mobile */
+    .btn-lg {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    .btn-block {
+        margin-bottom: 10px;
+    }
+    
+    /* Login page mobile */
+    .login-box {
+        padding: 25px 20px;
+        margin: 10px;
+    }
+    .login-box h2 {
+        font-size: 20px;
+    }
+    .login-icon {
+        font-size: 48px;
+    }
+    
+    /* Well mobile */
+    .well {
+        padding: 12px;
+        border-radius: 10px;
+    }
+    
+    /* User settings / form inline */
+    .form-inline .form-group {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .form-inline .form-control {
+        width: 100%;
+    }
+    
+    /* Stat card labels */
+    .col-xs-6 {
+        margin-bottom: 10px;
+    }
+    
+    /* Modal mobile */
+    .modal-dialog {
+        margin: 10px;
+    }
+    .modal-content {
+        border-radius: 10px;
+    }
+    
+    /* Sidebar menu for login redirect */
+    .nav.nav-pills.nav-stacked li a {
+        font-size: 14px;
+    }
+}
+
+/* Tablet styles */
+@media (min-width:768px) and (max-width:991px) {
+    .stat-num {
+        font-size: 26px;
+    }
+    .admin-content {
+        padding: 18px;
+    }
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
+

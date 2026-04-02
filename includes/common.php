@@ -1,0 +1,162 @@
+<?php
+error_reporting(E_ERROR | E_PARSE | E_COMPILE_ERROR);
+if(!isset($nosession)) $nosession = false;
+if(!isset($nosecu)) $nosecu = false;
+if(defined('IN_CRONLITE'))return;
+define('IN_CRONLITE', true);
+define('SYSTEM_ROOT', dirname(__FILE__).'/');
+define('ROOT', dirname(SYSTEM_ROOT).'/');
+define('VERSION', '1532');
+define('DB_VERSION', '1001');
+date_default_timezone_set('Asia/Shanghai');
+$date = date("Y-m-d H:i:s");
+
+if(!$nosession)session_start();
+// 全局CSRF token（并发上传不依赖session，写入文件共享）
+$csrf_file = sys_get_temp_dir() . '/cloud_csrf_token.txt';
+if(file_exists($csrf_file) && filemtime($csrf_file) > time() - 3600){
+    $token = trim(file_get_contents($csrf_file));
+} else {
+    $token = md5(mt_rand(0,999999).time().mt_rand(0,999999));
+    file_put_contents($csrf_file, $token, LOCK_EX);
+}
+$_SESSION['csrf_token'] = $token;
+$GLOBALS['_csrf_token'] = $token;
+
+include_once(SYSTEM_ROOT.'txprotect.php');
+include_once(SYSTEM_ROOT."autoloader.php");
+Autoloader::register();
+
+require ROOT.'config.php';
+
+if(!$dbconfig['user']||!$dbconfig['pwd']||!$dbconfig['dbname'])//检测安装1
+{
+header('Content-type:text/html;charset=utf-8');
+echo '你还没安装！<a href="./install/">点此安装</a>';
+exit();
+}
+
+$DB = new \lib\PdoHelper($dbconfig);
+
+if($DB->query("select * from pre_config where 1")==FALSE)//检测安装2
+{
+header('Content-type:text/html;charset=utf-8');
+echo '你还没安装！<a href="./install/">点此安装</a>';
+exit();
+}
+
+include_once(SYSTEM_ROOT."functions.php");
+
+$conf=getAllSetting();
+define('SYS_KEY', $conf['syskey']);
+$password_hash='!@#%!s!0';
+
+if (!$conf['version'] || $conf['version'] < DB_VERSION) {
+    if (!$install) {
+		header('Content-type:text/html;charset=utf-8');
+        echo '请先完成网站升级！<a href="/install/update.php"><font color=red>点此升级</font></a>';
+        exit;
+    }
+}
+
+$scriptpath=str_replace('\\','/',$_SERVER['SCRIPT_NAME']);
+$sitepath = substr($scriptpath, 0, strrpos($scriptpath, '/'));
+$siteurl = (is_https() ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$sitepath.'/';
+
+$clientip=real_ip($conf['ip_type']?$conf['ip_type']:0);
+if(isset($_COOKIE["admin_token"]))
+{
+	$token=authcode(daddslashes($_COOKIE['admin_token']), 'DECODE', SYS_KEY);
+	if($token){
+		list($user, $sid, $expiretime) = explode("\t", $token);
+		$session=md5($conf['admin_user'].$conf['admin_pwd'].$password_hash);
+		if($session==$sid && $expiretime>time()) {
+			$islogin=1;
+		}
+	}
+}
+if(isset($_COOKIE["user_token"]))
+{
+	$token=authcode(daddslashes($_COOKIE['user_token']), 'DECODE', SYS_KEY);
+	if($token){
+		list($uid, $sid, $expiretime) = explode("\t", $token);
+		if($userrow = $DB->getRow("SELECT * FROM pre_user WHERE uid='".intval($uid)."' LIMIT 1")){
+			$session=md5($userrow['type'].$userrow['openid'].$password_hash);
+			if($session===$sid && $expiretime>time()) {
+				if($userrow['enable']==1){
+					$islogin2=1;
+				}else{
+					$_SESSION['user_block'] = true;
+				}
+			}
+		}
+	}
+}
+
+include_once(SYSTEM_ROOT."vendor/autoload.php");
+
+//加载存储模块（必须在IN_ADMIN return之前，admin也需要存储功能）
+if($conf['storage'] == 'local'){
+    require_once SYSTEM_ROOT . 'lib/Storage/Local.php';
+    $stor = new \lib\Storage\Local(isset($conf['filepath']) ? $conf['filepath'] : '');
+} else {
+    $stor = \lib\StorHelper::getModel($conf['storage']);
+}
+
+if(defined('IN_ADMIN')) return;
+
+$denyip = explode('|',$conf['blackip']);
+if(in_array($clientip,$denyip) && !$islogin){
+	Header("HTTP/1.1 403 Forbidden");
+	exit;
+}
+
+if (!file_exists(ROOT.'install/install.lock') && file_exists(ROOT.'install/index.php')) {
+	sysmsg('<h2>检测到无 install.lock 文件</h2><ul><li><font size="4">如果您尚未安装本程序，请<a href="./install/">前往安装</a></font></li><li><font size="4">如果您已经安装本程序，请手动放置一个空的 install.lock 文件到 /install 文件夹下，<b>为了您站点安全，在您完成它之前我们不会工作。</b></font></li></ul><br/><h4>为什么必须建立 install.lock 文件？</h4>它是安装保护文件，如果检测不到它，就会认为站点还没安装，此时任何人都可以安装/重装你的网站。<br/><br/>');exit;
+}
+
+// ========== 分片上传临时文件自动清理 ==========
+// 概率触发（约1%请求），避免每次请求都扫描目录
+// 清理超过2小时未修改的 cloud_upload_* 临时目录
+$upload_gc_lock = sys_get_temp_dir() . '/cloud_upload_gc.lock';
+$upload_gc_interval = 3600; // 最少间隔1小时
+$should_gc = false;
+
+if (!file_exists($upload_gc_lock)) {
+    $should_gc = true;
+} else {
+    $gc_last = intval(@file_get_contents($upload_gc_lock));
+    if (time() - $gc_last > $upload_gc_interval) {
+        $should_gc = true;
+    }
+}
+
+if ($should_gc && mt_rand(1, 100) <= 1) {
+    file_put_contents($upload_gc_lock, (string)time(), LOCK_EX);
+    $tmp_dir = sys_get_temp_dir();
+    $gc_oldest = time() - 7200; // 2小时前的临时文件
+    try {
+        $iterator = new \RegexIterator(
+            new \DirectoryIterator($tmp_dir),
+            '/^cloud_upload_/'
+        );
+        foreach ($iterator as $item) {
+            if ($item->isDir() && $item->getMTime() < $gc_oldest) {
+                // 递归删除临时目录
+                $dir_path = $item->getPathname();
+                $files = new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($dir_path, \RecursiveDirectoryIterator::SKIP_DOTS),
+                    \RecursiveIteratorIterator::CHILD_FIRST
+                );
+                foreach ($files as $file) {
+                    $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
+                }
+                rmdir($dir_path);
+            }
+        }
+    } catch (\Exception $e) {
+        // 静默失败，不影响正常请求
+    }
+}
+
+?>
