@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
     $action = $_POST['action'] ?? 'login';
-    
+
     if(empty($username) || empty($password)){
         $error = "用户名和密码不能为空";
     } elseif(strlen($username) < 3 || strlen($username) > 20){
@@ -23,28 +23,32 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     } else {
         if($action == 'register'){
             // Check if username exists
-            $exists = $DB->getColumn("SELECT COUNT(*) FROM pre_user WHERE nickname=:name", array(':name' => $username));
+            $exists = $DB->getColumn("SELECT COUNT(*) FROM pre_user WHERE nickname=:name AND type='local'", array(':name' => $username));
             if($exists){
                 $error = "该用户名已被注册";
             } else {
-                // Register
-                $ip = real_ip($conf['ip_type'] ? $conf['ip_type'] : 0);
-                $DB->exec("INSERT INTO pre_user (nickname, password, type, regip, addtime, enable) VALUES ('$username', '" . md5($password) . "', 'local', '$ip', NOW(), 1)");
-                $uid = $DB->lastInsertId();
-                // Auto login
-                $token = authcode("$uid\t" . md5('local'.$password_hash) . "\t" . (time() + 2592000), 'ENCODE', SYS_KEY);
-                setcookie("user_token", $token, time() + 2592000, '/');
-                header('Location: ./');
-                exit;
+                // Register - use prepared statement to prevent SQL injection
+                $ip = real_ip(isset($conf['ip_type']) ? $conf['ip_type'] : 0);
+                $hash = md5($password);
+                $result = $DB->exec("INSERT INTO pre_user (nickname, password, type, openid, regip, addtime, lasttime, enable) VALUES (:name, :pwd, 'local', '', :ip, NOW(), NOW(), 1)",
+                    array(':name' => $username, ':pwd' => $hash, ':ip' => $ip));
+                if($result === false){
+                    $error = "注册失败：" . ($DB->error() ?: '数据库写入错误，请联系管理员');
+                    error_log('[REGISTER FAIL] '.$DB->error().' | SQL params: '.$username);
+                } else {
+                    // Registration successful - redirect to login page
+                    header('Location: ./login.php?act=ok');
+                    exit;
+                }
             }
         } else {
             // Login
             $row = $DB->getRow("SELECT * FROM pre_user WHERE nickname=:name AND type='local'", array(':name' => $username));
-            if($row && $row['password'] == md5($password)){
+            if($row && isset($row['password']) && $row['password'] == md5($password)){
                 if($row['enable'] != 1){
                     $error = "账号已被禁用，请联系管理员";
                 } else {
-                    $token = authcode("{$row['uid']}\t" . md5('local'.$password_hash) . "\t" . (time() + 2592000), 'ENCODE', SYS_KEY);
+                    $token = authcode("{$row['uid']}\t" . md5('local'.$row['openid'].$password_hash) . "\t" . (time() + 2592000), 'ENCODE', SYS_KEY);
                     setcookie("user_token", $token, time() + 2592000, '/');
                     header('Location: ./');
                     exit;
@@ -58,6 +62,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 $error = $error ?? '';
 $show_register = isset($_GET['act']) && $_GET['act'] == 'register';
+$show_success = isset($_GET['act']) && $_GET['act'] == 'ok';
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -258,6 +263,12 @@ $show_register = isset($_GET['act']) && $_GET['act'] == 'register';
             <?php if($error){?>
                 <div class="alert alert-danger">
                     <i class="fa fa-exclamation-circle"></i> <?php echo htmlspecialchars($error)?>
+                </div>
+            <?php }?>
+
+            <?php if($show_success){?>
+                <div class="alert alert-success">
+                    <i class="fa fa-check-circle"></i> 注册成功！请使用刚注册的账号登录。
                 </div>
             <?php }?>
             

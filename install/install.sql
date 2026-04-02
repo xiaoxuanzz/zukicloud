@@ -66,6 +66,7 @@ CREATE TABLE `pre_user` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(20) NOT NULL,
   `openid` varchar(150) NOT NULL,
+  `password` varchar(64) NOT NULL DEFAULT '',
   `nickname` varchar(255) NOT NULL,
   `faceimg` varchar(255) DEFAULT NULL,
   `enable` tinyint(1) NOT NULL DEFAULT '1',

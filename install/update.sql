@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `pre_user` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(20) NOT NULL,
   `openid` varchar(150) NOT NULL,
+  `password` varchar(64) NOT NULL DEFAULT '',
   `nickname` varchar(255) NOT NULL,
   `faceimg` varchar(255) DEFAULT NULL,
   `enable` tinyint(1) NOT NULL DEFAULT '1',
@@ -39,6 +40,9 @@ CREATE TABLE IF NOT EXISTS `pre_user` (
   PRIMARY KEY (`uid`),
   KEY `openid` (`openid`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1000;
+
+-- 为已有用户表补上 password 字段（如果不存在）
+ALTER TABLE `pre_user` ADD COLUMN IF NOT EXISTS `password` varchar(64) NOT NULL DEFAULT '' AFTER `openid`;
 
 REPLACE INTO `pre_config` VALUES ('isupload', '1');
 REPLACE INTO `pre_config` VALUES ('upload_size', '0');
