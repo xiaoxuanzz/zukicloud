@@ -29,7 +29,10 @@ new Vue({
         batchTotal: 0,
         batchDone: 0,
         uploading: false,
-        logs: []
+        logs: [],
+        // 性能优化：防抖更新
+        updateTimer: null,
+        isUpdating: false
     },
     mounted() {
         // 注册到全局，供 showToast 等同步调用 Vue 实例
@@ -69,6 +72,13 @@ new Vue({
         this._shapeTimer = setInterval(function(){
             that.shapeIndex = (that.shapeIndex + 1) % 4;
         }, 800);
+        
+        // 组件销毁时的清理
+        this.$once('hook:beforeDestroy', function() {
+            if(that._shapeTimer) clearInterval(that._shapeTimer);
+            if(that._keepAlive) clearInterval(that._keepAlive);
+            if(that.updateTimer) clearTimeout(that.updateTimer);
+        });
 
         var fileInput = $("#fileInput");
         var elemetnNode = "";
@@ -133,10 +143,17 @@ new Vue({
             $(".loading-info .status").text(text);
         },
         updateStatusText: function(){
-            var text = this.isReading
-                ? ('读取文件 ' + this.progress + '%')
-                : (this.progress_tip || this.progress + '% 上传中...');
-            this.setStatusText(text);
+            var self = this;
+            // 防抖更新，减少UI渲染频率
+            if(this.updateTimer) {
+                clearTimeout(this.updateTimer);
+            }
+            this.updateTimer = setTimeout(function(){
+                var text = self.isReading
+                    ? ('读取文件 ' + self.progress + '%')
+                    : (self.progress_tip || self.progress + '% 上传中...');
+                self.setStatusText(text);
+            }, 100); // 100ms防抖延迟
         },
         showToastMsg: function(msg, type, hideDelay){
             type = type || 'info';
@@ -162,6 +179,26 @@ new Vue({
             if(this.logs.length > 50) this.logs.pop();
             console.log('[' + type.toUpperCase() + '] ' + msg);
         },
+        // 批量更新文件状态，减少DOM操作
+        batchUpdateFiles: function(updates) {
+            if(this.isUpdating) return;
+            this.isUpdating = true;
+            
+            // 使用 requestAnimationFrame 确保在下一个渲染帧更新
+            requestAnimationFrame(() => {
+                for(var i = 0; i < updates.length; i++) {
+                    var update = updates[i];
+                    var item = this.fileQueue[update.index];
+                    if(item) {
+                        // 使用 Vue.set 确保响应式更新
+                        for(var key in update.data) {
+                            this.$set(item, key, update.data[key]);
+                        }
+                    }
+                }
+                this.isUpdating = false;
+            });
+        },
         clickUpload: function(){
             if(this.isBlock) return;
             $("#file").trigger("click");
@@ -186,15 +223,9 @@ new Vue({
             concurrency = Math.min(concurrency, 50, total);
 
             // Init state
-            this.fileQueue = [];
-            this.fileResults = [];
-            this.fileErrors = [];
-            this.batchTotal = total;
-            this.batchDone = 0;
-            this.beginTime = new Date().getTime();
-
+            var queue = [];
             for(var i = 0; i < total; i++){
-                this.fileQueue.push({
+                queue.push({
                     index: i,
                     file: files[i],
                     name: files[i].name,
@@ -202,6 +233,12 @@ new Vue({
                     status: 'waiting'
                 });
             }
+            this.fileQueue = queue;
+            this.fileResults = [];
+            this.fileErrors = [];
+            this.batchTotal = total;
+            this.batchDone = 0;
+            this.beginTime = new Date().getTime();
 
             this.uploading = true;
             if(isBatch){
@@ -216,6 +253,8 @@ new Vue({
 
             // Process sequentially or concurrently
             if(isBatch){
+                // 降低并发度，减少界面压力
+                var concurrency = Math.min(concurrency, 3); // 最大并发3个文件
                 // Run concurrent batches
                 for(var start = 0; start < this.fileQueue.length; start += concurrency){
                     var batch = this.fileQueue.slice(start, start + concurrency);
@@ -224,9 +263,9 @@ new Vue({
                         promises.push(this.processOneFile(batch[j], isBatch));
                     }
                     await Promise.all(promises);
-                    // 批次间加延迟，防止瞬时请求过多
+                    // 批次间增加延迟，防止界面卡顿
                     if(start + concurrency < this.fileQueue.length){
-                        await new Promise(function(r){ setTimeout(r, 300); });
+                        await new Promise(function(r){ setTimeout(r, 800); });
                     }
                 }
             } else {
@@ -247,7 +286,7 @@ new Vue({
             var Vue = self.$root.constructor;
 
             // Mark uploading
-            Vue.set(item, 'status', 'uploading');
+            item.status = 'uploading';
             if(isBatch){
                 self.filename = item.name;
                 self.progress_tip = '上传中 ' + self.batchDone + '/' + self.batchTotal;
@@ -262,7 +301,7 @@ new Vue({
             // Validate size
             if(upload_max_filesize != '' && parseInt(upload_max_filesize) > 0){
                 if(item.size > parseInt(upload_max_filesize) * 1024 * 1024){
-                    Vue.set(item, 'status', 'error');
+                    item.status = 'error';
                     self.fileErrors.push({name: item.name, reason: '超过' + upload_max_filesize + 'MB'});
                     self.batchDone++;
                     if(isBatch) self.showToastMsg(item.name + ' 文件过大', 'error');
@@ -347,7 +386,7 @@ new Vue({
                     var result = await self.preUpload(item.name, hashResult, item.size);
                     self.addLog('预上传结果', item.name, result);
                     if(result.code == 1){
-                        Vue.set(item, 'status', 'done');
+                        item.status = 'done';
                         self.fileResults.push({name: item.name, url: "file.php?hash=" + hashResult});
                         self.batchDone++;
                         self.addLog('文件已存在', item.name);
@@ -369,7 +408,7 @@ new Vue({
                             allChunks.push(blobSlice.call(item.file, offset, Math.min(offset + chunkSize, item.size)));
                             offset += chunkSize;
                         }
-                        var concurrency = Math.min(typeof upload_concurrent !== 'undefined' ? upload_concurrent : 2, 3, totalChunks);
+                        var concurrency = Math.min(typeof upload_concurrent !== 'undefined' ? upload_concurrent : 2, 2, totalChunks); // 降低分片并发度
                         self.addLog('并发上传', '分片数:' + totalChunks, '并发度:' + concurrency);
                         for(var bs = 1; bs <= totalChunks; bs += concurrency){
                             var promises = [];
@@ -379,12 +418,14 @@ new Vue({
                                     promises.push(self.uploadPart(allChunks[idx-1], idx, hashResult).then(function(){
                                         self.progress = Math.round(idx * chunkSize / item.size * 100);
                                         self.progress_tip = '上传中 (' + idx + '/' + totalChunks + ')';
+                                        // 使用防抖的更新方法
                                         self.updateStatusText();
                                     }));
                                 })(c);
                             }
                             await Promise.all(promises);
-                            if(bs + concurrency <= totalChunks) await new Promise(function(r){ setTimeout(r, 500); });
+                            // 增加批次间延迟，减少界面压力
+                            if(bs + concurrency <= totalChunks) await new Promise(function(r){ setTimeout(r, 800); });
                         }
                         allChunks = null;
                     }
@@ -397,13 +438,16 @@ new Vue({
                     self.addLog('完成返回 ' + item.name + ': ' + JSON.stringify(completeResult));
                     var jumpurl = "file.php?hash=" + hashResult;
                     if(self.input.ispwd && self.input.pwd) jumpurl += '&pwd=' + self.input.pwd;
-                    Vue.set(item, 'status', 'done');
+                    item.status = 'done';
                     self.fileResults.push({name: item.name, url: jumpurl});
                     self.batchDone++;
-                    self.showtype = 0; // 隐藏进度条，刷新界面
-                    $("#progressBarFrame").hide();
-                    if(!isBatch) self.uploadSuccess(hashResult);
                     self.addLog('✓ 成功', item.name);
+                    // 只在非批量或所有文件完成时隐藏进度条
+                    if(!isBatch || self.batchDone >= self.batchTotal) {
+                        self.showtype = 0; // 隐藏进度条，刷新界面
+                        $("#progressBarFrame").hide();
+                        if(!isBatch) self.uploadSuccess(hashResult);
+                    }
                 }
 
                 return; // 跳过下面的旧流程
@@ -415,7 +459,7 @@ new Vue({
                 if(result.code == 1){
                     var jumpurl = "file.php?hash=" + hash;
                     if(self.input.ispwd && self.input.pwd) jumpurl += '&pwd=' + self.input.pwd;
-                    Vue.set(item, 'status', 'done');
+                    item.status = 'done';
                     self.fileResults.push({name: item.name, url: jumpurl});
                     self.batchDone++;
                     if(isBatch) self.showToastMsg(item.name + ' 已存在', 'info');
@@ -488,18 +532,21 @@ new Vue({
                 // Success
                 var jumpurl = "file.php?hash=" + hash;
                 if(self.input.ispwd && self.input.pwd) jumpurl += '&pwd=' + self.input.pwd;
-                Vue.set(item, 'status', 'done');
+                item.status = 'done';
                 self.fileResults.push({name: item.name, url: jumpurl});
                 self.batchDone++;
-                self.showtype = 0;
-                $("#progressBarFrame").hide();
-                if(!isBatch){
-                    self.uploadSuccess(hash);
-                }
                 self.addLog('✓ 成功', item.name);
+                // 只在非批量或所有文件完成时隐藏进度条
+                if(!isBatch || self.batchDone >= self.batchTotal) {
+                    self.showtype = 0;
+                    $("#progressBarFrame").hide();
+                    if(!isBatch){
+                        self.uploadSuccess(hash);
+                    }
+                }
 
             } catch(err) {
-                Vue.set(item, 'status', 'error');
+                item.status = 'error';
                 var reason = typeof err === 'string' ? err : '上传失败';
                 self.fileErrors.push({name: item.name, reason: reason});
                 self.batchDone++;

@@ -42,7 +42,7 @@
               <a href="./" class="nav-glider-tab <?php echo checkIfActive('index,') ? 'active' : '' ?>" data-index="0"><i class="fa fa-th-large"></i> <span>文件列表</span></a>
               <a href="./upload.php" class="nav-glider-tab <?php echo checkIfActive('upload') ? 'active' : '' ?>" data-index="1"><i class="fa fa-cloud-upload"></i> <span>上传文件</span></a>
               <a href="./?m=mine" class="nav-glider-tab <?php echo checkIfActive('mine') ? 'active' : '' ?>" data-index="2"><i class="fa fa-folder-open"></i> <span>我的文件</span></a>
-              <a href="javascript:;" class="nav-glider-tab" onclick="alert('Python模块暂未开放')"><i class="fa fa-terminal"></i> <span>Python</span></a>
+	     <a class="nav-glider-tab brand-link" href="https://www.bilibili.com/video/BV1HRXfBNE4q/" target="_blank" rel="noopener" data-index="3"><i class="fa fa-terminal"></i> <span>Python</span></a>
               <!-- 【Python跳转替换】 将上面一行替换为下面的链接即可启用Python模块：
               <a class="nav-glider-tab brand-link" href="./python.php" target="_blank" rel="noopener" data-index="3"><i class="fa fa-terminal"></i> <span>Python</span></a>
               -->

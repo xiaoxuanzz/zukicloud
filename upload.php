@@ -299,7 +299,7 @@ function formatUploadSize($mb) {
             <!-- Batch file list -->
             <div v-if="batchTotal > 1" class="batch-file-list" style="margin-top:12px;max-height:200px;overflow-y:auto;">
                 <table style="width:100%;font-size:13px;">
-                    <tr v-for="item in fileQueue" :style="{'background': item.status==='done' ? '#f0fdf4' : item.status==='error' ? '#fef2f2' : '#f8fafc', 'border-bottom':'1px solid #f1f5f9'}">
+                    <tr v-for="(item, idx) in fileQueue" :key="item.index" :style="{'background': item.status==='done' ? '#f0fdf4' : item.status==='error' ? '#fef2f2' : '#f8fafc', 'border-bottom':'1px solid #f1f5f9'}">
                         <td style="padding:6px 8px;width:30px;text-align:center;">
                             <i v-if="item.status==='done'" class="fa fa-check-circle" style="color:#10b981;"></i>
                             <i v-else-if="item.status==='error'" class="fa fa-times-circle" style="color:#ef4444;"></i>

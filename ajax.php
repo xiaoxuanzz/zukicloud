@@ -169,6 +169,9 @@ case 'complete_upload':
 		if(file_exists($part_file)){
 			rename($part_file, $filepath);
 		}
+		// 单文件清理
+		@unlink($filepath . '.chunk1.ok');
+		@unlink($file_tmp);
 	} else {
 		// 预检查所有分片存在
 		$all_exist = true;
@@ -241,16 +244,17 @@ case 'complete_upload':
 			$expected_match = ($final_size == $size) ? 'YES' : 'NO';
 			error_log("[MERGE] 合并完成: success={$success} totalTime={$total_time}s fileSize=" . round($final_size/1048576, 1) . "MB expectedSize=" . round($size/1048576, 1) . "MB match={$expected_match}");
 		}
-		// 清理分片和临时文件
-		$clean_start = microtime(true);
-		$cleaned = 0;
-		for($i = 1; $i <= $chunks; $i++){
-			if(@unlink($filepath . '.part' . $i)) $cleaned++;
-			@unlink($filepath . '.chunk' . $i . '.ok');
-		}
-		@unlink($file_tmp);
-		$clean_time = round(microtime(true) - $clean_start, 2);
-		error_log("[MERGE] 清理完成: cleaned={$cleaned}/{$chunks} time={$clean_time}s");
+	// 清理分片、标记和临时文件
+	$clean_start = microtime(true);
+	$cleaned = 0;
+	for($i = 1; $i <= $chunks; $i++){
+		@unlink($filepath . '.part' . $i);
+		@unlink($filepath . '.chunk' . $i . '.ok');
+		$cleaned += 2;
+	}
+	@unlink($file_tmp);
+	$clean_time = round(microtime(true) - $clean_start, 2);
+	error_log("[MERGE] 清理完成: cleaned={$cleaned} time={$clean_time}s");
 	}
 	
 	// Verify file exists
@@ -303,6 +307,14 @@ case 'deleteFile':
 	}else{
 		exit('{"code":-1,"msg":"您没有权限删除此文件"}');
 	}
+	// 清理残留分片文件
+	$upload_dir = __DIR__ . '/upload/';
+	if(is_dir($upload_dir)){
+		$glob_pattern = $upload_dir . $hash . '*';
+		foreach(glob($glob_pattern) as $f){
+			@unlink($f);
+		}
+	}
 	exit('{"code":0,"msg":"删除成功"}');
 	break;
 
@@ -325,6 +337,14 @@ case 'cleanup_temp':
 		$file_tmp = $upload_tmp . '/' . $hash . '.json';
 		if(file_exists($file_tmp)){
 			@unlink($file_tmp);
+		}
+		// 同时清理 upload/ 目录下的残留分片
+		$upload_dir = __DIR__ . '/upload/';
+		if(is_dir($upload_dir)){
+			$glob_pattern = $upload_dir . $hash . '*';
+			foreach(glob($glob_pattern) as $f){
+				@unlink($f);
+			}
 		}
 	}
 	if(is_dir($upload_tmp)){
