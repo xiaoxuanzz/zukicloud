@@ -5,7 +5,7 @@ CREATE TABLE `pre_config` (
   PRIMARY KEY (`k`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT IGNORE INTO `pre_config` VALUES ('version', '1001');
+INSERT IGNORE INTO `pre_config` VALUES ('version', 'v2');
 INSERT IGNORE INTO `pre_config` VALUES ('db_version', '1001');
 INSERT IGNORE INTO `pre_config` VALUES ('admin_user', 'admin');
 INSERT IGNORE INTO `pre_config` VALUES ('admin_pwd', '123456');

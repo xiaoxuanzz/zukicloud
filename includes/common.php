@@ -6,7 +6,7 @@ if(defined('IN_CRONLITE'))return;
 define('IN_CRONLITE', true);
 define('SYSTEM_ROOT', dirname(__FILE__).'/');
 define('ROOT', dirname(SYSTEM_ROOT).'/');
-define('VERSION', '1532');
+define('VERSION', 'v2');
 define('DB_VERSION', '1001');
 date_default_timezone_set('Asia/Shanghai');
 $date = date("Y-m-d H:i:s");
@@ -50,14 +50,6 @@ include_once(SYSTEM_ROOT."functions.php");
 $conf=getAllSetting();
 define('SYS_KEY', $conf['syskey']);
 $password_hash='!@#%!s!0';
-
-if (!$conf['version'] || $conf['version'] < DB_VERSION) {
-    if (!$install) {
-		header('Content-type:text/html;charset=utf-8');
-        echo '请先完成网站升级！<a href="/install/update.php"><font color=red>点此升级</font></a>';
-        exit;
-    }
-}
 
 $scriptpath=str_replace('\\','/',$_SERVER['SCRIPT_NAME']);
 $sitepath = substr($scriptpath, 0, strrpos($scriptpath, '/'));

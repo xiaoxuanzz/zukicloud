@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 实例调用文档</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background: #f5f5f5; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #333; }
+        pre { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        code { background-color: #f8f9fa; padding: 2px 4px; border-radius: 3px; }
+        .nav-tabs { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fa fa-code"></i> API 实例调用文档</h1>
+        <hr>
+        
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#curl" data-toggle="tab">cURL 示例</a></li>
+            <li><a href="#javascript" data-toggle="tab">JavaScript 示例</a></li>
+            <li><a href="#python" data-toggle="tab">Python 示例</a></li>
+        </ul>
+        
+        <div class="tab-content">
+            <div class="tab-pane active" id="curl">
+                <h3>cURL 调用示例</h3>
+                
+                <h4>1. 上传文件</h4>
+                <pre><code># 上传文件到根目录
+curl -X POST "http://your-domain.com/api/index.php?action=upload" \
+  -H "X-API-KEY: your_api_key_here" \
+  -F "file=@/path/to/your/file.jpg"
+
+# 上传文件到指定目录
+curl -X POST "http://your-domain.com/api/index.php?action=upload" \
+  -H "X-API-KEY: your_api_key_here" \
+  -F "file=@/path/to/your/file.jpg" \
+  -F "dest=images/2026"</code></pre>
+            	
+                <h4>2. 获取文件列表</h4>
+                <pre><code># 获取根目录文件列表
+curl -H "X-API-KEY: your_api_key_here" \
+  "http://your-domain.com/api/index.php?action=list"
+
+# 递归获取所有文件
+curl -H "X-API-KEY: your_api_key_here" \
+  "http://your-domain.com/api/index.php?action=list&recursive=true"</code></pre>
+                
+                <h4>3. 下载文件</h4>
+                <pre><code># 下载文件（使用hash）
+curl -H "X-API-KEY: your_api_key_here" \
+  -O -J \
+  "http://your-domain.com/api/index.php?action=file&path=file_hash_here"</code></pre>
+            </div>
+            
+            <div class="tab-pane" id="javascript">
+                <h3>JavaScript 调用示例</h3>
+                
+                <h4>1. 上传文件</h4>
+                <pre><code>// 上传文件
+async function uploadFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('dest', 'images'); // 可选，目标目录
+    
+    try {
+        const response = await fetch('http://your-domain.com/api/index.php?action=upload', {
+            method: 'POST',
+            headers: {
+                'X-API-KEY': 'your_api_key_here'
+            },
+            body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+            console.log('上传成功:', data);
+        }
+    } catch (error) {
+        console.error('上传失败:', error);
+    }
+}</code></pre>
+                
+                <h4>2. 获取文件列表</h4>
+                <pre><code>// 获取文件列表
+async function loadFileList() {
+    try {
+        const response = await fetch(
+            'http://your-domain.com/api/index.php?action=list',
+            {
+                headers: {
+                    'X-API-KEY': 'your_api_key_here'
+                }
+            }
+        );
+        const data = await response.json();
+        if (data.contents) {
+            console.log('文件列表:', data.contents);
+        }
+    } catch (error) {
+        console.error('获取失败:', error);
+    }
+}</code></pre>
+            </div>
+            
+            <div class="tab-pane" id="python">
+                <h3>Python 调用示例</h3>
+                
+                <h4>1. 上传文件</h4>
+                <pre><code>import requests
+
+# 上传文件
+url = "http://your-domain.com/api/index.php?action=upload"
+headers = {"X-API-KEY": "your_api_key_here"}
+files = {"file": open("file.jpg", "rb")}
+data = {"dest": "images"}  # 可选
+
+response = requests.post(url, headers=headers, files=files, data=data)
+print(response.json())</code></pre>
+                
+                <h4>2. 获取文件列表</h4>
+                <pre><code>import requests
+
+# 获取文件列表
+url = "http://your-domain.com/api/index.php?action=list"
+headers = {"X-API-KEY": "your_api_key_here"}
+
+response = requests.get(url, headers=headers)
+print(response.json())</code></pre>
+            </div>
+        </div>
+        
+        <hr>
+        <p class="text-muted">注意：请将示例中的域名和API密钥替换为你自己的。</p>
+    </div>
+    
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -44,7 +44,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     <link href="https://s4.zstatic.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
     <link href="../assets/css/style.css?v=<?php echo VERSION?>" rel="stylesheet">
     <style>
-        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        /* Flat color background to remove AI-style gradient */
+        body { background: #f4f5f7; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
         .login-box { background: #fff; border-radius: 10px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
         .login-box h2 { text-align: center; margin-bottom: 30px; color: #333; }
         .login-box .form-control { height: 45px; border-radius: 5px; }
@@ -55,18 +56,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 </head>
 <body>
     <div class="login-box">
-        <div class="login-icon"><i class="fa fa-lock"></i></div>
+        <div class="login-icon"></div>
         <h2>管理后台登录</h2>
         <?php if($error){?>
             <div class="alert alert-danger"><?php echo htmlspecialchars($error)?></div>
         <?php }?>
         <form method="post" action="">
             <div class="form-group">
-                <label><i class="fa fa-user"></i> 用户名</label>
+                <label>用户名</label>
                 <input type="text" name="username" class="form-control" placeholder="请输入用户名" required autofocus value="<?php echo htmlspecialchars($_POST['username'] ?? '')?>">
             </div>
             <div class="form-group">
-                <label><i class="fa fa-key"></i> 密码</label>
+                <label>密码</label>
                 <input type="password" name="password" class="form-control" placeholder="请输入密码" required>
             </div>
             <button type="submit" class="btn btn-primary btn-block">登 录</button>

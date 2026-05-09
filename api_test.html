@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 完整测试工具</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { margin-bottom: 30px; color: #333; }
+        .section { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid #eee; }
+        .form-group label { font-weight: 600; }
+        .result-box { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 15px; margin-top: 15px; max-height: 400px; overflow-y: auto; }
+        .file-list-item { padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .file-list-item:hover { background: #f8f9fa; }
+        .file-info { flex: 1; }
+        .file-actions { flex-shrink: 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fa fa-cloud"></i> API 完整测试工具</h1>
+        
+        <!-- API 配置 -->
+        <div class="section">
+            <h2><i class="fa fa-cog"></i> API 配置</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>API 地址</label>
+                        <input type="text" class="form-control" id="apiUrl" value="">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>API 密钥 (X-API-KEY)</label>
+                        <input type="text" class="form-control" id="apiKey" value="1273e05283f805d7f6efa98360fd9c6b">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>管理员密钥 (X-Admin-Key)</label>
+                        <input type="text" class="form-control" id="adminKey" value="ab8c499273f26c6474e8423a593e3ce9">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文件列表（自动加载） -->
+        <div class="section">
+            <h2><i class="fa fa-list"></i> 文件列表</h2>
+            <button class="btn btn-info" onclick="loadFileList()"><i class="fa fa-refresh"></i> 刷新列表</button>
+            <div id="fileList" class="result-box" style="margin-top:15px;"></div>
+        </div>
+
+        <!-- 文件上传 -->
+        <div class="section">
+            <h2><i class="fa fa-upload"></i> 文件上传</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>选择文件</label>
+                        <input type="file" class="form-control" id="uploadFile">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>目标目录</label>
+                        <input type="text" class="form-control" id="uploadDest" placeholder="例如: test 或留空">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-success" onclick="uploadFile()"><i class="fa fa-upload"></i> 上传文件</button>
+            <div id="uploadResult" class="result-box" style="display:none;"></div>
+        </div>
+
+        <!-- 状态查询 -->
+        <div class="section">
+            <h2><i class="fa fa-info-circle"></i> API 状态</h2>
+            <button class="btn btn-primary" onclick="checkStatus()"><i class="fa fa-check"></i> 查询状态</button>
+            <div id="statusResult" class="result-box" style="display:none;"></div>
+        </div>
+
+        <!-- 管理员操作 -->
+        <div class="section">
+            <h2><i class="fa fa-lock"></i> 管理员操作</h2>
+            <div class="btn-group" role="group">
+                <button class="btn btn-success" onclick="toggleApi(true)"><i class="fa fa-toggle-on"></i> 开启API</button>
+                <button class="btn btn-danger" onclick="toggleApi(false)"><i class="fa fa-toggle-off"></i> 关闭API</button>
+                <button class="btn btn-warning" onclick="regenerateKey()"><i class="fa fa-refresh"></i> 重新生成密钥</button>
+            </div>
+            <div id="adminResult" class="result-box" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 自动获取API地址
+        document.getElementById('apiUrl').value = window.location.origin + '/api';
+
+        // 通用fetch封装
+        async function apiRequest(action, method, data, useAdminKey) {
+            method = method || 'GET';
+            data = data || null;
+            useAdminKey = useAdminKey || false;
+            
+            var url = window.location.origin + '/api/index.php?action=' + action;
+            var headers = {};
+            
+            if (useAdminKey) {
+                var adminKey = document.getElementById('adminKey').value;
+                if (!adminKey) {
+                    throw new Error('请先输入管理员密钥');
+                }
+                headers['X-Admin-Key'] = adminKey;
+            } else {
+                var apiKey = document.getElementById('apiKey').value;
+                if (apiKey) {
+                    headers['X-API-KEY'] = apiKey;
+                }
+            }
+
+            var options = {
+                method: method,
+                headers: headers
+            };
+
+            if (data instanceof FormData) {
+                options.body = data;
+            } else if (data) {
+                headers['Content-Type'] = 'application/json';
+                options.body = JSON.stringify(data);
+            }
+
+            var response = await fetch(url, options);
+            var contentType = response.headers.get('content-type');
+            
+            if (contentType && contentType.includes('application/json')) {
+                var json = await response.json();
+                return { status: response.status, data: json };
+            } else {
+                return { status: response.status, data: '文件下载成功', blob: await response.blob() };
+            }
+        }
+
+        // 显示结果
+        function showResult(elementId, result, isError) {
+            var el = document.getElementById(elementId);
+            el.style.display = 'block';
+            if (isError) {
+                el.innerHTML = '<div class="alert alert-danger"><strong>错误:</strong> ' + result + '</div>';
+            } else {
+                el.innerHTML = '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+            }
+        }
+
+        // 加载文件列表（自动执行）
+        async function loadFileList() {
+            try {
+                var result = await apiRequest('list', 'GET', null, false);
+                if (result.data && result.data.contents) {
+                    displayFileList(result.data.contents);
+                } else {
+                    showResult('fileList', '没有文件或请求失败', true);
+                }
+            } catch (error) {
+                showResult('fileList', error.message, true);
+            }
+        }
+
+        // 显示文件列表
+        function displayFileList(files) {
+            var html = '<h4>文件列表 (共 ' + files.length + ' 个)</h4>';
+            if (files.length > 0) {
+                html += '<div class="file-list">';
+                files.forEach(function(file) {
+                    var icon = file.type === 'directory' ? '<i class="fa fa-folder"></i>' : '<i class="fa fa-file"></i>';
+                    var displayName = file.name || file.path;
+                    var downloadPath = file.path || file.hash || displayName;
+                    var downloadBtn = file.type !== 'directory' ? 
+                        '<button class="btn btn-xs btn-primary" onclick="downloadFile(\'' + downloadPath + '\')"><i class="fa fa-download"></i> 下载</button>' : 
+                        '';
+                    html += '<div class="file-list-item">' +
+                        '<div class="file-info">' +
+                            icon + ' <strong>' + displayName + '</strong>' +
+                            '<span class="text-muted" style="font-size:12px; margin-left:10px;">' + (file.size || 0) + ' bytes</span>' +
+                        '</div>' +
+                        '<div class="file-actions">' + downloadBtn + '</div>' +
+                    '</div>';
+                });
+                html += '</div>';
+            } else {
+                html += '<p class="text-muted">没有文件</p>';
+            }
+            document.getElementById('fileList').innerHTML = html;
+            document.getElementById('fileList').style.display = 'block';
+        }
+
+        // 下载文件
+        window.downloadFile = async function(path) {
+            var url = window.location.origin + '/api/index.php?action=file&path=' + encodeURIComponent(path);
+            try {
+                var response = await fetch(url, {
+                    headers: {
+                        'X-API-KEY': document.getElementById('apiKey').value
+                    }
+                });
+                if (response.ok) {
+                    var blob = await response.blob();
+                    var downloadUrl = window.URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = downloadUrl;
+                    // 使用后端返回的文件名，不设置a.download
+                    a.click();
+                    window.URL.revokeObjectURL(downloadUrl);
+                } else {
+                    var data = await response.json();
+                    alert('下载失败: ' + (data.error || '未知错误'));
+                }
+            } catch (error) {
+                alert('下载失败: ' + error.message);
+            }
+        };
+
+        // 上传文件
+        async function uploadFile() {
+            var fileInput = document.getElementById('uploadFile');
+            if (!fileInput.files.length) {
+                alert('请选择要上传的文件');
+                return;
+            }
+            var formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            var dest = document.getElementById('uploadDest').value;
+            if (dest) {
+                formData.append('dest', dest);
+            }
+            try {
+                var result = await fetch(window.location.origin + '/api/index.php?action=upload', {
+                    method: 'POST',
+                    headers: {
+                        'X-API-KEY': document.getElementById('apiKey').value
+                    },
+                    body: formData
+                });
+                var data = await result.json();
+                showResult('uploadResult', data);
+                // 上传成功后刷新文件列表
+                if (data.success) {
+                    setTimeout(loadFileList, 1000);
+                }
+            } catch (error) {
+                showResult('uploadResult', error.message, true);
+            }
+        }
+
+        // 查询状态
+        window.checkStatus = async function() {
+            try {
+                var result = await apiRequest('status', 'GET', null, false);
+                showResult('statusResult', result.data);
+            } catch (error) {
+                showResult('statusResult', error.message, true);
+            }
+        };
+
+        // 开关API
+        window.toggleApi = async function(enabled) {
+            try {
+                var result = await apiRequest('admin_toggle', 'POST', { enabled: enabled }, true);
+                showResult('adminResult', result.data);
+                setTimeout(checkStatus, 500);
+            } catch (error) {
+                showResult('adminResult', error.message, true);
+            }
+        };
+
+        // 重新生成密钥
+        window.regenerateKey = async function() {
+            if (!confirm('确定要重新生成API密钥吗？旧密钥将失效。')) {
+                return;
+            }
+            try {
+                var result = await apiRequest('regenerate_key', 'POST', null, true);
+                showResult('adminResult', result.data);
+                if (result.data && result.data.key) {
+                    document.getElementById('apiKey').value = result.data.key;
+                }
+            } catch (error) {
+                showResult('adminResult', error.message, true);
+            }
+        };
+
+        // 页面加载时自动加载文件列表
+        window.onload = function() {
+            loadFileList();
+            checkStatus();
+        };
+    </script>
+</body>
+</html>

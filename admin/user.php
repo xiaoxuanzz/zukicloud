@@ -2,7 +2,6 @@
 define('IN_ADMIN', true);
 include("../includes/common.php");
 $title = "用户管理";
-include "./head.php";
 if($islogin != 1) exit("<script>window.location.href='./login.php';</script>");
 
 // Handle actions
@@ -18,14 +17,16 @@ if(isset($_GET['del'])){
     header('Location: ./user.php');
     exit;
 }
+
+ob_start();
 ?>
 <style>
 .table>tbody>tr>td { vertical-align: middle; }
 </style>
 <div class="panel panel-primary">
-<div class="panel-heading"><h3 class="panel-title"><i class="fa fa-users"></i> 用户管理</h3></div>
+<div class="panel-heading"><h3 class="panel-title">用户管理</h3></div>
 <div class="panel-body">
-<div class="table-responsive">
+  <div class="table-responsive">
 <table class="table table-striped">
 <thead><tr><th>UID</th><th>昵称</th><th>类型</th><th>注册IP</th><th>最后登录</th><th>状态</th><th>操作</th></tr></thead>
 <tbody>
@@ -50,8 +51,8 @@ foreach($rows as $row){
     echo "<td>{$lasttime}</td>";
     echo "<td>{$status}</td>";
     echo "<td>";
-    echo "<a href='./user.php?enable={$row['uid']}' class='btn btn-xs btn-warning'>" . ($row['enable'] == 1 ? '禁用' : '启用') . '</a> ';
-    echo "<a href='./user.php?del={$row['uid']}' class='btn btn-xs btn-danger' onclick=\"return confirm('确定删除此用户？')\">删除</a>";
+    echo "<a href='./user.php?enable={$row['uid']}' style=\"margin-right:8px;\">" . ($row['enable'] == 1 ? '禁用' : '启用') . '</a> ';
+    echo "<a href='./user.php?del={$row['uid']}' onclick=\"return confirm('确定删除此用户？');\" style=\"color:#ef4444;\">删除</a>";
     echo "</td></tr>";
 }
 ?>
@@ -70,3 +71,7 @@ if($pages > 1){
 ?>
 <div class="text-muted">共 <?php echo $total?> 个用户</div>
 </div></div>
+<?php
+$content = ob_get_clean();
+include "./head.php";
+?>

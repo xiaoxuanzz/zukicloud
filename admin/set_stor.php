@@ -2,8 +2,7 @@
 define("IN_ADMIN", true);
 include("../includes/common.php");
 $title = "存储设置";
-include "./head.php";
-if($islogin != 1) exit("<script>window.location.href=\"./login.php\";</script>");
+if($islogin != 1) exit("<script>window.location.href='./login.php';</script>");
 
 $storTypes = array(
     "local" => "本地存储",
@@ -40,146 +39,130 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["do"] == "submit"){
     }
     showmsg("存储设置保存成功！", 1);
 }
+
+ob_start();
 ?>
 
-<style>
-.storage-select {
-    width: 100%;
-    min-width: 300px;
-    height: 42px;
-    font-size: 14px;
-    padding: 8px 12px;
-    margin: 0;
-    border: 1.5px solid #ddd;
-    border-radius: 6px;
-    background: #fff;
-    text-indent: 0;
-    -webkit-appearance: auto;
-    appearance: auto;
-}
-.storage-select option {
-    padding: 10px;
-    font-size: 14px;
-}
-</style>
-
 <div class="panel panel-primary">
-<div class="panel-heading"><h3 class="panel-title"><i class="fa fa-database"></i> 存储设置</h3></div>
+<div class="panel-heading"><h3 class="panel-title">存储设置</h3></div>
 <div class="panel-body">
     <form method="post" class="form-horizontal">
-    <input type="hidden" name="do" value="submit">
-    
-    <div class="form-group">
-        <label class="col-sm-2 control-label">存储类型</label>
-        <div class="col-sm-10">
-            <select name="storage" id="storageType" class="storage-select" onchange="toggleStorageForm()">
-                <?php foreach($storTypes as $k => $v): ?>
-                <option value="<?php echo $k ?>" <?php echo $conf["storage"]==$k ? "selected" : "" ?>><?php echo $v ?></option>
-                <?php endforeach; ?>
-            </select>
-            <p class="help-block" style="margin-top:8px;">切换存储类型前，请确认已有文件的情况下请勿随意变更，否则之前上传的文件全部无法下载</p>
-        </div>
-    </div>
-
-    <div id="form-local" class="storage-form" style="display:none;">
-        <div class="alert alert-info">本地存储无需额外配置，文件将直接保存在服务器上。</div>
-    </div>
-
-    <div id="form-aliyun" class="storage-form" style="display:none;">
-        <h4>阿里云OSS配置</h4>
+        <input type="hidden" name="do" value="submit">
+        
         <div class="form-group">
-            <label class="col-sm-2 control-label">AccessKey ID</label>
-            <div class="col-sm-10"><input type="text" name="aliyun_ak" class="form-control" value="<?php echo htmlspecialchars($conf["aliyun_ak"]??"") ?>"></div>
+            <label class="col-sm-2 control-label">存储类型</label>
+            <div class="col-sm-10">
+                <select name="storage" id="storageType" class="storage-select" onchange="toggleStorageForm()">
+                    <?php foreach($storTypes as $k => $v): ?>
+                    <option value="<?php echo $k ?>" <?php echo $conf["storage"]==$k ? "selected" : "" ?>><?php echo $v ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <p class="help-block" style="margin-top:8px;">切换存储类型前，请确认已有文件的情况下请勿随意变更，否则之前上传的文件全部无法下载</p>
+            </div>
         </div>
+        
+        <div id="form-local" class="storage-form" style="display:none;">
+        </div>
+        
+        <div id="form-aliyun" class="storage-form" style="display:none;">
+            <h4>阿里云OSS配置</h4>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">AccessKey ID</label>
+                <div class="col-sm-10"><input type="text" name="aliyun_ak" class="form-control" value="<?php echo htmlspecialchars($conf["aliyun_ak"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">AccessKey Secret</label>
+                <div class="col-sm-10"><input type="text" name="aliyun_sk" class="form-control" value="<?php echo htmlspecialchars($conf["aliyun_sk"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Bucket名称</label>
+                <div class="col-sm-10"><input type="text" name="aliyun_bucket" class="form-control" value="<?php echo htmlspecialchars($conf["aliyun_bucket"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Endpoint</label>
+                <div class="col-sm-10"><input type="text" name="aliyun_endpoint" class="form-control" value="<?php echo htmlspecialchars($conf["aliyun_endpoint"]??'') ?>" placeholder="如：oss-cn-hangzhou.aliyuncs.com" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">自定义域名</label>
+                <div class="col-sm-10"><input type="text" name="aliyun_domain" class="form-control" value="<?php echo htmlspecialchars($conf["aliyun_domain"]??'') ?>" placeholder="可选" autocomplete="off"></div>
+            </div>
+        </div>
+        
+        <div id="form-qcloud" class="storage-form" style="display:none;">
+            <h4>腾讯云COS配置</h4>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">SecretId</label>
+                <div class="col-sm-10"><input type="text" name="qcloud_secretid" class="form-control" value="<?php echo htmlspecialchars($conf["qcloud_secretid"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">SecretKey</label>
+                <div class="col-sm-10"><input type="text" name="qcloud_secretkey" class="form-control" value="<?php echo htmlspecialchars($conf["qcloud_secretkey"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Bucket名称</label>
+                <div class="col-sm-10"><input type="text" name="qcloud_bucket" class="form-control" value="<?php echo htmlspecialchars($conf["qcloud_bucket"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">地域</label>
+                <div class="col-sm-10"><input type="text" name="qcloud_region" class="form-control" value="<?php echo htmlspecialchars($conf["qcloud_region"]??'') ?>" placeholder="如：ap-guangzhou" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">自定义域名</label>
+                <div class="col-sm-10"><input type="text" name="qcloud_domain" class="form-control" value="<?php echo htmlspecialchars($conf["qcloud_domain"]??'') ?>" placeholder="可选" autocomplete="off"></div>
+            </div>
+        </div>
+        
+        <div id="form-upyun" class="storage-form" style="display:none;">
+            <h4>又拍云配置</h4>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">服务名称</label>
+                <div class="col-sm-10"><input type="text" name="upyun_bucket" class="form-control" value="<?php echo htmlspecialchars($conf["upyun_bucket"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">操作员账号</label>
+                <div class="col-sm-10"><input type="text" name="upyun_operator" class="form-control" value="<?php echo htmlspecialchars($conf["upyun_operator"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">操作员密码</label>
+                <div class="col-sm-10"><input type="password" name="upyun_password" class="form-control" value="<?php echo htmlspecialchars($conf["upyun_password"]??'') ?>" autocomplete="new-password"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">自定义域名</label>
+                <div class="col-sm-10"><input type="text" name="upyun_domain" class="form-control" value="<?php echo htmlspecialchars($conf["upyun_domain"]??'') ?>" placeholder="可选" autocomplete="off"></div>
+            </div>
+        </div>
+        
+        <div id="form-qiniu" class="storage-form" style="display:none;">
+            <h4>七牛云配置</h4>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">AccessKey</label>
+                <div class="col-sm-10"><input type="text" name="qiniu_ak" class="form-control" value="<?php echo htmlspecialchars($conf["qiniu_ak"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">SecretKey</label>
+                <div class="col-sm-10"><input type="text" name="qiniu_sk" class="form-control" value="<?php echo htmlspecialchars($conf["qiniu_sk"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">存储空间名称</label>
+                <div class="col-sm-10"><input type="text" name="qiniu_bucket" class="form-control" value="<?php echo htmlspecialchars($conf["qiniu_bucket"]??'') ?>" autocomplete="off"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">自定义域名</label>
+                <div class="col-sm-10"><input type="text" name="qiniu_domain" class="form-control" value="<?php echo htmlspecialchars($conf["qiniu_domain"]??'') ?>" placeholder="可选" autocomplete="off"></div>
+            </div>
+        </div>
+        
         <div class="form-group">
-            <label class="col-sm-2 control-label">AccessKey Secret</label>
-            <div class="col-sm-10"><input type="text" name="aliyun_sk" class="form-control" value="<?php echo htmlspecialchars($conf["aliyun_sk"]??"") ?>"></div>
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary btn-lg">保存设置</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Bucket名称</label>
-            <div class="col-sm-10"><input type="text" name="aliyun_bucket" class="form-control" value="<?php echo htmlspecialchars($conf["aliyun_bucket"]??"") ?>"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Endpoint</label>
-            <div class="col-sm-10"><input type="text" name="aliyun_endpoint" class="form-control" value="<?php echo htmlspecialchars($conf["aliyun_endpoint"]??"") ?>" placeholder="如：oss-cn-hangzhou.aliyuncs.com"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">自定义域名</label>
-            <div class="col-sm-10"><input type="text" name="aliyun_domain" class="form-control" value="<?php echo htmlspecialchars($conf["aliyun_domain"]??"") ?>" placeholder="可选"></div>
-        </div>
-    </div>
-
-    <div id="form-qcloud" class="storage-form" style="display:none;">
-        <h4>腾讯云COS配置</h4>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">SecretId</label>
-            <div class="col-sm-10"><input type="text" name="qcloud_secretid" class="form-control" value="<?php echo htmlspecialchars($conf["qcloud_secretid"]??"") ?>"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">SecretKey</label>
-            <div class="col-sm-10"><input type="text" name="qcloud_secretkey" class="form-control" value="<?php echo htmlspecialchars($conf["qcloud_secretkey"]??"") ?>"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Bucket名称</label>
-            <div class="col-sm-10"><input type="text" name="qcloud_bucket" class="form-control" value="<?php echo htmlspecialchars($conf["qcloud_bucket"]??"") ?>"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">地域</label>
-            <div class="col-sm-10"><input type="text" name="qcloud_region" class="form-control" value="<?php echo htmlspecialchars($conf["qcloud_region"]??"") ?>" placeholder="如：ap-guangzhou"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">自定义域名</label>
-            <div class="col-sm-10"><input type="text" name="qcloud_domain" class="form-control" value="<?php echo htmlspecialchars($conf["qcloud_domain"]??"") ?>"></div>
-        </div>
-    </div>
-
-    <div id="form-upyun" class="storage-form" style="display:none;">
-        <h4>又拍云配置</h4>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">服务名称</label>
-            <div class="col-sm-10"><input type="text" name="upyun_bucket" class="form-control" value="<?php echo htmlspecialchars($conf["upyun_bucket"]??"") ?>"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">操作员账号</label>
-            <div class="col-sm-10"><input type="text" name="upyun_operator" class="form-control" value="<?php echo htmlspecialchars($conf["upyun_operator"]??"") ?>"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">操作员密码</label>
-            <div class="col-sm-10"><input type="password" name="upyun_password" class="form-control" value="<?php echo htmlspecialchars($conf["upyun_password"]??"") ?>"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">自定义域名</label>
-            <div class="col-sm-10"><input type="text" name="upyun_domain" class="form-control" value="<?php echo htmlspecialchars($conf["upyun_domain"]??"") ?>"></div>
-        </div>
-    </div>
-
-    <div id="form-qiniu" class="storage-form" style="display:none;">
-        <h4>七牛云配置</h4>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">AccessKey</label>
-            <div class="col-sm-10"><input type="text" name="qiniu_ak" class="form-control" value="<?php echo htmlspecialchars($conf["qiniu_ak"]??"") ?>"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">SecretKey</label>
-            <div class="col-sm-10"><input type="text" name="qiniu_sk" class="form-control" value="<?php echo htmlspecialchars($conf["qiniu_sk"]??"") ?>"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">存储空间名称</label>
-            <div class="col-sm-10"><input type="text" name="qiniu_bucket" class="form-control" value="<?php echo htmlspecialchars($conf["qiniu_bucket"]??"") ?>"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">自定义域名</label>
-            <div class="col-sm-10"><input type="text" name="qiniu_domain" class="form-control" value="<?php echo htmlspecialchars($conf["qiniu_domain"]??"") ?>"></div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary btn-lg">保存设置</button>
-        </div>
-    </div>
     </form>
-</div>
+    
+    <!-- 本地存储提示（移到最下面） -->
+    <div style="margin-top:30px; padding:15px; color:#666; font-size:14px; border-top:1px solid #eee;">
+        本地存储无需额外配置，文件将直接保存在服务器上。
+    </div>
 </div>
 
 <script>
@@ -192,6 +175,7 @@ function toggleStorageForm(){
 }
 toggleStorageForm();
 </script>
-
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+include "./head.php";
+?>

@@ -10,7 +10,7 @@ body { background: transparent; }
     overflow: hidden;
 }
 .panel-heading {
-    background: var(--zk-card) !important;
+    background: var(--zk-card);
     border-bottom: 1px solid var(--zk-border);
     padding: 14px 18px;
 }
@@ -18,29 +18,29 @@ body { background: transparent; }
 .panel-footer { background: rgba(99,102,241,0.04); border-top: 1px solid var(--zk-border); padding: 10px 18px; }
 .panel-footer a { color: var(--zk-primary); }
 
-.panel-primary > .panel-heading { background: var(--zk-gradient) !important; }
+.panel-primary > .panel-heading { background: var(--zk-gradient); }
 .panel-primary > .panel-heading .panel-title,
-.panel-primary > .panel-heading .huge { color: #fff !important; }
+.panel-primary > .panel-heading .huge { color: #fff; }
 
 .panel-green { border-color: rgba(16,185,129,0.2); }
-.panel-green > .panel-heading { background: linear-gradient(135deg, #34d399, #10b981) !important; border: none; }
-.panel-green > .panel-heading .panel-title, .panel-green > .panel-heading .huge { color: #fff !important; }
+.panel-green > .panel-heading { background: #10b981; border: none; }
+.panel-green > .panel-heading .panel-title, .panel-green > .panel-heading .huge { color: #fff; }
 .panel-green > .panel-footer { background: rgba(52,211,153,0.08); }
 
 .panel-yellow { border-color: rgba(245,158,11,0.2); }
-.panel-yellow > .panel-heading { background: linear-gradient(135deg, #fbbf24, #f59e0b) !important; border: none; }
-.panel-yellow > .panel-heading .panel-title, .panel-yellow > .panel-heading .huge { color: #fff !important; }
+.panel-yellow > .panel-heading { background: #f59e0b; border: none; }
+.panel-yellow > .panel-heading .panel-title, .panel-yellow > .panel-heading .huge { color: #fff; }
 .panel-yellow > .panel-footer { background: rgba(251,191,36,0.08); }
 
 .panel-red { border-color: rgba(244,114,182,0.2); }
-.panel-red > .panel-heading { background: linear-gradient(135deg, #f472b6, #ec4899) !important; border: none; }
-.panel-red > .panel-heading .panel-title, .panel-red > .panel-heading .huge { color: #fff !important; }
+.panel-red > .panel-heading { background: #ec4899; border: none; }
+.panel-red > .panel-heading .panel-title, .panel-red > .panel-heading .huge { color: #fff; }
 .panel-red > .panel-footer { background: rgba(244,114,182,0.08); }
 
-.panel-info > .panel-heading { background: var(--zk-gradient) !important; }
-.panel-info > .panel-heading .panel-title { color: #fff !important; }
-.panel-success > .panel-heading { background: linear-gradient(135deg, #34d399, #10b981) !important; }
-.panel-success > .panel-heading .panel-title { color: #fff !important; }
+.panel-info > .panel-heading { background: var(--zk-gradient); }
+.panel-info > .panel-heading .panel-title { color: #fff; }
+.panel-success > .panel-heading { background: #10b981; }
+.panel-success > .panel-heading .panel-title { color: #fff; }
 
 .huge { font-size: 32px; font-weight: 800; line-height: 1.2; color: var(--zk-text); }
 
@@ -72,8 +72,8 @@ body { background: transparent; }
     .admin-sidebar { 
         position: fixed;
         top: 0;
-        left: -280px !important;
-        width: 280px !important;
+        left: -280px;
+        width: 280px;
         height: 100%;
         z-index: 10001;
         transition: left 0.3s ease;
@@ -81,7 +81,7 @@ body { background: transparent; }
         padding: 10px;
     }
     .admin-sidebar.open {
-        left: 0 !important;
+        left: 0;
     }
     .mobile-menu-overlay {
         display: none;
@@ -240,4 +240,209 @@ body { background: transparent; }
         overflow-x: auto;
     }
 }
+
+/* 暗黑模式支持 */
+/* ========== 后台暗黑模式 - 最高优先级强制样式 ========== */
+
+/* 整体背景 */
+html[data-theme="dark"] body.admin-body {
+    background: #0f172a;
+    color: #f1f5f9;
+}
+
+/* 侧边�?*/
+html[data-theme="dark"] .admin-sidebar {
+    background: #1e293b;
+    border-right-color: #334155;
+}
+html[data-theme="dark"] .sidebar-brand {
+    color: #5b8def;
+    border-bottom-color: #334155;
+}
+html[data-theme="dark"] .nav-pills > li > a {
+    color: #94a3b8;
+}
+html[data-theme="dark"] .nav-pills > li > a:hover {
+    background: rgba(91,139,239,0.15);
+    color: #5b8def;
+}
+html[data-theme="dark"] .nav-pills > li.active > a {
+    background: #5b8def;
+    color: #fff;
+}
+
+/* 面板/卡片 */
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .well,
+html[data-theme="dark"] .setting-section {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+html[data-theme="dark"] .panel-heading {
+    background: #1e293b;
+    border-bottom-color: #334155;
+    color: #f1f5f9;
+}
+html[data-theme="dark"] .panel-title {
+    color: #f1f5f9;
+}
+html[data-theme="dark"] .panel-footer {
+    background: rgba(99,102,241,0.08);
+    border-top-color: #334155;
+}
+html[data-theme="dark"] .panel-footer a {
+    color: #5b8def;
+}
+
+/* 表格 - 文件列表、用户列表等（修复白色间隙） */
+html[data-theme="dark"] .table,
+html[data-theme="dark"] .table-responsive .table {
+    background: #1e293b;
+    color: #f1f5f9;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+html[data-theme="dark"] .table > thead > tr > th,
+html[data-theme="dark"] .table > tbody > tr > td {
+    background-color: #1e293b;
+    color: #f1f5f9;
+    border-color: #334155;
+}
+html[data-theme="dark"] .table-hover > tbody > tr:hover > td {
+    background: #334155;
+}
+html[data-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) > td {
+    background: #263548;
+}
+
+/* 表单元素 - 密码框、输入框�?*/
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] input[type="password"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+    background: #1e293b;
+    color: #f1f5f9;
+    border-color: #334155;
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+    color: #64748b;
+}
+html[data-theme="dark"] select option {
+    background: #1e293b;
+    color: #f1f5f9;
+}
+
+/* 按钮 */
+html[data-theme="dark"] .btn-default {
+    background: #334155;
+    color: #f1f5f9;
+    border-color: #475569;
+}
+html[data-theme="dark"] .btn-default:hover {
+    background: #475569;
+}
+
+/* 列表�?*/
+html[data-theme="dark"] .list-group-item {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+html[data-theme="dark"] .list-group-item b {
+    color: #f1f5f9;
+}
+
+/* 文件图标 */
+html[data-theme="dark"] .file-icon.img { background: rgba(236,72,153,0.15); color: #f472b6; }
+html[data-theme="dark"] .file-icon.audio { background: rgba(14,165,233,0.15); color: #0ea5e9; }
+html[data-theme="dark"] .file-icon.video { background: rgba(245,158,11,0.15); color: #f59e0b; }
+html[data-theme="dark"] .file-icon.doc { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+html[data-theme="dark"] .file-icon.other { background: rgba(148,163,184,0.15); color: #64748b; }
+
+/* 统计卡片 */
+html[data-theme="dark"] .stat-card {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+html[data-theme="dark"] .stat-num {
+    color: #f1f5f9;
+}
+html[data-theme="dark"] .stat-label {
+    color: #94a3b8;
+}
+
+/* 警告�?*/
+html[data-theme="dark"] .alert-success {
+    background: #064e3b;
+    color: #10b981;
+    border-color: #10b981;
+}
+html[data-theme="dark"] .alert-danger {
+    background: #7f1d1d;
+    color: #ef4444;
+    border-color: #ef4444;
+}
+html[data-theme="dark"] .alert-info {
+    background: #1e3a5f;
+    color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+/* 分页 */
+html[data-theme="dark"] .pagination > li > a {
+    background: #1e293b;
+    color: #5b8def;
+    border-color: #334155;
+}
+html[data-theme="dark"] .pagination > li.active > a {
+    background: #5b8def;
+    color: #fff;
+    border-color: #5b8def;
+}
+html[data-theme="dark"] .pagination > li > a:hover {
+    background: #334155;
+}
+
+/* 下拉菜单 */
+html[data-theme="dark"] .dropdown-menu {
+    background: #1e293b;
+    border-color: #334155;
+}
+html[data-theme="dark"] .dropdown-menu > li > a {
+    color: #f1f5f9;
+}
+html[data-theme="dark"] .dropdown-menu > li > a:hover {
+    background: #334155;
+    color: #f1f5f9;
+}
+
+/* 浏览器自动填�?- 暗黑模式 */
+html[data-theme="dark"] input:-webkit-autofill,
+html[data-theme="dark"] input:-webkit-autofill:hover,
+html[data-theme="dark"] input:-webkit-autofill:focus,
+html[data-theme="dark"] textarea:-webkit-autofill,
+html[data-theme="dark"] select:-webkit-autofill {
+    -webkit-text-fill-color: #f1f5f9;
+    box-shadow: 0 0 0 1000px #1e293b inset;
+    background-color: #1e293b;
+    color: #f1f5f9;
+}
+
+/* API界面示例区域 */
+html[data-theme="dark"] pre,
+html[data-theme="dark"] code {
+    background: #1e293b;
+    color: #f1f5f9;
+    border-color: #334155;
+}
+html[data-theme="dark"] .well pre,
+html[data-theme="dark"] .panel pre {
+    background: #0f172a;
+    color: #f1f5f9;
+}
+
 

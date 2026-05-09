@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 开发文档 v2.0</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 20px; padding-bottom: 40px; background-color: #f5f5f5; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #333; }
+        pre { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 4px; }
+        code { background-color: #f8f9fa; padding: 2px 4px; border-radius: 3px; }
+        .table th { background-color: #f8f9fa; }
+        .api-endpoint { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .api-endpoint:last-child { border-bottom: none; }
+        .method-get { color: #28a745; font-weight: bold; }
+        .method-post { color: #007bff; font-weight: bold; }
+        .text-blue { color: #337ab7; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fa fa-cloud"></i> 云存储 API 开发文档 v2.0</h1>
+        <hr>
+
+        <section>
+            <h2>概述</h2>
+            <p>本API提供文件上传、下载、列表查询及管理功能，支持RESTful风格调用。</p>
+            <p><strong>基础URL</strong>: <code>http://your-domain/api/index.php</code></p>
+            <p><strong>请求格式</strong>: JSON (部分接口为FormData)</p>
+            <p><strong>响应格式</strong>: JSON (文件下载除外)</p>
+        </section>
+
+        <section>
+            <h2>认证方式</h2>
+            <h3>普通用户 (API Key)</h3>
+            <ul>
+                <li><strong>Header方式</strong>: <code>X-API-KEY: &lt;your_api_key&gt;</code></li>
+                <li><strong>URL参数方式</strong>: <code>?api_key=&lt;your_api_key&gt;</code></li>
+            </ul>
+            <h3>管理员 (Admin Key)</h3>
+            <ul>
+                <li><strong>Header方式</strong>: <code>X-Admin-Key: &lt;your_admin_key&gt;</code></li>
+                <li><strong>URL参数方式</strong>: <code>?admin_key=&lt;your_admin_key&gt;</code></li>
+            </ul>
+            <p><em>API Key存储在 <code>api/keys.txt</code>，Admin Key存储在 <code>api/admin_key.txt</code></em></p>
+        </section>
+
+        <section>
+            <h2>API 端点</h2>
+
+            <div class="api-endpoint">
+                <h3>1. 查询API状态</h3>
+                <p><span class="method-get">GET</span> <code>/api/index.php?action=status</code></p>
+                <p><strong>认证</strong>: 无需认证</p>
+                <p><strong>响应示例</strong>:</p>
+                <pre>{
+  "api_enabled": true,
+  "version": "2.0"
+}</pre>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>2. 获取文件列表</h3>
+                <p><span class="method-get">GET</span> <code>/api/index.php?action=list&api_key=&lt;key&gt;[&path=&lt;path&gt;&recursive=false]</code></p>
+                <p><strong>参数</strong>:</p>
+                <table class="table table-bordered">
+                    <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
+                    <tbody>
+                        <tr><td>path</td><td>string</td><td>子目录路径 (如: <code>docs</code>)</td></tr>
+                        <tr><td>recursive</td><td>boolean</td><td>是否递归列出子目录 (默认false)</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>认证</strong>: 需要API Key</p>
+                <p><strong>响应示例</strong>:</p>
+                <pre>{
+  "path": "",
+  "contents": [{
+      "name": "PotPlayerMini64.reg",
+      "path": "f78fe335885a81f6f592c83af51435bc",
+      "type": "reg",
+      "size": 31840,
+      "mtime": 1778068540,
+      "hash": "f78fe335885a81f6f592c83af51435bc"
+  }],
+  "count": 1
+}</pre>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>3. 上传文件</h3>
+                <p><span class="method-post">POST</span> <code>/api/index.php?action=upload&api_key=&lt;key&gt;</code></p>
+                <p>Content-Type: <code>multipart/form-data</code></p>
+                <p><strong>参数</strong>:</p>
+                <table class="table table-bordered">
+                    <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
+                    <tbody>
+                        <tr><td>file</td><td>File</td><td>要上传的文件 (必填)</td></tr>
+                        <tr><td>dest</td><td>string</td><td>目标目录 (可选，如: <code>docs/images</code>)</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>认证</strong>: 需要API Key</p>
+                <p><strong>响应示例 (新上传)</strong>:</p>
+                <pre>{
+  "success": true,
+  "exists": 0,
+  "hash": "f78fe335885a81f6f592c83af51435bc",
+  "name": "PotPlayerMini64.reg",
+  "size": 31840,
+  "type": "reg",
+  "id": 72,
+  "downurl": "http://localhost:8001/down.php/f78fe335885a81f6f592c83af51435bc.reg"
+}</pre>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>4. 下载文件</h3>
+                <p><span class="method-get">GET</span> <code>/api/index.php?action=file&path=&lt;hash&gt;&api_key=&lt;key&gt;</code></p>
+                <p><strong>认证</strong>: 需要API Key</p>
+                <p><strong>响应</strong>: 文件流 (Content-Disposition会设置为原始文件名)</p>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>5. 管理员操作</h3>
+                <h4>5.1 开关API</h4>
+                <p><span class="method-post">POST</span> <code>/api/index.php?action=admin_toggle&admin_key=&lt;key&gt;</code></p>
+                <p>Content-Type: <code>application/json</code></p>
+                <p><strong>Body</strong>:</p>
+                <pre>{ "enabled": true }</pre>
+                <p><strong>响应示例</strong>:</p>
+                <pre>{ "success": true, "api_enabled": true, "message": "API enabled" }</pre>
+
+                <h4>5.2 重新生成API密钥</h4>
+                <p><span class="method-post">POST</span> <code>/api/index.php?action=regenerate_key&admin_key=&lt;key&gt;</code></p>
+                <p><strong>响应示例</strong>:</p>
+                <pre>{ "success": true, "key": "newly_generated_key_here" }</pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>cURL 测试示例</h2>
+            <pre>
+# 查询状态
+curl "http://localhost:8001/api/index.php?action=status"
+
+# 获取文件列表
+curl -H "X-API-KEY: your_key" "http://localhost:8001/api/index.php?action=list"
+
+# 上传文件
+curl -X POST -H "X-API-KEY: your_key" -F "file=@/path/to/file.pdf" "http://localhost:8001/api/index.php?action=upload"
+            </pre>
+        </section>
+
+        <section>
+            <h2>错误处理</h2>
+            <table class="table table-bordered">
+                <thead><tr><th>HTTP状态码</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr><td>200</td><td>请求成功</td></tr>
+                    <tr><td>400</td><td>错误请求</td></tr>
+                    <tr><td>401</td><td>认证失败</td></tr>
+                    <tr><td>403</td><td>禁止访问</td></tr>
+                    <tr><td>500</td><td>服务器内部错误</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <footer>
+            <hr>
+            <p class="text-muted">文档版本: v2.0 | 最后更新: 2026-05-08 | 对应后端: <code>api/index.php</code></p>
+        </footer>
+    </div>
+</body>
+</html>

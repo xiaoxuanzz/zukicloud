@@ -41,52 +41,53 @@ if(isset($_POST["batch_del"]) && !empty($_POST["ids"])){
 }
 
 $title = "文件管理";
-include "./head.php";
 if($islogin != 1) exit("<script>window.location.href=\"./login.php\";</script>");
+
+ob_start();
 ?>
-<style>
-.table>tbody>tr>td { vertical-align: middle; max-width: 360px; word-break: break-all; }
-.batch-actions { margin-bottom: 15px; }
-.btn-batch-del {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 18px;
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(239,68,68,0.3);
-    transition: all .2s;
-}
-.btn-batch-del:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(239,68,68,0.4);
-    color: #fff;
-}
-.btn-batch-del:active { transform: translateY(0); }
-.btn-del-item {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
-    background: rgba(239,68,68,0.1);
-    color: #ef4444;
-    border: none;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all .2s;
-}
-.btn-del-item:hover {
-    background: #ef4444;
-    color: #fff;
-    transform: translateY(-1px);
-}
+  <style>
+    .table>tbody>tr>td { vertical-align: middle; max-width: 360px; word-break: break-all; }
+    .batch-actions { margin-bottom: 15px; }
+    .btn-batch-del {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 18px;
+      background: var(--zk-primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: all .2s;
+    }
+    .btn-batch-del:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      color: #fff;
+    }
+    .btn-batch-del:active { transform: translateY(0); }
+    .btn-del-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: rgba(239,68,68,0.1);
+      color: #ef4444;
+      border: none;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-del-item:hover {
+      background: #ef4444;
+      color: #fff;
+      transform: translateY(-1px);
+    }
 .batch-count {
     display: inline-flex;
     align-items: center;
@@ -126,7 +127,13 @@ document.addEventListener('DOMContentLoaded',function(){
 </script>
 
 <?php if(isset($_GET["msg"]) && $_GET["msg"] == "deleted"){ ?>
-<script>showToast('文件删除成功', 'success');</script>
+<script>
+if (typeof showToast === 'function') {
+    showToast('文件删除成功', 'success');
+} else {
+    alert('文件删除成功');
+}
+</script>
 <?php } ?>
 
 <div class="panel panel-primary">
@@ -138,15 +145,14 @@ document.addEventListener('DOMContentLoaded',function(){
     <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin:0;">
         <input type="checkbox" id="selectAllH"> 全选
     </label>
-    <button type="submit" name="batch_del" value="1" class="btn-batch-del" onclick="event.preventDefault();var self=this;zkConfirm({icon:'danger',title:'确认删除',subtitle:'删除后不可恢复',confirmText:'确认删除',confirmClass:'btn-danger',onConfirm:function(){self.form.submit();}})">
-        <i class="fa fa-trash-o"></i>
+    <button type="submit" name="batch_del" value="1" class="btn-batch-del" onclick="return confirm('确认删除选中的文件吗？删除后不可恢复。');">
         <span>批量删除</span>
         <span class="batch-count" id="selectedCount">0</span>
     </button>
     <span class="text-muted" style="font-size:13px;">共 <b><?php echo $DB->getColumn("SELECT COUNT(*) FROM pre_file");?></b> 个文件</span>
 </div>
 
-<div class="table-responsive">
+  <div class="table-responsive">
 <table class="table table-striped">
 <thead><tr><th width="40"></th><th>ID</th><th>文件名</th><th>大小</th><th>下载</th><th>上传时间</th><th>操作</th></tr></thead>
 <tbody>
@@ -173,17 +179,17 @@ while($res = $rs->fetch(PDO::FETCH_ASSOC)){
     echo "<tr>";
     echo "<td><input type=\"checkbox\" name=\"ids[]\" value=\"{$res['id']}\"></td>";
     echo "<td>{$res['id']}</td>";
-    echo "<td class=\"filename\"><span class=\"file-icon ".type_to_icon($res['type'])."\"><i class=\"fa ".type_to_icon($res['type'])."\"></i></span>".htmlspecialchars($res['name'])."</td>";
+    echo "<td class=\"filename\">".htmlspecialchars($res['name'])."</td>";
     echo "<td>".size_format($res['size'])."</td>";
     echo "<td>".($res['count']?$res['count']:0)."</td>";
     echo "<td>{$res['addtime']}</td>";
     echo "<td>";
-    echo "<a href=\"{$fileurl}\" target=\"_blank\" class=\"btn btn-xs btn-info\"><i class=\"fa fa-download\"></i></a> ";
-    echo "<a href=\"{$viewurl}\" target=\"_blank\" class=\"btn btn-xs btn-success\"><i class=\"fa fa-eye\"></i></a> ";
-    echo "<a href=\"javascript:void(0)\" onclick=\"var self=this;zkConfirm({icon:'danger',title:'确认删除',subtitle:'删除后不可恢复',confirmText:'确认删除',confirmClass:'btn-danger',onConfirm:function(){window.location.href='./file.php?del={$res['id']}';}})\" class=\"btn-del-item\"><i class=\"fa fa-trash-o\"></i></a>";
+    echo "<a href=\"{$fileurl}\" target=\"_blank\" style=\"margin-right:8px;\">下载</a>";
+    echo "<a href=\"{$viewurl}\" target=\"_blank\" style=\"margin-right:8px;\">查看</a>";
+    echo "<a href=\"javascript:void(0)\" onclick=\"if(confirm('确认删除该文件吗？删除后不可恢复。')){ window.location.href='./file.php?del={$res['id']}'; }\" style=\"color:#ef4444;\">删除</a>";
     echo "</td></tr>";
 }
-if($numrows == 0) echo '<tr><td colspan="7" align="center" style="padding:40px;color:var(--zk-text-dim)"><i class="fa fa-inbox" style="font-size:36px;display:block;margin-bottom:12px"></i>还没有上传任何文件<br><a href="../upload.php" style="color:var(--zk-primary)">去上传 &rarr;</a></td></tr>';
+if($numrows == 0) echo '<tr><td colspan="7" align="center" style="padding:40px;color:var(--zk-text-dim)">还没有上传任何文件<br><a href="../upload.php" style="color:var(--zk-primary)">去上传 &rarr;</a></td></tr>';
 ?>
 </tbody>
 </table>
@@ -214,4 +220,7 @@ if(selectAll){
     });
 }
 </script>
-<?php include "./footer.php"; ?>
+<?php
+$content = ob_get_clean();
+include "./head.php";
+?>
