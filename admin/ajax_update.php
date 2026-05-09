@@ -13,43 +13,53 @@ if ($action === 'update') {
     $zipUrl = '';
     $source = '';
     
-    // 使用网站根目录作为临时目录
-    $rootDir = dirname(dirname(__DIR__));
+    // 使用 __DIR__ 获取当前文件所在目录（即 admin 目录）
+    $rootDir = __DIR__;
     $tempDir = $rootDir . '/zuki_update_temp';
     $zipFile = $rootDir . '/zuki_update.zip';
     
-    // 清理旧文件
+    // 调试：记录实际路径
+    error_log('Update rootDir: ' . $rootDir);
+    error_log('Update tempDir: ' . $tempDir);
+    error_log('Update zipFile: ' . $zipFile);
+    
     if (is_dir($tempDir)) delTree($tempDir);
     if (file_exists($zipFile)) @unlink($zipFile);
     
-    @mkdir($tempDir, 0777, true);
+    if (!is_dir($tempDir)) {
+        if (!@mkdir($tempDir, 0777, true)) {
+            echo json_encode(['code' => 1, 'msg' => '无法创建临时目录: ' . $tempDir]);
+            exit;
+        }
+    }
     
-    // 尝试 Gitee
-    $apiUrl = 'https://gitee.com/api/v5/repos/' . $giteeRepo . '/zipball?sha=' . $branch;
+    // 优先使用 GitHub
+    $source = 'GitHub';
+    $apiUrl = 'https://api.github.com/repos/' . $githubRepo . '/zipball/' . $branch;
     
     $ch = curl_init($apiUrl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
     curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/vnd.github.v3+json']);
     
     $response = curl_exec($ch);
-    $giteeCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
     curl_close($ch);
     
-    // 如果 Gitee 失败（401/404），尝试 GitHub
-    if ($giteeCode === 401 || $giteeCode === 404 || $giteeCode !== 302) {
-        $source = 'GitHub';
-        // 尝试 main 分支
+    // GitHub 404 尝试 master
+    if ($httpCode === 404) {
+        $branch = 'master';
         $apiUrl = 'https://api.github.com/repos/' . $githubRepo . '/zipball/' . $branch;
         
         $ch = curl_init($apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
         curl_setopt($ch, CURLOPT_HEADER, true);
@@ -59,29 +69,45 @@ if ($action === 'update') {
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         curl_close($ch);
+    }
+    
+    // GitHub 失败，尝试 Gitee
+    if ($httpCode !== 302 && $httpCode !== 301) {
+        $source = 'Gitee';
+        $branch = 'main';
+        $apiUrl = 'https://gitee.com/api/v5/repos/' . $giteeRepo . '/zipball?sha=' . $branch;
         
-        // 如果 main 404，尝试 master
+        $ch = curl_init($apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        curl_close($ch);
+        
+        // Gitee 404 尝试 master
         if ($httpCode === 404) {
             $branch = 'master';
-            $apiUrl = 'https://api.github.com/repos/' . $githubRepo . '/zipball/' . $branch;
+            $apiUrl = 'https://gitee.com/api/v5/repos/' . $giteeRepo . '/zipball?sha=' . $branch;
             
             $ch = curl_init($apiUrl);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
             curl_setopt($ch, CURLOPT_HEADER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/vnd.github.v3+json']);
             
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
             curl_close($ch);
         }
-    } else {
-        $source = 'Gitee';
-        $httpCode = $giteeCode;
     }
     
     // 检查是否成功
@@ -101,15 +127,15 @@ if ($action === 'update') {
             exit;
         }
     } else {
-        echo json_encode(['code' => 1, 'msg' => '获取下载链接失败: HTTP ' . $httpCode . ' (尝试: ' . $source . ', 分支: ' . $branch . ')']);
+        echo json_encode(['code' => 1, 'msg' => '获取下载链接失败: HTTP ' . $httpCode . ' (来源: ' . $source . ', 分支: ' . $branch . ')']);
         exit;
     }
     
-    // 下载 ZIP 文件
+    // 下载 ZIP
     $ch = curl_init($zipUrl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 600);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
     
@@ -127,7 +153,7 @@ if ($action === 'update') {
     if (substr($zipContent, 0, 2) !== 'PK') {
         @rmdir($tempDir);
         @unlink($zipFile);
-        echo json_encode(['code' => 1, 'msg' => '下载的不是有效的 ZIP 文件']);
+        echo json_encode(['code' => 1, 'msg' => '下载的文件不是有效的 ZIP']);
         exit;
     }
     
@@ -168,7 +194,8 @@ function proceedToExtract($zipFile, $tempDir, $source) {
     $excludeFiles = ['config.php', '.env'];
     $excludePatterns = ['.git', 'node_modules', 'vendor'];
     
-    $rootDir = dirname(dirname(__DIR__));
+    // 使用 __DIR__ 获取当前目录
+    $rootDir = __DIR__;
     $copied = 0;
     $skipped = 0;
     
