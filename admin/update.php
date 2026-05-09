@@ -332,31 +332,41 @@ window.closeUpdateConfirm = function() {
 function doUpdate() {
     closeUpdateConfirm();
     
-    var resultBox = document.getElementById('resultBox');
-    resultBox.className = 'result-box show info';
-    resultBox.innerHTML = '<strong><i class="fa fa-spinner fa-spin"></i> 正在更新...</strong>' +
-        '<div class="progress-bar"><div class="fill" id="progressFill" style="width:0%"></div></div>' +
-        '<div class="progress-text" id="progressText">正在连接更新服务器...</div>';
+    // 创建强制弹窗（无关闭按钮，无法点击空白退出）
+    var progressHtml = '<div id="zk-progress-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999999;display:flex;align-items:center;justify-content:center;">' +
+        '<div style="background:var(--zk-surface,#fff);border-radius:20px;box-shadow:0 25px 80px rgba(0,0,0,.4);width:90%;max-width:420px;padding:32px;text-align:center;animation:modalPulse 2s infinite;">' +
+        '<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--zk-primary),#8b5cf6);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 30px rgba(99,102,241,.4);">' +
+        '<i class="fa fa-cloud-download" style="font-size:36px;color:#fff;"></i></div>' +
+        '<h3 style="font-size:20px;font-weight:700;color:var(--zk-text,#1e293b);margin:0 0 24px;">正在更新...</h3>' +
+        '<div style="background:#e2e8f0;border-radius:10px;height:12px;overflow:hidden;margin-bottom:16px;">' +
+        '<div id="zk-progress-fill" style="height:100%;background:linear-gradient(90deg,var(--zk-primary),#8b5cf6);border-radius:10px;width:0%;transition:width .5s ease;"></div></div>' +
+        '<p id="zk-progress-text" style="font-size:14px;color:var(--zk-text-sub,#64748b);margin:0;">正在连接更新服务器...</p>' +
+        '<p style="font-size:12px;color:var(--zk-text-dim,#94a3b8);margin:16px 0 0;">更新完成后将自动刷新界面</p></div></div>';
+    
+    var div = document.createElement('div');
+    div.innerHTML = progressHtml;
+    document.body.appendChild(div);
     
     var progress = 0;
     var progressTimer = setInterval(function() {
-        if (progress < 90) {
-            progress += Math.random() * 10;
-            if (progress > 90) progress = 90;
-            document.getElementById('progressFill').style.width = progress + '%';
+        if (progress < 85) {
+            progress += Math.random() * 8;
+            if (progress > 85) progress = 85;
+            var fill = document.getElementById('zk-progress-fill');
+            if (fill) fill.style.width = progress + '%';
         }
-    }, 500);
+    }, 400);
     
     fetch('ajax_update.php?act=update', { method: 'POST' })
         .then(function(r) { return r.json(); })
         .then(function(data) {
             clearInterval(progressTimer);
-            document.getElementById('progressFill').style.width = '100%';
-            document.getElementById('progressText').textContent = '更新完成，正在刷新...';
+            var fill = document.getElementById('zk-progress-fill');
+            var text = document.getElementById('zk-progress-text');
+            if (fill) fill.style.width = '100%';
             
             if (data.code === 0) {
-                resultBox.className = 'result-box show success';
-                resultBox.innerHTML = '<strong><i class="fa fa-check-circle"></i> ' + data.msg + '</strong>';
+                if (text) text.textContent = '更新成功！正在刷新界面...';
                 
                 // 保存新版本
                 if (_latestInfo && _latestInfo.hash) {
@@ -366,16 +376,30 @@ function doUpdate() {
                 
                 setTimeout(function() {
                     location.reload();
-                }, 1500);
+                }, 2000);
             } else {
-                resultBox.className = 'result-box show error';
-                resultBox.innerHTML = '<strong><i class="fa fa-times-circle"></i> 更新失败</strong><br>' + data.msg;
+                var modal = document.getElementById('zk-progress-modal');
+                if (modal) {
+                    modal.querySelector('div').innerHTML = 
+                        '<div style="width:80px;height:80px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">' +
+                        '<i class="fa fa-times" style="font-size:36px;color:#fff;"></i></div>' +
+                        '<h3 style="font-size:20px;font-weight:700;color:#991b1b;margin:0 0 16px;">更新失败</h3>' +
+                        '<p style="font-size:14px;color:#991b1b;margin:0 0 24px;">' + esc(data.msg) + '</p>' +
+                        '<button onclick="location.reload()" style="padding:12px 32px;background:var(--zk-primary);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">刷新页面重试</button>';
+                }
             }
         })
         .catch(function(e) {
             clearInterval(progressTimer);
-            resultBox.className = 'result-box show error';
-            resultBox.innerHTML = '<strong><i class="fa fa-times-circle"></i> 更新失败</strong><br>' + e.message;
+            var modal = document.getElementById('zk-progress-modal');
+            if (modal) {
+                modal.querySelector('div').innerHTML = 
+                    '<div style="width:80px;height:80px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">' +
+                    '<i class="fa fa-times" style="font-size:36px;color:#fff;"></i></div>' +
+                    '<h3 style="font-size:20px;font-weight:700;color:#991b1b;margin:0 0 16px;">更新失败</h3>' +
+                    '<p style="font-size:14px;color:#991b1b;margin:0 0 24px;">' + esc(e.message) + '</p>' +
+                    '<button onclick="location.reload()" style="padding:12px 32px;background:var(--zk-primary);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">刷新页面重试</button>';
+            }
         });
 }
 

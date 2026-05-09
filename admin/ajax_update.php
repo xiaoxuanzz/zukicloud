@@ -8,15 +8,104 @@ $action = $_GET['act'] ?? '';
 
 if ($action === 'update') {
     $giteeRepo = 'xiaoxuanzz/zukicloud';
+    $githubRepo = 'xiaoxuanzz/zukicloud';
     $branch = 'main';
-    $zipUrl = 'https://gitee.com/' . $giteeRepo . '/repository/archive/' . $branch . '.zip';
+    $zipUrl = '';
+    $source = '';
     
-    $tempDir = sys_get_temp_dir() . '/zuki_update_' . time();
-    $zipFile = $tempDir . '.zip';
+    // 使用网站根目录作为临时目录
+    $rootDir = dirname(dirname(__DIR__));
+    $tempDir = $rootDir . '/zuki_update_temp';
+    $zipFile = $rootDir . '/zuki_update.zip';
+    
+    // 清理旧文件
+    if (is_dir($tempDir)) delTree($tempDir);
+    if (file_exists($zipFile)) @unlink($zipFile);
     
     @mkdir($tempDir, 0777, true);
     
-    // 下载文件
+    // 尝试 Gitee
+    $apiUrl = 'https://gitee.com/api/v5/repos/' . $giteeRepo . '/zipball?sha=' . $branch;
+    
+    $ch = curl_init($apiUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    
+    $response = curl_exec($ch);
+    $giteeCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+    curl_close($ch);
+    
+    // 如果 Gitee 失败（401/404），尝试 GitHub
+    if ($giteeCode === 401 || $giteeCode === 404 || $giteeCode !== 302) {
+        $source = 'GitHub';
+        // 尝试 main 分支
+        $apiUrl = 'https://api.github.com/repos/' . $githubRepo . '/zipball/' . $branch;
+        
+        $ch = curl_init($apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/vnd.github.v3+json']);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        curl_close($ch);
+        
+        // 如果 main 404，尝试 master
+        if ($httpCode === 404) {
+            $branch = 'master';
+            $apiUrl = 'https://api.github.com/repos/' . $githubRepo . '/zipball/' . $branch;
+            
+            $ch = curl_init($apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/vnd.github.v3+json']);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            curl_close($ch);
+        }
+    } else {
+        $source = 'Gitee';
+        $httpCode = $giteeCode;
+    }
+    
+    // 检查是否成功
+    if ($httpCode === 302 || $httpCode === 301) {
+        $headers = substr($response, 0, $headerSize);
+        if (preg_match('/Location:\s*(.+)/i', $headers, $matches)) {
+            $zipUrl = trim($matches[1]);
+        } else {
+            echo json_encode(['code' => 1, 'msg' => '无法获取下载链接']);
+            exit;
+        }
+    } elseif ($httpCode === 200) {
+        $body = substr($response, $headerSize);
+        if (substr($body, 0, 2) === 'PK') {
+            file_put_contents($zipFile, $body);
+            proceedToExtract($zipFile, $tempDir, $source);
+            exit;
+        }
+    } else {
+        echo json_encode(['code' => 1, 'msg' => '获取下载链接失败: HTTP ' . $httpCode . ' (尝试: ' . $source . ', 分支: ' . $branch . ')']);
+        exit;
+    }
+    
+    // 下载 ZIP 文件
     $ch = curl_init($zipUrl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -25,29 +114,29 @@ if ($action === 'update') {
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
     
     $zipContent = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error = curl_error($ch);
+    $downloadCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
     
-    if ($httpCode !== 200 || empty($zipContent)) {
+    if ($downloadCode !== 200 || empty($zipContent)) {
         @rmdir($tempDir);
         @unlink($zipFile);
-        echo json_encode(['code' => 1, 'msg' => '下载失败: HTTP ' . $httpCode]);
+        echo json_encode(['code' => 1, 'msg' => '下载失败: HTTP ' . $downloadCode]);
         exit;
     }
     
-    // 检查 ZIP 头
     if (substr($zipContent, 0, 2) !== 'PK') {
         @rmdir($tempDir);
         @unlink($zipFile);
-        echo json_encode(['code' => 1, 'msg' => '下载的文件不是有效的 ZIP 压缩包']);
+        echo json_encode(['code' => 1, 'msg' => '下载的不是有效的 ZIP 文件']);
         exit;
     }
     
-    // 保存 ZIP 文件
     file_put_contents($zipFile, $zipContent);
-    
-    // 解压
+    proceedToExtract($zipFile, $tempDir, $source);
+    exit;
+}
+
+function proceedToExtract($zipFile, $tempDir, $source) {
     $zip = new ZipArchive();
     if ($zip->open($zipFile) !== true) {
         @rmdir($tempDir);
@@ -59,15 +148,12 @@ if ($action === 'update') {
     $zip->extractTo($tempDir);
     $zip->close();
     
-    // 查找解压后的目录
     $extractDir = null;
     $items = scandir($tempDir);
     foreach ($items as $item) {
         if ($item !== '.' && $item !== '..' && is_dir($tempDir . '/' . $item)) {
-            if (strpos($item, 'zukicloud') !== false) {
-                $extractDir = $tempDir . '/' . $item;
-                break;
-            }
+            $extractDir = $tempDir . '/' . $item;
+            break;
         }
     }
     
@@ -78,18 +164,16 @@ if ($action === 'update') {
         exit;
     }
     
-    // 获取排除的文件和目录
-    $excludeDirs = ['admin', 'data', 'cache', 'includes/config.php'];
-    $excludePatterns = ['.git', '.env', 'node_modules', 'vendor'];
+    $excludeDirs = ['admin', 'data', 'cache'];
+    $excludeFiles = ['config.php', '.env'];
+    $excludePatterns = ['.git', 'node_modules', 'vendor'];
     
-    // 复制文件覆盖
-    $rootDir = dirname(dirname(__DIR));
+    $rootDir = dirname(dirname(__DIR__));
     $copied = 0;
     $skipped = 0;
     
-    function copyDirectory($src, $dst, &$copied, &$skipped, $excludeDirs, $excludePatterns) {
+    function copyDirectory($src, $dst, &$copied, &$skipped, $excludeDirs, $excludeFiles, $excludePatterns) {
         if (!is_dir($src)) return;
-        
         @mkdir($dst, 0777, true);
         
         $items = scandir($src);
@@ -99,22 +183,24 @@ if ($action === 'update') {
             $srcPath = $src . '/' . $item;
             $dstPath = $dst . '/' . $item;
             
-            // 检查排除
-            $skip = false;
             foreach ($excludePatterns as $pattern) {
                 if (strpos($item, $pattern) !== false) {
-                    $skip = true; break;
+                    $skipped++;
+                    continue 2;
                 }
             }
-            if ($skip) { $skipped++; continue; }
             
             if (is_dir($srcPath)) {
                 if (in_array($item, $excludeDirs)) {
                     $skipped++;
                     continue;
                 }
-                copyDirectory($srcPath, $dstPath, $copied, $skipped, $excludeDirs, $excludePatterns);
+                copyDirectory($srcPath, $dstPath, $copied, $skipped, $excludeDirs, $excludeFiles, $excludePatterns);
             } else {
+                if (in_array($item, $excludeFiles)) {
+                    $skipped++;
+                    continue;
+                }
                 if (copy($srcPath, $dstPath)) {
                     $copied++;
                 } else {
@@ -124,14 +210,12 @@ if ($action === 'update') {
         }
     }
     
-    copyDirectory($extractDir, $rootDir, $copied, $skipped, $excludeDirs, $excludePatterns);
+    copyDirectory($extractDir, $rootDir, $copied, $skipped, $excludeDirs, $excludeFiles, $excludePatterns);
     
-    // 清理临时文件
     @unlink($zipFile);
     delTree($tempDir);
     
-    echo json_encode(['code' => 0, 'msg' => '更新成功！共复制 ' . $copied . ' 个文件，跳过 ' . $skipped . ' 个文件']);
-    exit;
+    echo json_encode(['code' => 0, 'msg' => '更新成功！（来源: ' . $source . '）共复制 ' . $copied . ' 个文件，跳过 ' . $skipped . ' 个文件']);
 }
 
 function delTree($dir) {
