@@ -1,30 +1,32 @@
 # Cloud 文件云存储系统
-使用教程：
-https://www.bilibili.com/video/BV1pe9FBBEBy/
-一定要观看后再部署，里面有配置文件需要下载
+
+使用教程： https://www.bilibili.com/video/BV1pe9FBBEBy/ 一定要观看后再部署，里面有配置文件需要下载
+
 ## 📖 项目介绍
 
 Cloud 是一个基于 彩虹外链云盘，使用PHP + MySQL 的网盘/文件托管系统，支持文件上传、分享、外链、在线预览（图片/视频/音频）等功能。
 
-**主要特性：**
+### 主要特性
+
 - 支持图片、视频、音频在线预览（CKPlayer 播放器）
-- 多种存储后端：本地磁盘、阿里云 OSS、腾讯云 COS、七牛云、又拍云、华为 OBS
-- 用户注册/登录系统，支持浏览器缓存记录
+- 多种存储后端：本地存储、阿里云 OSS、腾讯云 COS、七牛云、又拍云、华为 OBS
+- 用户注册/登录系统，支持浏览器缓存登录状态
 - API 上传接口（支持 JSON/JSONP/表单 回调格式）
-- 文件分享、密码保护、下载统计
-- 后台管理面板
-- 内置内容安全审核（阿里云/腾讯云绿网）
-- 上传验证码、文件类型/大小限制
+- 文件分享、密码保护、下载次数统计
+- 后台管理面板（文件管理、用户管理、系统设置、存储设置、检查更新等）
+- 内置内容安全审核（阿里云绿网/腾讯云内容安全）
+- 上传验证码、文件类型/大小限制、并发上传
+- 在线检查更新，一键自动升级系统
 
 ## 🖥️ 运行环境
 
 | 组件 | 要求 |
 |------|------|
-| **PHP** | >= 7.4（推荐 7.4 或 8.0） |
-| **MySQL** | >= 5.6（推荐 5.7 或 MariaDB 10.x） |
-| **Web 服务器** | Nginx / Apache / 小皮面板（phpStudy） |
-| **PHP 扩展** | pdo_mysql、mbstring、json、gd、fileinfo、openssl |
-| **操作系统** | Linux（推荐）/ Windows（开发测试） |
+| PHP | >= 7.4（推荐 7.4 或 8.0） |
+| MySQL | >= 5.6（推荐 5.7 或 MariaDB 10.x） |
+| Web 服务器 | Nginx / Apache / 小皮面板（phpStudy） |
+| PHP 扩展 | pdo_mysql、mbstring、json、gd、fileinfo、openssl |
+| 操作系统 | Linux（推荐）/ Windows（开发测试） |
 
 ## 📁 目录结构
 
@@ -50,11 +52,11 @@ cloud/
 │   ├── user.php           # 用户管理
 │   ├── set.php            # 系统设置
 │   ├── set_stor.php       # 存储设置
+│   ├── update.php         # 检查更新
 │   └── ...
 ├── assets/                # 前端静态资源
 │   ├── css/               # 样式文件
-│   ├── js/                # JavaScript（上传、播放器等）
-│   └── img/               # 图片资源
+│   └── js/                # JavaScript
 ├── includes/              # 核心库
 │   ├── common.php         # 公共初始化
 │   ├── functions.php      # 函数库
@@ -64,15 +66,13 @@ cloud/
 │   │   ├── PdoHelper.php  # 数据库操作
 │   │   ├── Oauth.php      # OAuth 认证
 │   │   ├── Cache.php      # 缓存
-│   │   ├── Storage/       # 存储驱动
-│   │   │   ├── Local.php  # 本地存储
-│   │   │   ├── Oss.php    # 阿里云 OSS
-│   │   │   ├── Qcloud.php # 腾讯云 COS
-│   │   │   ├── Qiniu.php  # 七牛云
-│   │   │   ├── Upyun.php  # 又拍云
-│   │   │   └── Obs.php    # 华为 OBS
-│   │   └── ...
-│   ├── 360safe/           # 安全防护模块
+│   │   └── Storage/       # 存储驱动
+│   │       ├── Local.php  # 本地存储
+│   │       ├── Oss.php    # 阿里云 OSS
+│   │       ├── Qcloud.php # 腾讯云 COS
+│   │       ├── Qiniu.php  # 七牛云
+│   │       ├── Upyun.php  # 又拍云
+│   │       └── Obs.php    # 华为 OBS
 │   ├── OSS/               # 阿里云 OSS SDK
 │   ├── Obs/               # 华为 OBS SDK
 │   ├── Qcloud/            # 腾讯云 COS SDK
@@ -80,12 +80,11 @@ cloud/
 │   ├── Upyun/             # 又拍云 SDK
 │   └── vendor/            # Composer 依赖
 ├── file/                  # 本地存储目录
-│   └── .htaccess
 ├── upload/                # 上传临时目录
 └── install/               # 安装程序
     ├── index.php          # 安装入口
     ├── install.sql        # 数据库初始化 SQL
-    └── install.lock       # 安装锁（安装后自动生成）
+    └── install.lock       # 安装锁
 ```
 
 ## 🚀 部署步骤
@@ -93,35 +92,28 @@ cloud/
 ### 方式一：小皮面板（phpStudy）部署
 
 1. **启动环境**
-   - 打开小皮面板，启动 **Nginx**（或 Apache）+ **MySQL**
+   - 打开小皮面板，启动 Nginx（或 Apache）+ MySQL
    - 确认 PHP 版本 >= 7.4
 
 2. **放置文件**
-   - 将 `cloud` 整个文件夹复制到小皮面板的网站根目录
+   - 将 cloud 整个文件夹复制到小皮面板的网站根目录
    - 小皮面板默认网站目录：`C:\phpstudy_pro\WWW\`
    - 放好后路径应为：`C:\phpstudy_pro\WWW\cloud\`
 
 3. **创建数据库**
    - 打开小皮面板 → 数据库 → 创建数据库
-   - 数据库名：`cloud`（或自定义）
+   - 数据库名：cloud（或自定义）
    - 记下数据库用户名和密码
 
 4. **访问安装**
-   - 浏览器打开：`http://localhost/cloud/install/`
-   - 按照向导步骤填写：
-     - 数据库地址：`localhost`
-     - 数据库端口：`3306`
-     - 数据库名：`cloud`
-     - 数据库用户名：（小皮面板创建的）
-     - 数据库密码：（小皮面板创建的）
-     - 管理员账号：自定义（默认 `admin`）
-     - 管理员密码：自定义（默认 `123456`）
+   - 浏览器打开：http://localhost/cloud/install/
+   - 按照向导步骤填写数据库信息和管理员账号
    - 点击安装，等待完成
 
 5. **安装完成**
-   - 前台地址：`http://localhost/cloud/`
-   - 后台地址：`http://localhost/cloud/admin/`
-   - 安装完成后删除或重命名 `install` 文件夹（建议重命名）
+   - 前台地址：http://localhost/cloud/
+   - 后台地址：http://localhost/cloud/admin/
+   - 安装完成后删除或重命名 install 文件夹（建议重命名）
 
 ### 方式二：Linux 服务器部署
 
@@ -135,34 +127,9 @@ chmod -R 777 /var/www/html/cloud/upload/
 chmod -R 777 /var/www/html/cloud/file/
 
 # 3. Nginx 配置示例
-cat > /etc/nginx/conf.d/cloud.conf << 'EOF'
-server {
-    listen 80;
-    server_name your-domain.com;
-    root /var/www/html/cloud;
-    index index.php;
+# 编辑 /etc/nginx/conf.d/cloud.conf
 
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-
-    location ~ \.php$ {
-        fastcgi_pass unix:/run/php/php7.4-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
-
-    # 禁止访问敏感文件
-    location ~ /\.(ht|git|svn) {
-        deny all;
-    }
-}
-EOF
-
-# 4. 重载 Nginx
-nginx -s reload
-
-# 5. 浏览器访问安装
+# 4. 浏览器访问安装
 # http://your-domain.com/install/
 ```
 
@@ -182,24 +149,25 @@ $dbconfig = array(
 );
 ```
 
-> ⚠️ 安装后请修改管理员密码，数据库配置中的密码也建议改强密码。
+⚠️ **安装后请修改管理员密码，数据库配置中的密码也建议改强密码。**
 
 ### 存储后端配置
 
-安装后在后台管理 → 存储设置中配置：
+安装后在 **后台管理 → 存储设置** 中配置：
 
 | 存储方式 | 需要填写的配置 |
-|---------|--------------|
-| **本地存储** | 无需配置（默认） |
-| **阿里云 OSS** | AccessKey ID、AccessKey Secret、Bucket、Endpoint |
-| **腾讯云 COS** | SecretId、SecretKey、Bucket、Region |
-| **七牛云** | AccessKey、SecretKey、Bucket、Domain |
-| **又拍云** | 操作员名、密码、Bucket、域名 |
-| **华为 OBS** | AK、SK、Bucket、Endpoint |
+|----------|----------------|
+| 本地存储 | 无需配置（默认） |
+| 阿里云 OSS | AccessKey ID、AccessKey Secret、Bucket、Endpoint、Domain |
+| 腾讯云 COS | SecretId、SecretKey、Bucket、Region、Domain |
+| 七牛云 | AccessKey、SecretKey、Bucket、Domain |
+| 又拍云 | 操作员名、密码、Bucket、Domain |
+| 华为 OBS | AK、SK、Bucket、Endpoint |
 
 ### 文件类型限制
 
 系统内置允许的文件类型：
+
 - **图片**：png, jpg, jpeg, gif, bmp, webp, ico, svg, tif, tiff, heic
 - **音频**：mp3, wav, ogg, m4a, flac, aac
 - **视频**：mp4, webm, flv, mov, 3gp, avi, mkv, m3u8
@@ -210,11 +178,16 @@ $dbconfig = array(
 
 | 功能 | 说明 |
 |------|------|
-| **文件管理** | 查看/搜索/删除所有上传的文件 |
-| **用户管理** | 管理注册用户、分配权限 |
-| **系统设置** | 站点名称、SEO、上传限制等 |
-| **存储设置** | 切换存储后端（本地/OSS/COS/七牛等） |
-| **安全设置** | IP 黑名单、内容审核、上传验证码 |
+| 控制面板 | 系统概览、快捷操作入口 |
+| API 开关 | 开启/关闭 API 上传接口 |
+| 文件管理 | 查看/搜索/删除所有上传的文件 |
+| 用户管理 | 管理注册用户、查看用户文件 |
+| 网站信息 | 站点名称、关键词、描述、公告 |
+| 上传设置 | 文件大小限制、类型限制、验证码、并发数 |
+| 用户设置 | 用户注册、强制登录开关 |
+| 管理员设置 | 管理员账号和密码修改 |
+| 存储设置 | 切换存储后端（本地/OSS/COS/七牛/又拍/OBS） |
+| 检查更新 | 在线检查并一键升级系统 |
 
 后台登录地址：`http://你的域名/admin/`
 
@@ -222,16 +195,15 @@ $dbconfig = array(
 
 ### 上传接口
 
-```
-POST /api.php
-Content-Type: multipart/form-data
+**POST** `/api.php`
 
-参数：
-- file: 文件（必填）
-- upload_code: 验证码（如开启了上传验证）
-- format: json / jsonp / html（默认 json）
-- callback: JSONP 回调函数名（format=jsonp 时生效）
-```
+Content-Type: `multipart/form-data`
+
+**参数：**
+- `file`: 文件（必填）
+- `upload_code`: 验证码（如开启了上传验证）
+- `format`: json / jsonp / html（默认 json）
+- `callback`: JSONP 回调函数名（format=jsonp 时生效）
 
 **成功响应示例：**
 ```json
@@ -255,6 +227,7 @@ Content-Type: multipart/form-data
 ```
 
 **错误码：**
+
 | code | 含义 |
 |------|------|
 | 0 | 成功 |
@@ -266,10 +239,11 @@ Content-Type: multipart/form-data
 
 ## 🔧 常见问题
 
-### 1. 安装时提示"未检测到数据库扩展"
-确保 PHP 安装了 `pdo_mysql` 扩展。小皮面板中：PHP → 扩展管理 → 勾选 `pdo_mysql`。
+**1. 安装时提示"未检测到数据库扩展"**
+- 确保 PHP 安装了 pdo_mysql 扩展
+- 小皮面板中：PHP → 扩展管理 → 勾选 pdo_mysql
 
-### 2. 上传文件提示"权限不足"
+**2. 上传文件提示"权限不足"**
 ```bash
 # Linux
 chmod -R 777 cloud/upload/ cloud/file/
@@ -278,17 +252,17 @@ chmod -R 777 cloud/upload/ cloud/file/
 确保 upload 和 file 目录对 IIS/IUSR 可写
 ```
 
-### 3. 页面显示 500 错误
+**3. 页面显示 500 错误**
 - 检查 PHP 版本是否 >= 7.1
 - 查看 Nginx/Apache 错误日志
-- 确认 `config.php` 数据库配置正确
+- 确认 config.php 数据库配置正确
 
-### 4. 视频无法播放
+**4. 视频无法播放**
 - 检查视频格式是否在允许列表中
 - 确保视频文件 URL 可直接访问（不是防盗链的）
 - CKPlayer 需要浏览器支持 HTML5
 
-### 5. 如何重置管理员密码
+**5. 如何重置管理员密码**
 ```sql
 -- 直接在数据库中执行
 UPDATE pre_config SET v = '新密码MD5值' WHERE k = 'admin_pwd';
@@ -297,7 +271,11 @@ UPDATE pre_config SET v = '新密码MD5值' WHERE k = 'admin_pwd';
 
 ## 📋 版本信息
 
-- **程序版本**：1532
+- **程序版本**：v2
 - **数据库版本**：1001
 - **最低 PHP**：7.4
 - **默认管理员**：admin / 123456（⚠️ 首次使用请修改）
+
+---
+
+**联系作者**：https://space.bilibili.com/521205099
