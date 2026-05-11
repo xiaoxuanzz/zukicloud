@@ -133,7 +133,7 @@ chmod -R 777 /var/www/html/cloud/file/
 # http://your-domain.com/install/
 ```
 
-## ⚙️ 配置说明
+## 配置说明
 
 ### 数据库配置
 
@@ -237,7 +237,7 @@ Content-Type: `multipart/form-data`
 | -4 | API 未开启 / 验证码错误 |
 | -5 | 文件被安全拦截 |
 
-## 🔧 常见问题
+## 常见问题
 
 **1. 安装时提示"未检测到数据库扩展"**
 - 确保 PHP 安装了 pdo_mysql 扩展
@@ -274,7 +274,7 @@ UPDATE pre_config SET v = '新密码MD5值' WHERE k = 'admin_pwd';
 - **程序版本**：v2
 - **数据库版本**：1001
 - **最低 PHP**：7.4
-- **默认管理员**：admin / 123456（⚠️ 首次使用请修改）
+- **默认管理员**：admin / 123456（注意：首次使用请修改）
 
 ---
 
