@@ -7,205 +7,248 @@ if($islogin != 1) exit("<script>window.location.href=\"./login.php\";</script>")
 ob_start();
 ?>
 <style>
-.update-container { max-width: 500px; margin: 0 auto; }
-.version-card {
-    background: var(--zk-surface, #fff); border-radius: 14px;
-    padding: 24px; margin-bottom: 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+.update-container { max-width: 400px; margin: 20px auto; font-size: 14px; }
+.version-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+.version-label { color: #666; }
+.version-value { font-family: monospace; font-weight: bold; }
+.controls { margin: 15px 0; }
+.controls button { padding: 8px 16px; border: 1px solid #ccc; background: #f5f5f5; border-radius: 4px; cursor: pointer; }
+.controls button:hover { background: #eee; }
+.btn-primary { background: #337ab7; color: #fff; border-color: #2e6da4; }
+.btn-primary:hover { background: #286090; }
+.result-box { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; animation: fadeSlideIn .3s ease; }
+.result-box.show { display: block; }
+.result-box.warning { background: #fcf8e3; border: 1px solid #faebcc; color: #8a6d3b; }
+.result-box.success { background: #dff0d8; border: 1px solid #d6e9c6; color: #3c763d; }
+.result-box.error { background: #f2dede; border: 1px solid #ebccd1; color: #a94442; }
+
+/* ── 进度模态框动画 ── */
+.progress-modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,.45); z-index: 999998;
+    justify-content: center; align-items: center;
+    animation: modalFadeIn .25s ease;
 }
-.version-title { font-size: 13px; color: var(--zk-text-sub, #64748b); margin-bottom: 8px; font-weight: 500; }
-.version-num { font-size: 24px; font-weight: 700; color: var(--zk-text, #1e293b); font-family: 'JetBrains Mono', monospace; }
-.version-num.new { color: var(--zk-primary, #5b8def); }
-.version-status { font-size: 13px; margin-top: 6px; }
-.version-status.latest { color: #10b981; }
-.version-status.outdated { color: #f59e0b; }
-.controls-row {
-    display: flex; gap: 12px; align-items: center;
-    background: var(--zk-surface, #fff); border-radius: 14px;
-    padding: 16px 20px; margin-bottom: 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+.progress-box {
+    background: #fff; border-radius: 16px; padding: 36px 40px 32px;
+    width: 400px; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    animation: modalBounceIn .35s cubic-bezier(.34,1.56,.64,1);
+    position: relative;
 }
-.controls-row select {
-    flex: 1; padding: 10px 14px; border: 2px solid var(--zk-border, #e2e8f0);
-    border-radius: 10px; font-size: 14px; background: var(--zk-surface, #fff);
-    color: var(--zk-text, #1e293b); cursor: pointer;
+@keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalBounceIn {
+    0%   { opacity: 0; transform: scale(.85) translateY(20px); }
+    60%  { transform: scale(1.02) translateY(-3px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
 }
-.controls-row select:focus { outline: none; border-color: var(--zk-primary, #5b8def); }
-.controls-row .switch-wrap {
-    display: flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap;
-}
-.controls-row .switch {
-    width: 44px; height: 24px; border-radius: 12px; background: #e2e8f0;
-    position: relative; transition: all .2s;
-}
-.controls-row .switch::after {
-    content: ''; position: absolute; top: 3px; left: 3px;
-    width: 18px; height: 18px; border-radius: 50%; background: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: all .2s;
-}
-.controls-row .switch.on { background: var(--zk-primary); }
-.controls-row .switch.on::after { left: 23px; }
-.result-box {
-    display: none; padding: 16px 20px; border-radius: 12px;
-    font-size: 14px; margin-top: 16px; border: 1px solid transparent;
-}
-.result-box.show { display: block; animation: fadeIn .3s ease; }
-.result-box.warning { background: #fffbeb; color: #92400e; border-color: #fde68a; }
-.result-box.success { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
-.result-box.error { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
-.result-box.info { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
-.result-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeSlideOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
+
+.progress-box h3 { margin: 0 0 24px; font-size: 18px; color: #333; }
+
+/* ── 进度条 ── */
 .progress-bar {
-    height: 8px; background: #e2e8f0; border-radius: 4px; margin-top: 12px; overflow: hidden;
+    height: 26px; background: #f0f0f0; border-radius: 13px;
+    overflow: hidden; margin-bottom: 12px; position: relative;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,.12);
 }
-.progress-bar .fill {
-    height: 100%; background: var(--zk-primary);
-    border-radius: 4px; transition: width .3s ease;
+.progress-fill {
+    height: 100%; width: 0%; border-radius: 13px;
+    background: linear-gradient(135deg, #337ab7 0%, #5bc0de 50%, #28a745 100%);
+    background-size: 200% 100%;
+    transition: width .35s cubic-bezier(.4,0,.2,1);
+    position: relative;
 }
-.progress-text { font-size: 12px; color: var(--zk-text-sub, #64748b); margin-top: 6px; text-align: center; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+/* 条纹滚动动画 */
+.progress-fill::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+        -45deg, transparent, transparent 10px,
+        rgba(255,255,255,.25) 10px, rgba(255,255,255,.25) 20px
+    );
+    animation: stripeMove 1s linear infinite;
+}
+/* 运行中才显示条纹 */
+.progress-bar:not(.idle) .progress-fill::after { animation-play-state: running; }
+.progress-bar.idle .progress-fill::after { animation-play-state: paused; }
+
+@keyframes stripeMove { 0% { background-position: 0 0; } 100% { background-position: 28px 0; } }
+
+/* 光泽效果 */
+.progress-fill::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,.3) 0%, transparent 50%, rgba(0,0,0,.08) 100%);
+    pointer-events: none;
+}
+
+/* 100% 完成时发光 */
+.progress-fill.done-glow {
+    box-shadow: 0 0 12px rgba(40,167,69,.5);
+}
+
+.progress-percent {
+    position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #333;
+    text-shadow: 0 1px 2px rgba(255,255,255,.8);
+    transition: color .3s;
+}
+
+.progress-info {
+    font-size: 13px; color: #666; line-height: 1.9;
+    background: #f9f9f9; padding: 12px 14px; border-radius: 10px;
+    animation: fadeSlideIn .4s ease .1s both;
+}
+.progress-info .row { display: flex; justify-content: space-between; }
+.progress-info .row span:first-child { color: #999; }
+.progress-info .row span:last-child { font-weight: 600; color: #333; font-family: monospace; transition: color .3s; }
+
+.progress-status {
+    margin-top: 16px; font-size: 13px; color: #888; min-height: 22px;
+    transition: color .3s, font-weight .2s;
+    animation: fadeSlideIn .4s ease .15s both;
+}
+.progress-status.active { color: #337ab7; font-weight: 600; }
+.progress-status.success { color: #28a745; font-weight: 700; }
+.progress-status.error { color: #dc3545; font-weight: 700; }
+
+/* 完成时的庆祝动画 */
+@keyframes pulseGreen {
+    0%   { box-shadow: 0 0 0 0 rgba(40,167,69,.4); }
+    70%  { box-shadow: 0 0 0 12px rgba(40,167,69,0); }
+    100% { box-shadow: 0 0 0 0 rgba(40,167,69,0); }
+}
+.progress-box.complete { animation: pulseGreen 1s ease-out; }
+
+.controls { margin-top: 18px; display: flex; gap: 10px; justify-content: center; }
+.controls button {
+    padding: 9px 20px; border: 1px solid #ccc; background: #f5f5f5;
+    border-radius: 6px; cursor: pointer; font-size: 13px;
+    transition: background .2s, transform .1s, box-shadow .2s;
+}
+.controls button:hover { background: #eee; }
+.controls button:active { transform: scale(.97); }
+.controls button:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary { background: #337ab7; color: #fff; border-color: #2e6da4; }
+.btn-primary:hover { background: #286090; box-shadow: 0 2px 8px rgba(51,122,183,.3); }
 </style>
 
 <div class="update-container">
-    <div class="version-card">
-        <div class="version-title">当前版本</div>
-        <div class="version-num" id="localVersion">--</div>
-        <div class="version-status" id="localStatus">获取中...</div>
+    <div class="version-row">
+        <span class="version-label">当前版本:</span>
+        <span class="version-value" id="localVersion">--</span>
     </div>
-    
-    <div class="version-card">
-        <div class="version-title">最新版本</div>
-        <div class="version-num" id="latestVersion">--</div>
-        <div class="version-status" id="latestStatus">获取中...</div>
+    <div class="version-row">
+        <span class="version-label">最新版本:</span>
+        <span class="version-value" id="latestVersion">--</span>
     </div>
-
-    <div class="controls-row">
-        <select id="nodeSelect" onchange="changeNode()">
-            <option value="auto">自动</option>
-            <option value="gitee">Gitee</option>
-            <option value="github">GitHub</option>
-        </select>
-        <label class="switch-wrap" onclick="toggleAutoUpdate()">
-            <div class="switch" id="autoSwitch"></div>
-            <span style="font-size:14px;font-weight:500;color:var(--zk-text,#1e293b);">自动更新</span>
+    <div class="controls">
+        <button id="btnCheck" onclick="checkUpdate()">检查更新</button>
+        <label style="margin-left:15px;cursor:pointer;">
+            <input type="checkbox" id="autoCheck" onchange="toggleAuto()"> 自动检查
         </label>
     </div>
-
-    <button class="btn btn-primary btn-lg btn-block" id="btnCheck" onclick="checkUpdate()">
-        <i class="fa fa-refresh"></i> 检查更新
-    </button>
-
     <div class="result-box" id="resultBox"></div>
+</div>
+
+<div class="progress-modal" id="progressModal">
+    <div class="progress-box" id="progressBox">
+        <h3 style="margin:0 0 20px;">正在更新...</h3>
+        <div class="progress-bar idle" id="progressBarContainer">
+            <div class="progress-fill" id="progressFill"></div>
+            <div class="progress-percent" id="progressPercent">0%</div>
+        </div>
+        <div class="progress-info" id="progressInfo">
+            <div class="row"><span>总大小</span><span id="totalSize">--</span></div>
+            <div class="row"><span>已下载</span><span id="downloaded">--</span></div>
+            <div class="row"><span>下载速度</span><span id="speed">--</span></div>
+        </div>
+        <div class="progress-status" id="progressStatus">准备中...</div>
+    </div>
 </div>
 
 <script>
 var STORAGE_KEY = 'zuki_update_hash';
-var NODE_KEY = 'zuki_update_node';
-var AUTO_KEY = 'zuki_auto_update';
-var _currentNode = 'auto';
+var AUTO_KEY = 'zuki_auto_check';
 var _latestInfo = null;
 var _checking = false;
-var _hasNewVersion = false;
-
-var REPO_CONFIG = {
-    gitee: { api: 'https://gitee.com/api/v5/repos/xiaoxuanzz/zukicloud/commits', name: 'Gitee', headers: {} },
-    github: { api: 'https://api.github.com/repos/xiaoxuanzz/zukicloud/commits', name: 'GitHub', headers: { 'Accept': 'application/vnd.github.v3+json' } }
-};
+var _autoTimer = null;
+var _lastDownloaded = 0;
+var _lastTime = 0;
 var BRANCH = 'main';
+var _loadingDots = '';
+var _loadingTimer = null;
 
 function init() {
-    _currentNode = localStorage.getItem(NODE_KEY) || 'auto';
-    document.getElementById('nodeSelect').value = _currentNode;
-    
     var autoOn = localStorage.getItem(AUTO_KEY) === '1';
-    document.getElementById('autoSwitch').classList.toggle('on', autoOn);
-    
+    document.getElementById('autoCheck').checked = autoOn;
     loadLocalVersion();
     fetchLatestVersion();
 }
 
 function loadLocalVersion() {
     var hash = localStorage.getItem(STORAGE_KEY) || '';
-    var el = document.getElementById('localVersion');
-    var status = document.getElementById('localStatus');
-    if (hash) {
-        el.textContent = hash.substring(0, 7);
-        status.textContent = '已记录';
-        status.className = 'version-status latest';
-    } else {
-        el.textContent = '无记录';
-        status.textContent = '首次使用';
-        status.className = 'version-status outdated';
-    }
+    document.getElementById('localVersion').textContent = hash ? hash.substring(0, 7) : '无记录';
+}
+
+function startLoadingDots(el) {
+    _loadingDots = '';
+    _loadingTimer = setInterval(function() {
+        _loadingDots = _loadingDots.length >= 5 ? '' : _loadingDots + '.';
+        if (el) el.textContent = '获取中' + _loadingDots;
+    }, 400);
+}
+
+function stopLoadingDots() {
+    if (_loadingTimer) { clearInterval(_loadingTimer); _loadingTimer = null; }
+}
+
+function toggleAuto() {
+    var cb = document.getElementById('autoCheck');
+    var isOn = cb.checked;
+    localStorage.setItem(AUTO_KEY, isOn ? '1' : '0');
+    if (isOn) startAutoCheck(); else stopAutoCheck();
+}
+
+function startAutoCheck() {
+    stopAutoCheck();
+    _autoTimer = setInterval(function() { checkUpdate(); }, 3600000);
+}
+
+function stopAutoCheck() {
+    if (_autoTimer) { clearInterval(_autoTimer); _autoTimer = null; }
 }
 
 function fetchLatestVersion() {
     var el = document.getElementById('latestVersion');
-    var status = document.getElementById('latestStatus');
     el.textContent = '获取中...';
-    status.textContent = '正在连接...';
+    startLoadingDots(el);
     
-    var sources = _currentNode === 'auto' ? ['github', 'gitee'] : [_currentNode];
-    tryNextSource(sources, 0);
-}
-
-function tryNextSource(sources, idx) {
-    if (idx >= sources.length) {
-        document.getElementById('latestVersion').textContent = '获取失败';
-        document.getElementById('latestStatus').textContent = '请检查网络';
-        document.getElementById('latestStatus').className = 'version-status outdated';
-        return;
-    }
+    var url = 'https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=' + BRANCH + '&per_page=1';
+    var timer = setTimeout(function() { 
+        stopLoadingDots();
+        document.getElementById('latestVersion').textContent = '获取失败'; 
+    }, 10000);
     
-    var key = sources[idx];
-    var src = REPO_CONFIG[key];
-    var url = src.api + '?sha=' + BRANCH + '&per_page=1';
-    
-    var timer = setTimeout(function() { tryNextSource(sources, idx + 1); }, 10000);
-    
-    fetch(url, { headers: src.headers })
+    fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
         .then(function(r) { clearTimeout(timer); if (!r.ok) throw new Error(); return r.json(); })
         .then(function(data) {
+            stopLoadingDots();
             if (Array.isArray(data) && data.length > 0) {
                 var c = data[0];
                 _latestInfo = { hash: c.sha, short: c.sha.substring(0, 7), message: c.commit.message.split('\n')[0] };
                 document.getElementById('latestVersion').textContent = _latestInfo.short;
-                document.getElementById('latestVersion').classList.add('new');
-                
-                var localHash = localStorage.getItem(STORAGE_KEY) || '';
-                if (localHash && localHash === c.sha) {
-                    document.getElementById('latestStatus').textContent = '已是最新';
-                    document.getElementById('latestStatus').className = 'version-status latest';
-                    _hasNewVersion = false;
-                } else if (!localHash) {
-                    document.getElementById('latestStatus').textContent = '新版本可用';
-                    document.getElementById('latestStatus').className = 'version-status outdated';
-                    _hasNewVersion = true;
-                } else {
-                    document.getElementById('latestStatus').textContent = '发现新版本';
-                    document.getElementById('latestStatus').className = 'version-status outdated';
-                    _hasNewVersion = true;
-                }
             } else {
-                tryNextSource(sources, idx + 1);
+                document.getElementById('latestVersion').textContent = '获取失败'; 
             }
         })
-        .catch(function(e) { tryNextSource(sources, idx + 1); });
-}
-
-function changeNode() {
-    var node = document.getElementById('nodeSelect').value;
-    _currentNode = node;
-    localStorage.setItem(NODE_KEY, node);
-    fetchLatestVersion();
-    document.getElementById('resultBox').className = 'result-box';
-}
-
-function toggleAutoUpdate() {
-    var sw = document.getElementById('autoSwitch');
-    var isOn = sw.classList.toggle('on');
-    localStorage.setItem(AUTO_KEY, isOn ? '1' : '0');
-    showToast(isOn ? '自动更新已开启' : '自动更新已关闭', isOn ? 'success' : 'info');
+        .catch(function(e) { 
+            stopLoadingDots();
+            document.getElementById('latestVersion').textContent = '获取失败'; 
+        });
 }
 
 function checkUpdate() {
@@ -213,228 +256,193 @@ function checkUpdate() {
     _checking = true;
     var btn = document.getElementById('btnCheck');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> 检查中...';
+    btn.textContent = '检查中...';
     
-    var resultBox = document.getElementById('resultBox');
-    resultBox.className = 'result-box';
-    resultBox.innerHTML = '';
-    
-    var sources = _currentNode === 'auto' ? ['github', 'gitee'] : [_currentNode];
-    tryCheckSource(sources, 0);
-}
-
-function tryCheckSource(sources, idx) {
-    if (idx >= sources.length) {
+    var url = 'https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=' + BRANCH + '&per_page=1';
+    var timer = setTimeout(function() { 
         _checking = false;
-        document.getElementById('btnCheck').disabled = false;
-        document.getElementById('btnCheck').innerHTML = '<i class="fa fa-refresh"></i> 检查更新';
-        showResult('error', '<strong>连接失败</strong><br>请检查网络或稍后重试');
-        return;
-    }
+        btn.disabled = false;
+        btn.textContent = '检查更新';
+        showResult('error', '<strong>连接失败</strong> - 请检查网络');
+    }, 15000);
     
-    var key = sources[idx];
-    var src = REPO_CONFIG[key];
-    var url = src.api + '?sha=' + BRANCH + '&per_page=1';
-    var headers = { 'Accept': key === 'github' ? 'application/vnd.github.v3+json' : 'application/json' };
-    
-    var timer = setTimeout(function() { tryCheckSource(sources, idx + 1); }, 15000);
-    
-    fetch(url, { headers: headers })
+    fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
         .then(function(r) { clearTimeout(timer); if (!r.ok) throw new Error(); return r.json(); })
         .then(function(data) {
-            clearTimeout(timer);
+            _checking = false;
+            btn.disabled = false;
+            btn.textContent = '检查更新';
             if (Array.isArray(data) && data.length > 0) {
                 var c = data[0];
                 var localHash = localStorage.getItem(STORAGE_KEY) || '';
                 var localShort = localHash ? localHash.substring(0, 7) : '无记录';
                 var short = c.sha.substring(0, 7);
-                var msg = c.commit.message.split('\n')[0];
-                
                 if (localHash && localHash === c.sha) {
-                    showResult('success', '<strong>已是最新版本</strong><br>当前版本: <code>' + short + '</code>');
-                    _hasNewVersion = false;
+                    showResult('success', '<strong>已是最新版本</strong> (' + short + ')');
                 } else {
-                    _hasNewVersion = true;
-                    var html = '';
-                    if (!localHash) {
-                        html = '<strong>首次记录版本</strong><br>最新: <code>' + short + '</code><br>提交: ' + esc(msg.substring(0, 40));
-                    } else {
-                        html = '<strong>发现新版本！</strong><br>本地: <code>' + localShort + '</code> → 最新: <code>' + short + '</code><br>提交: ' + esc(msg.substring(0, 40));
-                    }
-                    html += '<div class="result-actions">';
-                    html += '<button class="btn btn-primary btn-sm" onclick="showUpdateConfirm()"><i class="fa fa-cloud-download"></i> 立即更新</button>';
-                    html += '<button class="btn btn-success btn-sm" onclick="saveVersion(\'' + c.sha + '\')"><i class="fa fa-check"></i> 标记已更新</button>';
-                    if (localHash) html += '<button class="btn btn-default btn-sm" onclick="clearVersion()"><i class="fa fa-eraser"></i> 清除记录</button>';
-                    html += '</div>';
+                    var html = localHash ? '<strong>发现新版本!</strong><br>本地:' + localShort + ' → 最新:' + short : '<strong>首次记录版本</strong><br>最新:' + short;
+                    html += '<br><br>';
+                    html += '<button class="btn btn-primary" onclick="showUpdateConfirm()">立即更新</button> ';
+                    html += '<button onclick="saveVersion(\'' + c.sha + '\')">仅记录版本</button>';
+                    if (localHash) html += ' <button onclick="clearVersion()">清除记录</button>';
                     showResult('warning', html);
                 }
-                _latestInfo = { hash: c.sha, short: short, message: msg };
+                _latestInfo = { hash: c.sha, short: short, message: c.commit.message.split('\n')[0] };
                 document.getElementById('latestVersion').textContent = short;
-                document.getElementById('latestVersion').classList.add('new');
-                document.getElementById('latestStatus').textContent = _hasNewVersion ? '新版本可用' : '已是最新';
-                document.getElementById('latestStatus').className = _hasNewVersion ? 'version-status outdated' : 'version-status latest';
             } else {
-                tryCheckSource(sources, idx + 1);
+                showResult('error', '<strong>获取版本信息失败</strong>');
             }
         })
-        .catch(function(e) { tryCheckSource(sources, idx + 1); });
-    
-    function showResult(type, html) {
-        _checking = false;
-        document.getElementById('btnCheck').disabled = false;
-        document.getElementById('btnCheck').innerHTML = '<i class="fa fa-refresh"></i> 检查更新';
-        var resultBox = document.getElementById('resultBox');
-        resultBox.className = 'result-box show ' + type;
-        resultBox.innerHTML = html;
-    }
+        .catch(function(e) { 
+            _checking = false;
+            btn.disabled = false;
+            btn.textContent = '检查更新';
+            showResult('error', '<strong>连接失败</strong> - 请检查网络');
+        });
+}
+
+function showResult(type, html) {
+    var resultBox = document.getElementById('resultBox');
+    resultBox.className = 'result-box show ' + type;
+    resultBox.innerHTML = html;
 }
 
 function showUpdateConfirm() {
-    var html = '<div id="zk-update-confirm" style="position:fixed;inset:0;background:rgba(0,0,0,0);z-index:999999;display:flex;align-items:center;justify-content:center;">' +
-        '<div style="background:var(--zk-surface,#fff);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25);width:90%;max-width:440px;transform:scale(.9);transition:all .3s;">' +
-        '<div style="padding:24px 24px 0;">' +
-        '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">' +
-        '<div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#f59e0b;">' +
-        '<i class="fa fa-exclamation-triangle" style="font-size:22px;color:#fff;"></i></div>' +
-        '<div><h3 style="font-size:18px;font-weight:700;color:var(--zk-text,#1e293b);margin:0 0 4px;">更新警告</h3>' +
-        '<p style="font-size:13px;color:var(--zk-text-dim,#94a3b8);margin:0;">请仔细阅读以下内容</p></div></div>' +
-        '<div style="background:#fffbeb;border-radius:10px;padding:14px 16px;margin-bottom:16px;border:1px solid #fde68a;">' +
-        '<div style="font-size:14px;color:#92400e;line-height:1.7;">' +
-        '<strong style="font-size:15px;">⚠️ 更新存在风险，请务必先备份！</strong><br><br>' +
-        '• 建议在更新前完整备份网站数据和数据库<br>' +
-        '• 更新过程可能会覆盖修改过的文件<br>' +
-        '• 更新有概率导致文件丢失，若丢失文件 <strong>概不负责</strong><br>' +
-        '• 更新完成后系统将自动刷新界面</div></div></div>' +
-        '<div style="display:flex;gap:10px;padding:0 24px 24px;">' +
-        '<button onclick="closeUpdateConfirm()" style="flex:1;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;background:#f1f5f9;color:#64748b;">取消</button>' +
-        '<button onclick="doUpdate()" style="flex:1;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;background:#5b8def;color:#fff;">我已备份，继续更新</button></div></div></div>';
-    
-    var div = document.createElement('div');
-    div.innerHTML = html;
-    document.body.appendChild(div);
-    
-    setTimeout(function() {
-        document.getElementById('zk-update-confirm').style.background = 'rgba(0,0,0,0.5)';
-        document.getElementById('zk-update-confirm').querySelector('div').style.transform = 'scale(1)';
-    }, 10);
+    if (!confirm('更新可能覆盖修改过的文件，建议先备份数据库。确定要更新吗？')) return;
+    doUpdate();
 }
 
-window.closeUpdateConfirm = function() {
-    var el = document.getElementById('zk-update-confirm');
-    if (el) {
-        el.style.background = 'rgba(0,0,0,0)';
-        el.querySelector('div').style.transform = 'scale(.9)';
-        setTimeout(function() { el.remove(); }, 200);
-    }
-};
-
 function doUpdate() {
-    closeUpdateConfirm();
+    var modal = document.getElementById('progressModal');
+    modal.style.display = 'block';
+    modal.style.position = 'fixed';
+    modal.style.top = '50%';
+    modal.style.left = '50%';
+    modal.style.transform = 'translate(-50%, -50%)';
+    modal.style.zIndex = '999999';
+
+    var barContainer = document.getElementById('progressBarContainer');
+    barContainer.classList.remove('idle');
+
+    document.getElementById('progressStatus').textContent = '准备中...';
+    document.getElementById('progressStatus').className = 'progress-status active';
+    document.getElementById('totalSize').textContent = '--';
+    document.getElementById('downloaded').textContent = '--';
+    document.getElementById('speed').textContent = '--';
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressFill').classList.remove('done-glow');
+    document.getElementById('progressPercent').textContent = '0%';
+    document.getElementById('progressBox').className = 'progress-box';
+    _lastDownloaded = 0;
+    _lastTime = 0;
     
-    // 创建强制弹窗（无关闭按钮，无法点击空白退出）
-    var progressHtml = '<div id="zk-progress-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999999;display:flex;align-items:center;justify-content:center;">' +
-        '<div style="background:var(--zk-surface,#fff);border-radius:20px;box-shadow:0 25px 80px rgba(0,0,0,.4);width:90%;max-width:420px;padding:32px;text-align:center;">' +
-        '<div style="width:80px;height:80px;border-radius:50%;background:#5b8def;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">' +
-        '<i class="fa fa-cloud-download" style="font-size:36px;color:#fff;"></i></div>' +
-        '<h3 style="font-size:20px;font-weight:700;color:var(--zk-text,#1e293b);margin:0 0 24px;">正在更新...</h3>' +
-        '<div style="background:#e2e8f0;border-radius:10px;height:12px;overflow:hidden;margin-bottom:16px;">' +
-        '<div id="zk-progress-fill" style="height:100%;background:#5b8def;border-radius:10px;width:0%;transition:width .5s ease;"></div></div>' +
-        '<p id="zk-progress-text" style="font-size:14px;color:var(--zk-text-sub,#64748b);margin:0;">正在连接更新服务器...</p>' +
-        '<p style="font-size:12px;color:var(--zk-text-dim,#94a3b8);margin:16px 0 0;">更新完成后将自动刷新界面</p></div></div>';
+var progressTimer = setInterval(function() {
+        fetch('ajax_update.php?act=progress')
+            .then(function(r) { return r.json(); })
+            .then(function(resp) {
+                if (resp.code === 0 && resp.data) {
+                    var data = resp.data;
+                    var fill = document.getElementById('progressFill');
+                    var percent = document.getElementById('progressPercent');
+                    fill.style.width = data.percent + '%';
+                    percent.textContent = data.percent + '%';
+                    document.getElementById('progressStatus').textContent = data.msg;
+
+                    if (data.percent >= 100) {
+                        barContainer.classList.add('idle');
+                        fill.classList.add('done-glow');
+                        document.getElementById('progressBox').classList.add('complete');
+                        document.getElementById('progressStatus').className = 'progress-status success';
+                    } else if (data.percent < 0) {
+                        barContainer.classList.add('idle');
+                        document.getElementById('progressStatus').className = 'progress-status error';
+                    } else {
+                        document.getElementById('progressStatus').className = 'progress-status active';
+                    }
+                    if (data.total && data.total > 0) {
+                        document.getElementById('totalSize').textContent = formatSize(data.total);
+                    }
+                    if (data.downloaded && data.downloaded > 0) {
+                        document.getElementById('downloaded').textContent =
+                            formatSize(data.downloaded) + '/' + (data.total ? formatSize(data.total) : '?');
+                    }
+                    if (data.downloaded && data.total) {
+                        var now = Date.now() / 1000;
+                        if (_lastDownloaded > 0 && _lastTime > 0) {
+                            var deltaBytes = data.downloaded - _lastDownloaded;
+                            var deltaTime = Math.max(0.1, now - _lastTime);
+                            document.getElementById('speed').textContent = formatSize(Math.floor(deltaBytes / deltaTime)) + '/s';
+                        }
+                        _lastDownloaded = data.downloaded;
+                        _lastTime = now;
+                    }
+                }
+            })
+            .catch(function() {});
+    }, 1000);
+
+    var _lastDownloaded = 0;
+    var _lastTime = 0;
+
+    function formatSize(bytes) {
+        if (bytes < 1024) return bytes + 'B';
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + 'KB';
+        return (bytes / 1048576).toFixed(1) + 'MB';
+    }
     
-    var div = document.createElement('div');
-    div.innerHTML = progressHtml;
-    document.body.appendChild(div);
-    
-    var progress = 0;
-    var progressTimer = setInterval(function() {
-        if (progress < 95) {
-            progress += Math.random() * 5;
-            if (progress > 95) progress = 95;
-            var fill = document.getElementById('zk-progress-fill');
-            if (fill) fill.style.width = progress + '%';
-        }
-    }, 300);
-    
-    // 超时处理
     var updateTimeout = setTimeout(function() {
         clearInterval(progressTimer);
-        var modal = document.getElementById('zk-progress-modal');
-        if (modal) {
-            modal.querySelector('div').innerHTML = 
-                '<div style="width:80px;height:80px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">' +
-                '<i class="fa fa-times" style="font-size:36px;color:#fff;"></i></div>' +
-                '<h3 style="font-size:20px;font-weight:700;color:#991b1b;margin:0 0 16px;">更新超时</h3>' +
-                '<p style="font-size:14px;color:#991b1b;margin:0 0 24px;">请求超时，请检查网络或服务器状态</p>' +
-                '<button onclick="location.reload()" style="padding:12px 32px;background:var(--zk-primary);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">刷新页面重试</button>';
-        }
-    }, 120000); // 2分钟超时
+        document.getElementById('progressStatus').innerHTML = '<span style="color:red;">更新超时，请重试</span>';
+    }, 600000);
     
-    fetch('ajax_update.php?act=update', { method: 'POST', signal: AbortSignal.timeout(120000) })
-        .then(function(r) { return r.json(); })
+    fetch('ajax_update.php?act=update', { method: 'POST' })
+        .then(function(r) { 
+            if (!r.ok) throw new Error('HTTP ' + r.status); 
+            return r.json(); 
+        })
         .then(function(data) {
             clearInterval(progressTimer);
             clearTimeout(updateTimeout);
-            var fill = document.getElementById('zk-progress-fill');
-            var text = document.getElementById('zk-progress-text');
-            if (fill) fill.style.width = '100%';
-            
+
+            barContainer.classList.add('idle');
+
             if (data.code === 0) {
-                if (text) text.textContent = '更新成功！正在刷新界面...';
-                
-                // 保存新版本
+                document.getElementById('progressFill').classList.add('done-glow');
+                document.getElementById('progressBox').classList.add('complete');
+                document.getElementById('progressStatus').className = 'progress-status success';
+                document.getElementById('progressStatus').textContent = '✔ 更新成功！正在刷新...';
                 if (_latestInfo && _latestInfo.hash) {
                     localStorage.setItem(STORAGE_KEY, _latestInfo.hash);
                     loadLocalVersion();
                 }
-                
                 setTimeout(function() {
-                    location.reload();
+                    modal.style.animation = 'fadeSlideOut .3s ease forwards';
+                    setTimeout(function() { modal.style.display = 'none'; window.location.href = './update.php'; }, 300);
                 }, 2000);
             } else {
-                var modal = document.getElementById('zk-progress-modal');
-                if (modal) {
-                    modal.querySelector('div').innerHTML = 
-                        '<div style="width:80px;height:80px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">' +
-                        '<i class="fa fa-times" style="font-size:36px;color:#fff;"></i></div>' +
-                        '<h3 style="font-size:20px;font-weight:700;color:#991b1b;margin:0 0 16px;">更新失败</h3>' +
-                        '<p style="font-size:14px;color:#991b1b;margin:0 0 24px;">' + esc(data.msg) + '</p>' +
-                        '<button onclick="location.reload()" style="padding:12px 32px;background:var(--zk-primary);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">刷新页面重试</button>';
-                }
+                document.getElementById('progressStatus').className = 'progress-status error';
+                document.getElementById('progressStatus').textContent = '✘ 更新失败: ' + (data.msg || '未知错误');
             }
         })
         .catch(function(e) {
             clearInterval(progressTimer);
             clearTimeout(updateTimeout);
-            var modal = document.getElementById('zk-progress-modal');
-            if (modal) {
-                modal.querySelector('div').innerHTML = 
-                    '<div style="width:80px;height:80px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">' +
-                    '<i class="fa fa-times" style="font-size:36px;color:#fff;"></i></div>' +
-                    '<h3 style="font-size:20px;font-weight:700;color:#991b1b;margin:0 0 16px;">更新失败</h3>' +
-                    '<p style="font-size:14px;color:#991b1b;margin:0 0 24px;">' + esc(e.message) + '</p>' +
-                    '<button onclick="location.reload()" style="padding:12px 32px;background:var(--zk-primary);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">刷新页面重试</button>';
-            }
+            var errMsg = e.message === 'Failed to fetch' ? '无法连接到服务器，请检查网络' : e.message;
+            document.getElementById('progressStatus').innerHTML = '<span style="color:red;">错误: ' + errMsg + '</span>';
         });
 }
 
 function saveVersion(hash) {
     localStorage.setItem(STORAGE_KEY, hash);
     loadLocalVersion();
-    var resultBox = document.getElementById('resultBox');
-    resultBox.className = 'result-box show success';
-    resultBox.innerHTML = '<strong>版本已保存</strong>';
-    showToast('版本已更新', 'success');
+    showResult('success', '<strong>版本已保存</strong>');
 }
 
 function clearVersion() {
     localStorage.removeItem(STORAGE_KEY);
     loadLocalVersion();
     document.getElementById('resultBox').className = 'result-box';
-    showToast('记录已清除', 'info');
 }
-
-function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
 init();
 </script>

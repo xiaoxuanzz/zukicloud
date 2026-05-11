@@ -162,13 +162,39 @@ if (!isset($currentPage)) {
     </ul>
   </nav>
   <div class="admin-content" style="flex:1;min-width:0;padding:20px;">
-    <!-- 移动端侧边栏展开按钮 -->
-    <button class="mobile-sidebar-toggle" onclick="toggleAdminSidebar()" style="display:none;position:fixed;top:10px;left:10px;z-index:10002;background:var(--zk-primary);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
-      <i class="fa fa-bars"></i>
+    <!-- 移动端侧边栏展开按钮 - 汉堡菜单动画 -->
+    <button class="hamburger-btn" onclick="toggleAdminSidebar()" style="display:none;position:fixed;top:10px;right:10px;z-index:10002;background:var(--zk-primary);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:0;">
+      <span class="hamburger-icon">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </span>
     </button>
     <style>
     @media (max-width:767px) {
-      .mobile-sidebar-toggle { display: block !important; }
+      .hamburger-btn { display: flex !important; align-items: center; justify-content: center; }
+    }
+    .hamburger-icon {
+      display: flex; flex-direction: column; justify-content: center; align-items: center; width: 18px; height: 14px;
+      position: relative;
+    }
+    .hamburger-line {
+      display: block; width: 18px; height: 2px; background: #fff; border-radius: 2px;
+      position: absolute; transition: all 0.3s ease;
+    }
+    .hamburger-line:nth-child(1) { top: 0; }
+    .hamburger-line:nth-child(2) { top: 50%; transform: translateY(-50%); }
+    .hamburger-line:nth-child(3) { bottom: 0; }
+    
+    /* 激活状态 - 三条线旋转成X */
+    .hamburger-btn.active .hamburger-line:nth-child(1) {
+      top: 50%; transform: translateY(-50%) rotate(45deg);
+    }
+    .hamburger-btn.active .hamburger-line:nth-child(2) {
+      opacity: 0; transform: translateX(-5px);
+    }
+    .hamburger-btn.active .hamburger-line:nth-child(3) {
+      bottom: 50%; transform: translateY(50%) rotate(-45deg);
     }
     </style>
     <!-- main content will be injected here by individual pages -->
@@ -203,6 +229,11 @@ if (!isset($currentPage)) {
     var sidebar = document.getElementById('adminSidebar');
     if(!sidebar) return;
     sidebar.classList.toggle('open');
+    
+    // 切换汉堡按钮动画
+    var btn = document.querySelector('.hamburger-btn');
+    if(btn) btn.classList.toggle('active');
+    
     var overlay = document.querySelector('.mobile-menu-overlay');
     if(!overlay){
       overlay = document.createElement('div');
@@ -213,12 +244,12 @@ if (!isset($currentPage)) {
     overlay.classList.toggle('open');
   }
   document.addEventListener('DOMContentLoaded', function(){
-    var btn = document.querySelector('.mobile-sidebar-toggle');
-    if(btn) btn.style.display = window.innerWidth <= 767 ? 'block' : 'none';
+    var btn = document.querySelector('.hamburger-btn');
+    if(btn) btn.style.display = window.innerWidth <= 767 ? 'flex' : 'none';
   });
   window.addEventListener('resize', function(){
-    var btn = document.querySelector('.mobile-sidebar-toggle');
-    if(btn) btn.style.display = window.innerWidth <= 767 ? 'block' : 'none';
+    var btn = document.querySelector('.hamburger-btn');
+    if(btn) btn.style.display = window.innerWidth <= 767 ? 'flex' : 'none';
   });
   </script>
   <script>

@@ -591,3 +591,16 @@
     ]
 }
 
+[2026-05-11 16:00:10] extractApiKey: {
+    "source": "X-API-KEY",
+    "key": "1273e05283f805d7f6efa98360fd9c6b"
+}
+
+[2026-05-11 16:00:10] authenticateApi: {
+    "providedKey": "SET (length: 32",
+    "keysFile": "E:\\cloud\/api\/keys.txt",
+    "validKeys": [
+        "1273e05283f805d7f6efa98360fd9c6b"
+    ]
+}
+

@@ -2211,3 +2211,72 @@ HTTP_HOST: localhost:8001
 REQUEST_TIME_FLOAT: 1778242108.2092
 REQUEST_TIME: 1778242108
 
+2026-05-11 16:00:10 GET /api/index.php?action=status
+Headers: {"Cookie":"admin_token=91318Zp3z3Sw%2FHrrBshltMkekqWx2R9kEfD15VAcQDz9qALV8cxUo6XXbpHP0tOgwSR5UALFBoSygoFnT7zdhrlYei3h6QK6kuIGey2V; PHPSESSID=1e4cc0en7bi34t1co3ebjtp0sj","Accept-Language":"zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6","Accept-Encoding":"gzip, deflate, br, zstd","Referer":"http:\/\/localhost:8001\/api_test.html","Sec-Fetch-Dest":"empty","Sec-Fetch-Mode":"cors","Sec-Fetch-Site":"same-origin","Accept":"*\/*","Sec-Ch-Ua-Mobile":"?0","X-Api-Key":"1273e05283f805d7f6efa98360fd9c6b","Sec-Ch-Ua":"\"Chromium\";v=\"148\", \"Microsoft Edge\";v=\"148\", \"Not\/A)Brand\";v=\"99\"","User-Agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/148.0.0.0 Safari\/537.36 Edg\/148.0.0.0","Sec-Ch-Ua-Platform":"\"Windows\"","Connection":"close","Host":"localhost:8001"}
+SERVER: REQUEST_URI: /api/index.php?action=status
+REQUEST_METHOD: GET
+REQUEST_SCHEME: http
+HTTP_COOKIE: admin_token=91318Zp3z3Sw%2FHrrBshltMkekqWx2R9kEfD15VAcQDz9qALV8cxUo6XXbpHP0tOgwSR5UALFBoSygoFnT7zdhrlYei3h6QK6kuIGey2V; PHPSESSID=1e4cc0en7bi34t1co3ebjtp0sj
+HTTP_ACCEPT_LANGUAGE: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+HTTP_ACCEPT_ENCODING: gzip, deflate, br, zstd
+HTTP_REFERER: http://localhost:8001/api_test.html
+HTTP_SEC_FETCH_DEST: empty
+HTTP_SEC_FETCH_MODE: cors
+HTTP_SEC_FETCH_SITE: same-origin
+HTTP_ACCEPT: */*
+HTTP_SEC_CH_UA_MOBILE: ?0
+HTTP_X_API_KEY: 1273e05283f805d7f6efa98360fd9c6b
+HTTP_SEC_CH_UA: "Chromium";v="148", "Microsoft Edge";v="148", "Not/A)Brand";v="99"
+HTTP_USER_AGENT: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0
+HTTP_SEC_CH_UA_PLATFORM: "Windows"
+HTTP_CONNECTION: close
+HTTP_HOST: localhost:8001
+REQUEST_TIME_FLOAT: 1778486410.6035
+REQUEST_TIME: 1778486410
+
+2026-05-11 16:00:10 GET /api/index.php?action=list
+Headers: {"Cookie":"admin_token=91318Zp3z3Sw%2FHrrBshltMkekqWx2R9kEfD15VAcQDz9qALV8cxUo6XXbpHP0tOgwSR5UALFBoSygoFnT7zdhrlYei3h6QK6kuIGey2V; PHPSESSID=1e4cc0en7bi34t1co3ebjtp0sj","Accept-Language":"zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6","Accept-Encoding":"gzip, deflate, br, zstd","Referer":"http:\/\/localhost:8001\/api_test.html","Sec-Fetch-Dest":"empty","Sec-Fetch-Mode":"cors","Sec-Fetch-Site":"same-origin","Accept":"*\/*","Sec-Ch-Ua-Mobile":"?0","X-Api-Key":"1273e05283f805d7f6efa98360fd9c6b","Sec-Ch-Ua":"\"Chromium\";v=\"148\", \"Microsoft Edge\";v=\"148\", \"Not\/A)Brand\";v=\"99\"","User-Agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/148.0.0.0 Safari\/537.36 Edg\/148.0.0.0","Sec-Ch-Ua-Platform":"\"Windows\"","Connection":"close","Host":"localhost:8001"}
+SERVER: REQUEST_URI: /api/index.php?action=list
+REQUEST_METHOD: GET
+REQUEST_SCHEME: http
+HTTP_COOKIE: admin_token=91318Zp3z3Sw%2FHrrBshltMkekqWx2R9kEfD15VAcQDz9qALV8cxUo6XXbpHP0tOgwSR5UALFBoSygoFnT7zdhrlYei3h6QK6kuIGey2V; PHPSESSID=1e4cc0en7bi34t1co3ebjtp0sj
+HTTP_ACCEPT_LANGUAGE: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+HTTP_ACCEPT_ENCODING: gzip, deflate, br, zstd
+HTTP_REFERER: http://localhost:8001/api_test.html
+HTTP_SEC_FETCH_DEST: empty
+HTTP_SEC_FETCH_MODE: cors
+HTTP_SEC_FETCH_SITE: same-origin
+HTTP_ACCEPT: */*
+HTTP_SEC_CH_UA_MOBILE: ?0
+HTTP_X_API_KEY: 1273e05283f805d7f6efa98360fd9c6b
+HTTP_SEC_CH_UA: "Chromium";v="148", "Microsoft Edge";v="148", "Not/A)Brand";v="99"
+HTTP_USER_AGENT: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0
+HTTP_SEC_CH_UA_PLATFORM: "Windows"
+HTTP_CONNECTION: close
+HTTP_HOST: localhost:8001
+REQUEST_TIME_FLOAT: 1778486410.6034
+REQUEST_TIME: 1778486410
+
+2026-05-11 16:00:13 GET /api/index.php?action=status
+Headers: {"Cookie":"admin_token=91318Zp3z3Sw%2FHrrBshltMkekqWx2R9kEfD15VAcQDz9qALV8cxUo6XXbpHP0tOgwSR5UALFBoSygoFnT7zdhrlYei3h6QK6kuIGey2V; PHPSESSID=1e4cc0en7bi34t1co3ebjtp0sj","Accept-Language":"zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6","Accept-Encoding":"gzip, deflate, br, zstd","Referer":"http:\/\/localhost:8001\/api_test.html","Sec-Fetch-Dest":"empty","Sec-Fetch-Mode":"cors","Sec-Fetch-Site":"same-origin","Accept":"*\/*","Sec-Ch-Ua-Mobile":"?0","X-Api-Key":"1273e05283f805d7f6efa98360fd9c6b","Sec-Ch-Ua":"\"Chromium\";v=\"148\", \"Microsoft Edge\";v=\"148\", \"Not\/A)Brand\";v=\"99\"","User-Agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/148.0.0.0 Safari\/537.36 Edg\/148.0.0.0","Sec-Ch-Ua-Platform":"\"Windows\"","Connection":"close","Host":"localhost:8001"}
+SERVER: REQUEST_URI: /api/index.php?action=status
+REQUEST_METHOD: GET
+REQUEST_SCHEME: http
+HTTP_COOKIE: admin_token=91318Zp3z3Sw%2FHrrBshltMkekqWx2R9kEfD15VAcQDz9qALV8cxUo6XXbpHP0tOgwSR5UALFBoSygoFnT7zdhrlYei3h6QK6kuIGey2V; PHPSESSID=1e4cc0en7bi34t1co3ebjtp0sj
+HTTP_ACCEPT_LANGUAGE: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+HTTP_ACCEPT_ENCODING: gzip, deflate, br, zstd
+HTTP_REFERER: http://localhost:8001/api_test.html
+HTTP_SEC_FETCH_DEST: empty
+HTTP_SEC_FETCH_MODE: cors
+HTTP_SEC_FETCH_SITE: same-origin
+HTTP_ACCEPT: */*
+HTTP_SEC_CH_UA_MOBILE: ?0
+HTTP_X_API_KEY: 1273e05283f805d7f6efa98360fd9c6b
+HTTP_SEC_CH_UA: "Chromium";v="148", "Microsoft Edge";v="148", "Not/A)Brand";v="99"
+HTTP_USER_AGENT: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0
+HTTP_SEC_CH_UA_PLATFORM: "Windows"
+HTTP_CONNECTION: close
+HTTP_HOST: localhost:8001
+REQUEST_TIME_FLOAT: 1778486413.1196
+REQUEST_TIME: 1778486413
+

@@ -7,4 +7,3 @@ $dbconfig=array(
     'pwd' => '123456',
     'dbname' => 'cloud'
 );
-    
