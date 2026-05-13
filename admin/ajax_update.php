@@ -45,92 +45,107 @@ function get_progress() {
     return null;
 }
 
+/**
+ * 通用远程 GET 请求（cURL 实现，不受 allow_url_fopen 限制）
+ */
+function http_get($url, $timeout = 10) {
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL            => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => $timeout,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS      => 5,
+        CURLOPT_ENCODING       => '',
+        CURLOPT_USERAGENT      => 'ZukiCloud-UpdateHub/1.0',
+    ]);
+    $body = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $err  = curl_errno($ch);
+    curl_close($ch);
+    if ($body === false || $err !== 0 || $code !== 200) return null;
+    return $body;
+}
+
 function github_api($url) {
-     $ch = curl_init();
-     curl_setopt_array($ch, [
-         CURLOPT_URL            => $url,
-         CURLOPT_RETURNTRANSFER => true,
-         CURLOPT_TIMEOUT        => 15,
-         CURLOPT_SSL_VERIFYPEER => false,
-         CURLOPT_FOLLOWLOCATION => true,
-         CURLOPT_MAXREDIRS      => 5,
-         CURLOPT_ENCODING       => '',
-         CURLOPT_HTTPHEADER     => [
-             'Accept: application/vnd.github.v3+json',
-             'User-Agent: ZukiCloud-UpdateHub'
-         ]
-     ]);
-     $body = curl_exec($ch);
-     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-     curl_close($ch);
-     if ($body === false || $httpCode !== 200) return null;
-     $data = @json_decode($body, true);
-     return is_array($data) ? $data : null;
- }
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL            => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS      => 5,
+        CURLOPT_ENCODING       => '',
+        CURLOPT_HTTPHEADER     => [
+            'Accept: application/vnd.github.v3+json',
+            'User-Agent: ZukiCloud-UpdateHub'
+        ]
+    ]);
+    $body = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    if ($body === false || $httpCode !== 200) return null;
+    $data = @json_decode($body, true);
+    return is_array($data) ? $data : null;
+}
 
 /**
  * 并行请求多个 GitHub API，返回第一个成功的结果
- * @param array $urls 请求的 URL 列表
- * @param int $timeout 单个请求超时（秒）
- * @return array|null 第一个成功返回的 [url, data] 或 null
  */
 function github_api_race(array $urls, $timeout = 8) {
-     $mh = curl_multi_init();
-     $handles = [];
-     $urlMap = [];
+    $mh = curl_multi_init();
+    $handles = [];
+    $urlMap = [];
 
-     foreach ($urls as $i => $url) {
-         $ch = curl_init();
-         curl_setopt_array($ch, [
-             CURLOPT_URL            => $url,
-             CURLOPT_RETURNTRANSFER => true,
-             CURLOPT_TIMEOUT        => $timeout,
-             CURLOPT_SSL_VERIFYPEER => false,
-             CURLOPT_FOLLOWLOCATION => true,
-             CURLOPT_MAXREDIRS      => 3,
-             CURLOPT_ENCODING       => '',
-             CURLOPT_HTTPHEADER     => [
-                 'Accept: application/vnd.github.v3+json',
-                 'User-Agent: ZukiCloud-UpdateHub'
-             ]
-         ]);
-         curl_multi_add_handle($mh, $ch);
-         $handles[$i] = $ch;
-         $urlMap[$i]  = $url;
-     }
+    foreach ($urls as $i => $url) {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => $timeout,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS      => 3,
+            CURLOPT_ENCODING       => '',
+            CURLOPT_HTTPHEADER     => [
+                'Accept: application/vnd.github.v3+json',
+                'User-Agent: ZukiCloud-UpdateHub'
+            ]
+        ]);
+        curl_multi_add_handle($mh, $ch);
+        $handles[$i] = $ch;
+        $urlMap[$i]  = $url;
+    }
 
-     $running = null;
-     do {
-         $status = curl_multi_exec($mh, $running);
-         if ($running > 0) {
-             curl_multi_select($mh, 0.5);
-         }
-     } while ($running > 0 && $status === CURLM_OK);
+    $running = null;
+    do {
+        $status = curl_multi_exec($mh, $running);
+        if ($running > 0) {
+            curl_multi_select($mh, 0.5);
+        }
+    } while ($running > 0 && $status === CURLM_OK);
 
-     $result = null;
-     foreach ($handles as $i => $ch) {
-         $body = curl_multi_getcontent($ch);
-         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-         curl_multi_remove_handle($mh, $ch);
-         curl_close($ch);
+    $result = null;
+    foreach ($handles as $i => $ch) {
+        $body = curl_multi_getcontent($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_multi_remove_handle($mh, $ch);
+        curl_close($ch);
 
-         if ($body !== false && $httpCode === 200) {
-             $data = @json_decode($body, true);
-             if (is_array($data)) {
-                 $result = [$urlMap[$i], $data];
-                 break;
-             }
-         }
-     }
-     curl_multi_close($mh);
-     return $result;
- }
+        if ($body !== false && $httpCode === 200) {
+            $data = @json_decode($body, true);
+            if (is_array($data)) {
+                $result = [$urlMap[$i], $data];
+                break;
+            }
+        }
+    }
+    curl_multi_close($mh);
+    return $result;
+}
 
-/**
- * 获取安全的自定义 API 基础路径
- * 如果用户提供了 uhub_url 参数，验证格式后返回（去掉末尾斜杠）
- * 否则返回默认值 https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud
- */
 $uhubApi = 'https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud';
 if (isset($_REQUEST['uhub_url'])) {
     $input = rtrim(trim($_REQUEST['uhub_url']), '/');
@@ -139,11 +154,6 @@ if (isset($_REQUEST['uhub_url'])) {
     }
 }
 
-/**
- * 获取安全的 GitHub 仓库标识 owner/repo
- * 如果用户提供了 gh_repo 参数，验证格式后返回
- * 否则返回默认值 xiaoxuanzz/zukicloud
- */
 $ghRepo = 'xiaoxuanzz/zukicloud';
 if (isset($_REQUEST['gh_repo'])) {
     $input = trim($_REQUEST['gh_repo']);
@@ -156,55 +166,54 @@ update_log("=== 操作: $action, 源: $source ===");
 
 /* ========== Changelog ========== */
 if ($action === 'changelog') {
-     $limit = max(1, intval($_GET['limit'] ?? 20));
-     $page  = max(1, intval($_GET['page'] ?? 1));
-     $result = null;
-     $usedSource = '';
+    $limit = max(1, intval($_GET['limit'] ?? 20));
+    $page  = max(1, intval($_GET['page'] ?? 1));
+    $result = null;
+    $usedSource = '';
 
-     if (($source === 'auto' || $source === 'uhub') && $uhubApi) {
-         $url = $uhubApi . '/changelog&limit=' . $limit . '&page=' . $page;
-         update_log("私有节点日志: $url");
-         $ctx = stream_context_create(['http' => ['timeout' => 10, 'ignore_errors' => true]]);
-         $body = @file_get_contents($url, false, $ctx);
-         if ($body !== false) {
-             $data = @json_decode($body, true);
-             if ($data && isset($data['logs'])) {
-                 $result = ['code' => 0, 'data' => [
-                     'logs'   => $data['logs'],
-                     'count'  => $data['count'] ?? count($data['logs']),
-                     'page'   => $data['page'] ?? $page,
-                     'limit'  => $data['limit'] ?? $limit,
-                     'pages'  => $data['pages'] ?? $page
-                 ]];
-                 $usedSource = '私人推送节点';
-                 update_log("私有日志成功: " . count($data['logs']) . " 条");
-             }
-         }
-         if (!$result) update_log("私有日志失败，降级 GitHub");
-     }
+    if (($source === 'auto' || $source === 'uhub') && $uhubApi) {
+        $url = $uhubApi . '/changelog&limit=' . $limit . '&page=' . $page;
+        update_log("私有节点日志: $url");
+        $body = http_get($url, 10);
+        if ($body !== false) {
+            $data = @json_decode($body, true);
+            if ($data && isset($data['logs'])) {
+                $result = ['code' => 0, 'data' => [
+                    'logs'   => $data['logs'],
+                    'count'  => $data['count'] ?? count($data['logs']),
+                    'page'   => $data['page'] ?? $page,
+                    'limit'  => $data['limit'] ?? $limit,
+                    'pages'  => $data['pages'] ?? $page
+                ]];
+                $usedSource = '私人推送节点';
+                update_log("私有日志成功: " . count($data['logs']) . " 条");
+            }
+        }
+        if (!$result) update_log("私有日志失败，降级 GitHub");
+    }
 
-     // GitHub 节点不获取更新日志，只获取更新链接
-     if (!$result && ($source === 'auto' || $source === 'github')) {
-         $result = ['code' => 0, 'data' => [
-             'logs'  => [],
-             'count' => 0,
-             'page'  => $page,
-             'limit' => $limit,
-             'pages' => $page
-         ]];
-         $usedSource = 'GitHub (跳过日志)';
-         update_log("GitHub 节点跳过日志获取");
-     }
+    // GitHub 节点不获取更新日志
+    if (!$result && ($source === 'auto' || $source === 'github')) {
+        $result = ['code' => 0, 'data' => [
+            'logs'  => [],
+            'count' => 0,
+            'page'  => $page,
+            'limit' => $limit,
+            'pages' => $page
+        ]];
+        $usedSource = 'GitHub (跳过日志)';
+        update_log("GitHub 节点跳过日志获取");
+    }
 
-     if ($result) {
-         if ($usedSource) $result['source'] = $usedSource;
-         echo json_encode($result);
-     } else {
-         update_log("日志获取全部失败");
-         echo json_encode(['code' => 1, 'msg' => '日志获取失败，所有节点均无法连接']);
-     }
-     exit;
- }
+    if ($result) {
+        if ($usedSource) $result['source'] = $usedSource;
+        echo json_encode($result);
+    } else {
+        update_log("日志获取全部失败");
+        echo json_encode(['code' => 1, 'msg' => '日志获取失败，所有节点均无法连接']);
+    }
+    exit;
+}
 
 /* ========== 检查更新 ========== */
 if ($action === 'check') {
@@ -214,7 +223,8 @@ if ($action === 'check') {
     if (($source === 'auto' || $source === 'uhub') && $uhubApi) {
         $url = $uhubApi . '/check&_=' . time();
         update_log("私有检查: $url");
-        $data = @json_decode(@file_get_contents($url, false, stream_context_create(['http' => ['timeout' => 10, 'ignore_errors' => true]])), true);
+        $body = http_get($url, 10);
+        $data = $body ? @json_decode($body, true) : null;
         if ($data && isset($data['latest'])) {
             $result = ['code' => 0, 'data' => [
                 'version'  => $data['latest']['version'],
@@ -227,44 +237,41 @@ if ($action === 'check') {
         } else { update_log("私有检查失败，降级 GitHub"); }
     }
 
-if (!$result && ($source === 'auto' || $source === 'github')) {
-         // 并行请求 releases/latest + commits，取第一个成功的
-         $ghUrls = [
-             'https://api.github.com/repos/' . $ghRepo . '/releases/latest',
-             'https://api.github.com/repos/' . $ghRepo . '/commits?sha=main&per_page=1'
-         ];
-         $ghResult = github_api_race($ghUrls, 8);
-         if ($ghResult) {
-             list($ghUrl, $data) = $ghResult;
-             if (isset($data['tag_name'])) {
-                 // releases/latest 返回
-                 $tag = $data['tag_name'];
-                 $ver = preg_replace('/^v/i', '', $tag);
-                 $result = ['code' => 0, 'data' => [
-                     'version'  => $ver, 'tag' => $tag,
-                     'changelog'=> $data['body'] ?? $data['name'] ?? '',
-                     'created_at'=> $data['published_at'] ?? '',
-                     'logs' => [['version' => $ver, 'changelog' => $data['body'] ?? $data['name'] ?? '', 'created_at' => $data['published_at'] ?? '', 'is_live' => true]]
-                 ], 'source' => 'GitHub (releases)'];
-                 $usedSource = 'GitHub (releases)';
-                 update_log("GitHub release检查: v$ver");
-             } elseif (isset($data[0]['sha'])) {
-                 // commits 返回
-                 $c = $data[0];
-                 $msg = $c['commit']['message'] ?? '';
-                 $result = ['code' => 0, 'data' => [
-                     'version'  => substr($c['sha'], 0, 7), 'sha' => $c['sha'],
-                     'changelog'=> $msg,
-                     'created_at'=> $c['commit']['author']['date'] ?? '',
-                     'logs' => [['version' => substr($c['sha'], 0, 7), 'changelog' => $msg, 'created_at' => $c['commit']['author']['date'] ?? '', 'is_live' => false]]
-                 ], 'source' => 'GitHub (commits)'];
-                 $usedSource = 'GitHub (commits)';
-                 update_log("GitHub commit检查: " . substr($c['sha'], 0, 7));
-             }
-         } else {
-             update_log("GitHub 所有接口均超时");
-         }
-     }
+    if (!$result && ($source === 'auto' || $source === 'github')) {
+        $ghUrls = [
+            'https://api.github.com/repos/' . $ghRepo . '/releases/latest',
+            'https://api.github.com/repos/' . $ghRepo . '/commits?sha=main&per_page=1'
+        ];
+        $ghResult = github_api_race($ghUrls, 8);
+        if ($ghResult) {
+            list($ghUrl, $data) = $ghResult;
+            if (isset($data['tag_name'])) {
+                $tag = $data['tag_name'];
+                $ver = preg_replace('/^v/i', '', $tag);
+                $result = ['code' => 0, 'data' => [
+                    'version'  => $ver, 'tag' => $tag,
+                    'changelog'=> $data['body'] ?? $data['name'] ?? '',
+                    'created_at'=> $data['published_at'] ?? '',
+                    'logs' => [['version' => $ver, 'changelog' => $data['body'] ?? $data['name'] ?? '', 'created_at' => $data['published_at'] ?? '', 'is_live' => true]]
+                ], 'source' => 'GitHub (releases)'];
+                $usedSource = 'GitHub (releases)';
+                update_log("GitHub release检查: v$ver");
+            } elseif (isset($data[0]['sha'])) {
+                $c = $data[0];
+                $msg = $c['commit']['message'] ?? '';
+                $result = ['code' => 0, 'data' => [
+                    'version'  => substr($c['sha'], 0, 7), 'sha' => $c['sha'],
+                    'changelog'=> $msg,
+                    'created_at'=> $c['commit']['author']['date'] ?? '',
+                    'logs' => [['version' => substr($c['sha'], 0, 7), 'changelog' => $msg, 'created_at' => $c['commit']['author']['date'] ?? '', 'is_live' => false]]
+                ], 'source' => 'GitHub (commits)'];
+                $usedSource = 'GitHub (commits)';
+                update_log("GitHub commit检查: " . substr($c['sha'], 0, 7));
+            }
+        } else {
+            update_log("GitHub 所有接口均超时");
+        }
+    }
 
     echo $result ? json_encode($result) : json_encode(['code' => 1, 'msg' => '检查更新失败，所有节点均无法连接']);
     exit;
@@ -304,7 +311,8 @@ if ($action === 'update') {
         if ($src === 'uhub' && $uhubApi) {
             update_log("尝试私有节点下载...");
             save_progress('prepare', '获取私有下载链接...', 12);
-            $info = @json_decode(@file_get_contents($uhubApi . '/latest'), true);
+            $infoBody = http_get($uhubApi . '/latest', 10);
+            $info = $infoBody ? @json_decode($infoBody, true) : null;
             if ($info && isset($info['download_url']) && $info['download_url']) {
                 $zipUrl = $info['download_url'];
                 $fp = @fopen($zipFile, 'w');
@@ -327,22 +335,19 @@ if ($action === 'update') {
 
         if (!$downloaded && $src === 'github') {
             update_log("GitHub 下载...");
-            // 优先尝试 release zipball
             $release = github_api('https://api.github.com/repos/' . $ghRepo . '/releases/latest');
+            $zipUrl = null;
             if ($release && isset($release['zipball_url'])) {
                 $zipUrl = $release['zipball_url'];
                 update_log("使用 release zip: $zipUrl");
-            } else {
-                $zipUrl = 'https://github.com/' . $ghRepo . '/archive/refs/heads/main.zip';
-                update_log("使用 archive zip: $zipUrl");
             }
 
             $branches = ['main', 'master'];
             foreach ($branches as $br) {
                 if ($downloaded) break;
-                // 如果上面已经从 release 拿到了 zipball_url，不再循环 branches，改用 archive
-                if (!str_contains($zipUrl, 'releases/latest') && !str_contains($zipUrl, 'zipball_url')) {
+                if (!$zipUrl) {
                     $zipUrl = 'https://github.com/' . $ghRepo . '/archive/refs/heads/' . $br . '.zip';
+                    update_log("使用 archive zip: $zipUrl");
                 }
                 save_progress('download', '下载中...', 15, 0, 0);
                 $fp = @fopen($zipFile, 'w');

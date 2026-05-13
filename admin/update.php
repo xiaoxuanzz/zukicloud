@@ -54,61 +54,21 @@ ob_start();
 .changelog-loading { text-align:center; padding:24px; color:#999; }
 
 .progress-modal {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,.45); z-index: 999998;
-    justify-content: center; align-items: center;
-}
-.progress-box {
-    background: #fff; border-radius: 16px; padding: 36px 40px 32px;
-    width: 400px; text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,.35);
-    position: relative;
-}
-.progress-box h3 { margin: 0 0 20px; font-size: 18px; color: #333; }
-.progress-bar {
-    height: 26px; background: #f0f0f0; border-radius: 13px;
-    overflow: hidden; margin-bottom: 12px; position: relative;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,.12);
-}
-.progress-fill {
-    height: 100%; width: 0%; border-radius: 13px;
-    background: linear-gradient(135deg, #337ab7 0%, #5bc0de 50%, #28a745 100%);
-    background-size: 200% 100%;
-    transition: width .35s cubic-bezier(.4,0,.2,1);
-    position: relative;
-}
-.progress-fill::after {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,.25) 10px, rgba(255,255,255,.25) 20px);
-    animation: stripeMove 1s linear infinite;
-}
-.progress-bar:not(.idle) .progress-fill::after { animation-play-state: running; }
-.progress-bar.idle .progress-fill::after { animation-play-state: paused; }
-
-@keyframes stripeMove { 0% { background-position: 0 0; } 100% { background-position: 28px 0; } }
-
-.progress-fill::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(180deg, rgba(255,255,255,.3) 0%, transparent 50%, rgba(0,0,0,.08) 100%);
-    pointer-events: none;
-}
-.progress-fill.done-glow { box-shadow: 0 0 12px rgba(40,167,69,.5); }
-.progress-percent {
-    position: absolute; left: 0; right: 0; top: 0; bottom: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 700; color: #333;
-    text-shadow: 0 1px 2px rgba(255,255,255,.8);
-}
-.progress-info { font-size: 13px; color: #666; line-height: 1.9; background: #f9f9f9; padding: 12px 14px; border-radius: 10px; }
-.progress-info .row { display: flex; justify-content: space-between; }
-.progress-info .row span:first-child { color: #999; }
-.progress-info .row span:last-child { font-weight: 600; color: #333; font-family: monospace; }
-.progress-status { margin-top: 16px; font-size: 13px; color: #888; min-height: 22px; transition: color .3s, font-weight .2s; }
-.progress-status.active { color: #337ab7; font-weight: 600; }
-.progress-status.success { color: #28a745; font-weight: 700; }
-.progress-status.error { color: #dc3545; font-weight: 700; }
+     display: none; justify-content: center; align-items: center;
+     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+     background: rgba(0,0,0,.45); z-index: 999998;
+ }
+ .progress-box {
+     background: #fff; border-radius: 16px; padding: 36px 40px 32px;
+     width: 320px; text-align: center;
+     box-shadow: 0 20px 60px rgba(0,0,0,.35);
+     position: relative;
+ }
+ .progress-box h3 { margin: 0 0 20px; font-size: 18px; color: #333; }
+ .progress-status { margin-top: 16px; font-size: 13px; color: #888; min-height: 22px; }
+ .progress-status.active { color: #337ab7; font-weight: 600; }
+ .progress-status.success { color: #28a745; font-weight: 700; }
+ .progress-status.error { color: #dc3545; font-weight: 700; }
 
 @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 </style>
@@ -172,20 +132,11 @@ ob_start();
 </div>
 
 <div class="progress-modal" id="progressModal">
-    <div class="progress-box" id="progressBox">
-        <h3>正在更新...</h3>
-        <div class="progress-bar idle" id="progressBarContainer">
-            <div class="progress-fill" id="progressFill"></div>
-            <div class="progress-percent" id="progressPercent">0%</div>
-        </div>
-        <div class="progress-info" id="progressInfo">
-            <div class="row"><span>总大小</span><span id="totalSize">--</span></div>
-            <div class="row"><span>已下载</span><span id="downloaded">--</span></div>
-            <div class="row"><span>下载速度</span><span id="speed">--</span></div>
-        </div>
-        <div class="progress-status" id="progressStatus">准备中...</div>
-    </div>
-</div>
+     <div class="progress-box" id="progressBox">
+         <div id="progressText">正在更新<span id="progressDots"></span></div>
+         <div class="progress-status" id="progressStatus">准备中...</div>
+     </div>
+ </div>
 
 <script>
 var STORAGE_KEY = 'zuki_update_hash';
@@ -675,90 +626,58 @@ function showUpdateConfirm() {
 }
 
 function doUpdate() {
-    var modal = document.getElementById('progressModal');
-    if (!modal) return;
-    modal.style.display = 'block';
-    var barContainer = document.getElementById('progressBarContainer');
-    if (barContainer) barContainer.classList.remove('idle');
-    var ps = document.getElementById('progressStatus');
-    if (ps) { ps.textContent = '准备中...'; ps.className = 'progress-status active'; }
-    var tf = function(id, v) { var e = document.getElementById(id); if (e) e.textContent = v; };
-    tf('totalSize', '--'); tf('downloaded', '--'); tf('speed', '--');
-    var pf = document.getElementById('progressFill');
-    if (pf) { pf.style.width = '0%'; pf.classList.remove('done-glow'); }
-    var pb = document.getElementById('progressBox');
-    if (pb) pb.className = 'progress-box';
-    _lastDownloaded = 0; _lastTime = 0;
+     var modal = document.getElementById('progressModal');
+     if (!modal) return;
+     modal.style.display = 'flex';
+     var ps = document.getElementById('progressStatus');
+     if (ps) { ps.textContent = '准备中...'; ps.className = 'progress-status active'; }
 
-    var progressTimer = setInterval(function() {
-        fetch('ajax_update.php?act=progress').then(function(r) { return r.json(); }).then(function(resp) {
-            if (resp.code === 0 && resp.data) {
-                var data = resp.data;
-                if (pf) pf.style.width = data.percent + '%';
-                tf('progressPercent', data.percent + '%');
-                tf('progressStatus', data.msg);
-                if (data.percent >= 100) {
-                    if (barContainer) barContainer.classList.add('idle');
-                    if (pf) pf.classList.add('done-glow');
-                    if (pb) pb.classList.add('complete');
-                    if (ps) ps.className = 'progress-status success';
-                } else if (data.percent < 0) {
-                    if (barContainer) barContainer.classList.add('idle');
-                    if (ps) ps.className = 'progress-status error';
-                } else {
-                    if (ps) ps.className = 'progress-status active';
-                }
-                if (data.total && data.total > 0) tf('totalSize', formatSize(data.total));
-                if (data.downloaded && data.downloaded > 0) tf('downloaded', formatSize(data.downloaded) + '/' + (data.total ? formatSize(data.total) : '?'));
-                if (data.downloaded && data.total) {
-                    var now = Date.now() / 1000;
-                    if (_lastDownloaded > 0 && _lastTime > 0) {
-                        var deltaBytes = data.downloaded - _lastDownloaded;
-                        var deltaTime = Math.max(0.1, now - _lastTime);
-                        tf('speed', formatSize(Math.floor(deltaBytes / deltaTime)) + '/s');
-                    }
-                    _lastDownloaded = data.downloaded;
-                    _lastTime = now;
-                }
-            }
-        }).catch(function() {});
-    }, 1000);
+     // 启动 loading 动画
+     var dotsEl = document.getElementById('progressDots');
+     var dotTimer = null;
+     if (dotsEl) {
+         var dotIdx = 0;
+         dotTimer = setInterval(function() {
+             dotIdx = (dotIdx + 1) % 4;
+             dotsEl.textContent = '.'.repeat(dotIdx);
+         }, 400);
+     }
 
-    var updateTimeout = setTimeout(function() {
-        clearInterval(progressTimer);
-        tf('progressStatus', '<span style="color:red;">更新超时，请重试</span>');
-    }, 600000);
+     var updateTimeout = setTimeout(function() {
+         if (dotTimer) clearInterval(dotTimer);
+         if (ps) ps.textContent = '更新超时，请重试';
+         modal.style.display = 'none';
+     }, 600000);
 
-    var url = buildQuery('ajax_update.php?act=update&source=' + _currentSource, getAjaxParams());
+     var url = buildQuery('ajax_update.php?act=update&source=' + _currentSource, getAjaxParams());
      fetch(url, { method: 'POST' }).then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-    }).then(function(data) {
-        clearInterval(progressTimer);
-        clearTimeout(updateTimeout);
-        if (barContainer) barContainer.classList.add('idle');
-        if (data.code === 0) {
-            if (pf) { pf.classList.add('done-glow'); }
-            if (pb) { pb.classList.add('complete'); }
-            if (ps) { ps.className = 'progress-status success'; ps.textContent = '更新成功！正在刷新...'; }
-            if (_latestInfo && _latestInfo.hash) {
-                localStorage.setItem(STORAGE_KEY, _latestInfo.hash);
-                loadLocalVersion();
-            }
-            setTimeout(function() {
-                if (modal) modal.style.display = 'none';
-                window.location.href = './update.php';
-            }, 2000);
-        } else {
-            if (ps) { ps.className = 'progress-status error'; ps.textContent = '更新失败: ' + (data.msg || '未知错误'); }
-        }
-    }).catch(function(e) {
-        clearInterval(progressTimer);
-        clearTimeout(updateTimeout);
-        var msg = '无法连接到服务器，请检查网络';
-        tf('progressStatus', '错误: ' + msg);
-    });
-}
+         if (!r.ok) throw new Error('HTTP ' + r.status);
+         return r.json();
+     }).then(function(data) {
+         clearTimeout(updateTimeout);
+         if (dotTimer) clearInterval(dotTimer);
+         if (data.code === 0) {
+             if (dotsEl) dotsEl.textContent = '';
+             if (ps) { ps.className = 'progress-status success'; ps.textContent = '更新成功！正在刷新...'; }
+             if (_latestInfo && _latestInfo.hash) {
+                 localStorage.setItem(STORAGE_KEY, _latestInfo.hash);
+                 loadLocalVersion();
+             }
+             setTimeout(function() {
+                 if (modal) modal.style.display = 'none';
+                 window.location.href = './update.php';
+             }, 2000);
+         } else {
+             if (dotsEl) dotsEl.textContent = '';
+             if (ps) { ps.className = 'progress-status error'; ps.textContent = '更新失败: ' + (data.msg || '未知错误'); }
+         }
+     }).catch(function(e) {
+         clearTimeout(updateTimeout);
+         if (dotTimer) clearInterval(dotTimer);
+         if (dotsEl) dotsEl.textContent = '';
+         if (ps) { ps.className = 'progress-status error'; ps.textContent = '无法连接到服务器'; }
+     });
+ }
 
 function saveVersion() {
     var verEl = document.getElementById('latestVersion');
