@@ -26,3 +26,797 @@
 [2026-05-11 09:56:15] === 开始更新流程, 操作: progress ===
 [2026-05-11 09:56:15] === 开始更新流程, 操作: progress ===
 [2026-05-11 09:56:15] === 开始更新流程, 操作: progress ===
+[2026-05-13 09:39:55] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 09:39:55] 未知操作: changelog
+[2026-05-13 09:39:56] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:39:56] 未知操作: check
+[2026-05-13 09:40:00] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 09:40:00] 未知操作: changelog
+[2026-05-13 09:40:01] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:40:01] 未知操作: check
+[2026-05-13 09:40:04] === 开始更新流程, 操作: check, 源: uhub ===
+[2026-05-13 09:40:04] 未知操作: check
+[2026-05-13 09:40:05] === 开始更新流程, 操作: changelog, 源: uhub ===
+[2026-05-13 09:40:05] 未知操作: changelog
+[2026-05-13 09:40:05] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 09:40:05] 未知操作: changelog
+[2026-05-13 09:40:06] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 09:40:06] 未知操作: check
+[2026-05-13 09:40:10] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 09:40:10] 未知操作: changelog
+[2026-05-13 09:40:11] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:40:11] 未知操作: check
+[2026-05-13 09:46:46] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 09:46:46] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 09:46:49] 私人节点日志获取成功, 1 条
+[2026-05-13 09:46:49] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:46:49] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778636809
+[2026-05-13 09:46:49] 私人节点检查更新成功: v2.0
+[2026-05-13 09:46:49] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 09:46:49] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 09:46:49] 私人节点日志获取成功, 1 条
+[2026-05-13 09:46:49] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:46:49] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778636809
+[2026-05-13 09:46:50] 私人节点检查更新成功: v2.0
+[2026-05-13 09:46:58] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 09:46:58] 从 GitHub 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=20&page=1
+[2026-05-13 09:47:01] GitHub 日志获取成功, 16 条
+[2026-05-13 09:47:01] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 09:47:01] 从 GitHub 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=1
+[2026-05-13 09:47:02] GitHub 检查更新成功: e71b303
+[2026-05-13 09:47:08] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:47:08] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778636828
+[2026-05-13 09:47:08] 私人节点检查更新成功: v2.0
+[2026-05-13 09:47:08] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 09:47:08] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 09:47:09] 私人节点日志获取成功, 1 条
+[2026-05-13 09:51:46] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 09:51:46] 从 GitHub 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=20&page=1
+[2026-05-13 09:51:47] GitHub 日志获取成功, 16 条
+[2026-05-13 09:51:47] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 09:51:47] 从 GitHub 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=1
+[2026-05-13 09:51:48] GitHub 检查更新成功: e71b303
+[2026-05-13 09:51:56] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 09:51:56] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 09:51:57] 私人节点日志获取成功, 1 条
+[2026-05-13 09:51:57] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:51:57] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778637117
+[2026-05-13 09:51:57] 私人节点检查更新成功: v2.0
+[2026-05-13 09:57:29] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:57:29] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778637449
+[2026-05-13 09:57:29] 私人节点检查更新成功: v2.0
+[2026-05-13 09:57:35] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:57:35] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778637455
+[2026-05-13 09:57:35] 私人节点检查更新成功: v2.0
+[2026-05-13 09:57:37] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:57:37] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778637457
+[2026-05-13 09:57:37] 私人节点检查更新成功: v2.0
+[2026-05-13 09:57:38] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 09:57:38] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778637458
+[2026-05-13 09:58:00] 私人节点检查更新成功: v2.0
+[2026-05-13 10:03:24] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 10:03:24] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:03:24] 私人节点日志获取成功, 1 条
+[2026-05-13 10:03:24] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:03:24] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778637804
+[2026-05-13 10:03:25] 私人节点检查更新成功: v2.0
+[2026-05-13 10:03:25] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 10:03:25] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:03:25] 私人节点日志获取成功, 1 条
+[2026-05-13 10:03:25] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:03:25] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778637805
+[2026-05-13 10:03:25] 私人节点检查更新成功: v2.0
+[2026-05-13 10:03:27] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:03:27] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:03:28] 所有节点的日志获取均失败
+[2026-05-13 10:03:28] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:03:28] 从 GitHub releases 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:03:29] 所有节点的检查更新均失败
+[2026-05-13 10:07:50] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 10:07:50] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:07:50] 私人节点日志获取成功, 1 条
+[2026-05-13 10:07:50] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:07:50] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638070
+[2026-05-13 10:07:51] 私人节点检查更新成功: v2.0
+[2026-05-13 10:07:52] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:07:52] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:07:53] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=20&page=1
+[2026-05-13 10:07:54] GitHub commits 日志获取成功, 3 条
+[2026-05-13 10:07:54] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:07:54] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:07:55] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=1
+[2026-05-13 10:07:55] 所有节点的检查更新均失败
+[2026-05-13 10:08:36] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 10:08:36] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:08:37] 私人节点日志获取成功, 1 条
+[2026-05-13 10:08:37] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:08:37] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638117
+[2026-05-13 10:08:37] 私人节点检查更新成功: v2.0
+[2026-05-13 10:08:47] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:08:47] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638127
+[2026-05-13 10:08:47] 私人节点检查更新成功: v2.0
+[2026-05-13 10:08:54] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 10:08:54] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:08:55] 私人节点日志获取成功, 1 条
+[2026-05-13 10:08:55] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:08:55] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638135
+[2026-05-13 10:08:55] 私人节点检查更新成功: v2.0
+[2026-05-13 10:08:55] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:08:55] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638135
+[2026-05-13 10:08:55] 私人节点检查更新成功: v2.0
+[2026-05-13 10:17:21] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 10:17:21] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:17:21] 私人节点日志获取成功, 1 条
+[2026-05-13 10:17:21] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:17:21] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638641
+[2026-05-13 10:17:22] 私人节点检查更新成功: v2.0
+[2026-05-13 10:17:22] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:17:22] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638642
+[2026-05-13 10:17:22] 私人节点检查更新成功: v2.0
+[2026-05-13 10:17:23] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:17:23] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:17:23] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=20&page=1
+[2026-05-13 10:17:23] 所有节点的日志获取均失败
+[2026-05-13 10:17:23] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:17:23] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:17:23] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=1
+[2026-05-13 10:17:23] 所有节点的检查更新均失败
+[2026-05-13 10:17:25] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 10:17:25] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:17:26] 私人节点日志获取成功, 1 条
+[2026-05-13 10:17:26] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:17:26] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638646
+[2026-05-13 10:17:26] 私人节点检查更新成功: v2.0
+[2026-05-13 10:17:26] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:17:26] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638646
+[2026-05-13 10:17:26] 私人节点检查更新成功: v2.0
+[2026-05-13 10:17:28] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:17:28] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:17:28] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=1
+[2026-05-13 10:17:28] 所有节点的检查更新均失败
+[2026-05-13 10:17:28] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:17:28] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:17:28] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=20&page=1
+[2026-05-13 10:17:28] 所有节点的日志获取均失败
+[2026-05-13 10:17:29] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 10:17:29] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:17:29] 私人节点日志获取成功, 1 条
+[2026-05-13 10:17:29] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:17:29] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638649
+[2026-05-13 10:17:29] 私人节点检查更新成功: v2.0
+[2026-05-13 10:17:29] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:17:29] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778638649
+[2026-05-13 10:17:29] 私人节点检查更新成功: v2.0
+[2026-05-13 10:24:27] === 开始更新流程, 操作: changelog, 源: auto ===
+[2026-05-13 10:24:27] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:24:28] 私人节点日志获取成功, 1 条
+[2026-05-13 10:24:28] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:24:28] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778639068
+[2026-05-13 10:24:28] 私人节点检查更新成功: v2.0
+[2026-05-13 10:24:28] === 开始更新流程, 操作: check, 源: auto ===
+[2026-05-13 10:24:28] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778639068
+[2026-05-13 10:24:29] 私人节点检查更新成功: v2.0
+[2026-05-13 10:24:29] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:24:29] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:24:29] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=20&page=1
+[2026-05-13 10:24:29] 所有节点的日志获取均失败
+[2026-05-13 10:24:29] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:24:29] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:24:29] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=1
+[2026-05-13 10:24:29] 所有节点的检查更新均失败
+[2026-05-13 10:24:29] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:24:29] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:24:29] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=20&page=1
+[2026-05-13 10:24:29] 所有节点的日志获取均失败
+[2026-05-13 10:24:29] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:24:29] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:24:29] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=1
+[2026-05-13 10:24:29] 所有节点的检查更新均失败
+[2026-05-13 10:24:30] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:24:30] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:24:30] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=20&page=1
+[2026-05-13 10:24:30] 所有节点的日志获取均失败
+[2026-05-13 10:24:30] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:24:30] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:24:30] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=1
+[2026-05-13 10:24:30] 所有节点的检查更新均失败
+[2026-05-13 10:24:31] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:24:31] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:24:31] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=1
+[2026-05-13 10:24:31] 所有节点的检查更新均失败
+[2026-05-13 10:24:31] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:24:31] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:24:31] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=20&page=1
+[2026-05-13 10:24:31] 所有节点的日志获取均失败
+[2026-05-13 10:24:31] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:24:31] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:24:31] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=1
+[2026-05-13 10:24:31] 所有节点的检查更新均失败
+[2026-05-13 10:24:31] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:24:31] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:24:31] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=1
+[2026-05-13 10:24:31] 所有节点的检查更新均失败
+[2026-05-13 10:24:32] === 开始更新流程, 操作: changelog, 源: uhub ===
+[2026-05-13 10:24:32] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:24:32] 私人节点日志获取成功, 1 条
+[2026-05-13 10:24:32] === 开始更新流程, 操作: check, 源: uhub ===
+[2026-05-13 10:24:32] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778639072
+[2026-05-13 10:24:33] 私人节点检查更新成功: v2.0
+[2026-05-13 10:24:33] === 开始更新流程, 操作: check, 源: uhub ===
+[2026-05-13 10:24:33] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778639073
+[2026-05-13 10:24:33] 私人节点检查更新成功: v2.0
+[2026-05-13 10:24:33] === 开始更新流程, 操作: changelog, 源: uhub ===
+[2026-05-13 10:24:33] 从私人节点获取日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:24:34] 私人节点日志获取成功, 1 条
+[2026-05-13 10:24:34] === 开始更新流程, 操作: check, 源: uhub ===
+[2026-05-13 10:24:34] 从私人节点检查更新: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778639074
+[2026-05-13 10:24:34] 私人节点检查更新成功: v2.0
+[2026-05-13 10:24:34] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:24:34] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:24:34] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=20&page=1
+[2026-05-13 10:24:34] 所有节点的日志获取均失败
+[2026-05-13 10:24:34] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:24:34] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:24:34] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=BRANCH&per_page=1
+[2026-05-13 10:24:34] 所有节点的检查更新均失败
+[2026-05-13 10:29:08] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:29:08] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:29:08] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=20&page=1
+[2026-05-13 10:29:08] 所有节点的日志获取均失败
+[2026-05-13 10:29:08] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:29:08] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:29:08] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=1
+[2026-05-13 10:29:08] 所有节点的检查更新均失败
+[2026-05-13 10:29:09] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:29:09] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:29:09] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=1
+[2026-05-13 10:29:09] 所有节点的检查更新均失败
+[2026-05-13 10:33:21] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:33:21] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:33:21] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=20&page=1
+[2026-05-13 10:33:21] 所有节点的日志获取均失败
+[2026-05-13 10:33:22] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:33:22] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:33:22] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=1
+[2026-05-13 10:33:22] 所有节点的检查更新均失败
+[2026-05-13 10:33:22] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:33:22] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:33:22] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=1
+[2026-05-13 10:33:22] 所有节点的检查更新均失败
+[2026-05-13 10:33:22] === 开始更新流程, 操作: changelog, 源: github ===
+[2026-05-13 10:33:22] 从 GitHub releases 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases?per_page=20&page=1
+[2026-05-13 10:33:22] 从 GitHub commits 获取日志: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=20&page=1
+[2026-05-13 10:33:22] 所有节点的日志获取均失败
+[2026-05-13 10:33:22] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:33:22] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:33:22] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=1
+[2026-05-13 10:33:22] 所有节点的检查更新均失败
+[2026-05-13 10:33:23] === 开始更新流程, 操作: check, 源: github ===
+[2026-05-13 10:33:23] 从 GitHub releases/latest 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/releases/latest
+[2026-05-13 10:33:23] 从 GitHub commits 检查更新: https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=main&per_page=1
+[2026-05-13 10:33:23] 所有节点的检查更新均失败
+[2026-05-13 10:39:54] === 操作: changelog, 源: github ===
+[2026-05-13 10:39:54] 日志获取全部失败
+[2026-05-13 10:39:54] === 操作: check, 源: github ===
+[2026-05-13 10:39:54] === 操作: check, 源: github ===
+[2026-05-13 10:47:12] === 操作: check, 源: github ===
+[2026-05-13 10:47:13] === 操作: changelog, 源: github ===
+[2026-05-13 10:47:13] GitHub 节点跳过日志获取
+[2026-05-13 10:47:13] === 操作: check, 源: github ===
+[2026-05-13 10:47:15] === 操作: check, 源: auto ===
+[2026-05-13 10:47:15] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778640435
+[2026-05-13 10:47:16] 私有检查成功: v2.0
+[2026-05-13 10:47:16] === 操作: changelog, 源: auto ===
+[2026-05-13 10:47:16] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:47:16] 私有日志成功: 1 条
+[2026-05-13 10:47:17] === 操作: check, 源: uhub ===
+[2026-05-13 10:47:17] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778640437
+[2026-05-13 10:47:17] 私有检查成功: v2.0
+[2026-05-13 10:47:17] === 操作: changelog, 源: uhub ===
+[2026-05-13 10:47:17] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:47:18] 私有日志成功: 1 条
+[2026-05-13 10:47:21] === 操作: changelog, 源: uhub ===
+[2026-05-13 10:47:21] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:47:22] 私有日志成功: 1 条
+[2026-05-13 10:47:22] === 操作: check, 源: uhub ===
+[2026-05-13 10:47:22] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778640442
+[2026-05-13 10:47:22] 私有检查成功: v2.0
+[2026-05-13 10:47:22] === 操作: check, 源: uhub ===
+[2026-05-13 10:47:22] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778640442
+[2026-05-13 10:47:22] 私有检查成功: v2.0
+[2026-05-13 10:47:22] === 操作: changelog, 源: github ===
+[2026-05-13 10:47:22] GitHub 节点跳过日志获取
+[2026-05-13 10:47:22] === 操作: check, 源: github ===
+[2026-05-13 10:47:25] === 操作: check, 源: github ===
+[2026-05-13 10:47:28] === 操作: check, 源: github ===
+[2026-05-13 10:47:29] === 操作: check, 源: github ===
+[2026-05-13 10:47:40] === 操作: changelog, 源: github ===
+[2026-05-13 10:47:40] GitHub 节点跳过日志获取
+[2026-05-13 10:47:40] === 操作: check, 源: github ===
+[2026-05-13 10:47:40] === 操作: check, 源: github ===
+[2026-05-13 10:51:21] === 操作: changelog, 源: github ===
+[2026-05-13 10:51:21] GitHub 节点跳过日志获取
+[2026-05-13 10:51:21] === 操作: check, 源: github ===
+[2026-05-13 10:51:23] GitHub commit检查: e71b303
+[2026-05-13 10:51:23] === 操作: check, 源: github ===
+[2026-05-13 10:51:23] GitHub commit检查: e71b303
+[2026-05-13 10:51:26] === 操作: changelog, 源: auto ===
+[2026-05-13 10:51:26] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 10:51:26] 私有日志成功: 1 条
+[2026-05-13 10:51:26] === 操作: check, 源: auto ===
+[2026-05-13 10:51:26] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778640686
+[2026-05-13 10:51:26] 私有检查成功: v2.0
+[2026-05-13 10:51:33] === 操作: check, 源: auto ===
+[2026-05-13 10:51:33] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778640693
+[2026-05-13 10:51:33] 私有检查成功: v2.0
+[2026-05-13 14:59:55] === 操作: check, 源: auto ===
+[2026-05-13 14:59:55] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778655595
+[2026-05-13 15:00:06] 私有检查失败，降级 GitHub
+[2026-05-13 15:00:07] GitHub commit检查: e71b303
+[2026-05-13 15:00:21] === 操作: changelog, 源: auto ===
+[2026-05-13 15:00:21] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 15:00:31] 私有日志失败，降级 GitHub
+[2026-05-13 15:00:31] GitHub 节点跳过日志获取
+[2026-05-13 15:00:31] === 操作: check, 源: auto ===
+[2026-05-13 15:00:31] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778655631
+[2026-05-13 15:00:41] 私有检查失败，降级 GitHub
+[2026-05-13 15:00:41] GitHub commit检查: e71b303
+[2026-05-13 15:00:41] === 操作: check, 源: auto ===
+[2026-05-13 15:00:41] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778655641
+[2026-05-13 15:00:51] 私有检查失败，降级 GitHub
+[2026-05-13 15:00:51] GitHub commit检查: e71b303
+[2026-05-13 15:00:51] === 操作: check, 源: auto ===
+[2026-05-13 15:00:51] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778655651
+[2026-05-13 15:01:01] 私有检查失败，降级 GitHub
+[2026-05-13 15:01:02] GitHub commit检查: e71b303
+[2026-05-13 15:01:02] === 操作: changelog, 源: auto ===
+[2026-05-13 15:01:02] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 15:01:12] 私有日志失败，降级 GitHub
+[2026-05-13 15:01:12] GitHub 节点跳过日志获取
+[2026-05-13 15:01:12] === 操作: check, 源: auto ===
+[2026-05-13 15:01:12] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778655672
+[2026-05-13 15:01:22] 私有检查失败，降级 GitHub
+[2026-05-13 15:01:22] GitHub commit检查: e71b303
+[2026-05-13 15:01:22] === 操作: check, 源: auto ===
+[2026-05-13 15:01:22] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778655682
+[2026-05-13 15:01:32] 私有检查失败，降级 GitHub
+[2026-05-13 15:01:32] GitHub commit检查: e71b303
+[2026-05-13 15:01:32] === 操作: check, 源: auto ===
+[2026-05-13 15:01:32] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778655692
+[2026-05-13 15:01:42] 私有检查失败，降级 GitHub
+[2026-05-13 15:01:42] GitHub commit检查: e71b303
+[2026-05-13 15:04:14] === 操作: changelog, 源: auto ===
+[2026-05-13 15:04:14] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 15:04:24] 私有日志失败，降级 GitHub
+[2026-05-13 15:04:24] GitHub 节点跳过日志获取
+[2026-05-13 15:04:25] === 操作: check, 源: auto ===
+[2026-05-13 15:04:25] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778655865
+[2026-05-13 15:04:35] 私有检查失败，降级 GitHub
+[2026-05-13 15:04:35] GitHub commit检查: e71b303
+[2026-05-13 15:04:35] === 操作: check, 源: auto ===
+[2026-05-13 15:04:35] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778655875
+[2026-05-13 15:04:46] 私有检查失败，降级 GitHub
+[2026-05-13 15:04:47] GitHub commit检查: e71b303
+[2026-05-13 16:16:07] === 操作: changelog, 源: auto ===
+[2026-05-13 16:16:07] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:16:09] 私有日志成功: 1 条
+[2026-05-13 16:16:09] === 操作: check, 源: auto ===
+[2026-05-13 16:16:09] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778660169
+[2026-05-13 16:16:10] 私有检查成功: v2.0
+[2026-05-13 16:16:10] === 操作: check, 源: auto ===
+[2026-05-13 16:16:10] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778660170
+[2026-05-13 16:16:11] 私有检查成功: v2.0
+[2026-05-13 16:16:32] === 操作: changelog, 源: github ===
+[2026-05-13 16:16:32] GitHub 节点跳过日志获取
+[2026-05-13 16:16:32] === 操作: check, 源: github ===
+[2026-05-13 16:16:33] GitHub commit检查: e71b303
+[2026-05-13 16:16:36] === 操作: changelog, 源: auto ===
+[2026-05-13 16:16:36] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:16:37] 私有日志成功: 1 条
+[2026-05-13 16:16:37] === 操作: check, 源: auto ===
+[2026-05-13 16:16:37] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778660197
+[2026-05-13 16:16:37] 私有检查成功: v2.0
+[2026-05-13 16:17:02] === 操作: check, 源: auto ===
+[2026-05-13 16:17:02] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778660222
+[2026-05-13 16:17:02] 私有检查成功: v2.0
+[2026-05-13 16:17:03] === 操作: changelog, 源: auto ===
+[2026-05-13 16:17:03] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:17:04] 私有日志成功: 1 条
+[2026-05-13 16:17:04] === 操作: check, 源: auto ===
+[2026-05-13 16:17:04] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778660224
+[2026-05-13 16:17:04] 私有检查失败，降级 GitHub
+[2026-05-13 16:17:04] GitHub commit检查: e71b303
+[2026-05-13 16:17:04] === 操作: check, 源: auto ===
+[2026-05-13 16:17:04] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778660224
+[2026-05-13 16:17:05] 私有检查失败，降级 GitHub
+[2026-05-13 16:17:05] GitHub commit检查: e71b303
+[2026-05-13 16:17:11] === 操作: changelog, 源: auto ===
+[2026-05-13 16:17:11] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:17:11] 私有日志失败，降级 GitHub
+[2026-05-13 16:17:11] GitHub 节点跳过日志获取
+[2026-05-13 16:17:11] === 操作: check, 源: auto ===
+[2026-05-13 16:17:11] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778660231
+[2026-05-13 16:17:11] 私有检查失败，降级 GitHub
+[2026-05-13 16:17:11] GitHub commit检查: e71b303
+[2026-05-13 16:17:12] === 操作: check, 源: auto ===
+[2026-05-13 16:17:12] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778660232
+[2026-05-13 16:17:12] 私有检查失败，降级 GitHub
+[2026-05-13 16:17:12] GitHub commit检查: e71b303
+[2026-05-13 16:31:35] === 操作: check, 源: auto ===
+[2026-05-13 16:31:35] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778661095
+[2026-05-13 16:31:35] 私有检查失败，降级 GitHub
+[2026-05-13 16:31:37] GitHub commit检查: e71b303
+[2026-05-13 16:31:37] === 操作: changelog, 源: auto ===
+[2026-05-13 16:31:37] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:31:37] 私有日志失败，降级 GitHub
+[2026-05-13 16:31:37] GitHub 节点跳过日志获取
+[2026-05-13 16:31:37] === 操作: check, 源: auto ===
+[2026-05-13 16:31:37] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778661097
+[2026-05-13 16:31:37] 私有检查失败，降级 GitHub
+[2026-05-13 16:31:38] GitHub commit检查: e71b303
+[2026-05-13 16:31:38] === 操作: check, 源: auto ===
+[2026-05-13 16:31:38] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778661098
+[2026-05-13 16:31:38] 私有检查失败，降级 GitHub
+[2026-05-13 16:31:38] GitHub commit检查: e71b303
+[2026-05-13 16:31:38] === 操作: changelog, 源: auto ===
+[2026-05-13 16:31:38] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:31:38] 私有日志失败，降级 GitHub
+[2026-05-13 16:31:38] GitHub 节点跳过日志获取
+[2026-05-13 16:31:38] === 操作: check, 源: auto ===
+[2026-05-13 16:31:38] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778661098
+[2026-05-13 16:31:38] 私有检查失败，降级 GitHub
+[2026-05-13 16:31:39] GitHub commit检查: e71b303
+[2026-05-13 16:39:10] === 操作: check, 源: auto ===
+[2026-05-13 16:39:10] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778661550
+[2026-05-13 16:39:20] 私有检查失败，降级 GitHub
+[2026-05-13 16:39:21] GitHub commit检查: e71b303
+[2026-05-13 16:39:21] === 操作: changelog, 源: auto ===
+[2026-05-13 16:39:21] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:39:31] 私有日志失败，降级 GitHub
+[2026-05-13 16:39:31] GitHub 节点跳过日志获取
+[2026-05-13 16:39:31] === 操作: check, 源: auto ===
+[2026-05-13 16:39:31] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778661571
+[2026-05-13 16:39:41] 私有检查失败，降级 GitHub
+[2026-05-13 16:39:41] GitHub commit检查: e71b303
+[2026-05-13 16:45:44] === 操作: changelog, 源: auto ===
+[2026-05-13 16:45:44] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:45:54] 私有日志失败，降级 GitHub
+[2026-05-13 16:45:54] GitHub 节点跳过日志获取
+[2026-05-13 16:45:54] === 操作: check, 源: auto ===
+[2026-05-13 16:45:54] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778661954
+[2026-05-13 16:46:04] 私有检查失败，降级 GitHub
+[2026-05-13 16:46:04] GitHub commit检查: e71b303
+[2026-05-13 16:46:04] === 操作: check, 源: auto ===
+[2026-05-13 16:46:04] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778661964
+[2026-05-13 16:46:15] 私有检查失败，降级 GitHub
+[2026-05-13 16:46:15] GitHub commit检查: e71b303
+[2026-05-13 16:46:15] === 操作: check, 源: auto ===
+[2026-05-13 16:46:15] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778661975
+[2026-05-13 16:46:25] 私有检查失败，降级 GitHub
+[2026-05-13 16:46:25] GitHub commit检查: e71b303
+[2026-05-13 16:46:25] === 操作: changelog, 源: auto ===
+[2026-05-13 16:46:25] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:46:35] 私有日志失败，降级 GitHub
+[2026-05-13 16:46:35] GitHub 节点跳过日志获取
+[2026-05-13 16:46:35] === 操作: check, 源: auto ===
+[2026-05-13 16:46:35] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778661995
+[2026-05-13 16:46:45] 私有检查失败，降级 GitHub
+[2026-05-13 16:46:45] GitHub commit检查: e71b303
+[2026-05-13 16:48:54] === 操作: changelog, 源: auto ===
+[2026-05-13 16:48:54] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:48:58] 私有日志成功: 1 条
+[2026-05-13 16:48:58] === 操作: check, 源: auto ===
+[2026-05-13 16:48:58] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778662138
+[2026-05-13 16:48:59] 私有检查成功: v2.0
+[2026-05-13 16:48:59] === 操作: check, 源: auto ===
+[2026-05-13 16:48:59] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778662139
+[2026-05-13 16:48:59] 私有检查成功: v2.0
+[2026-05-13 16:52:25] === 操作: changelog, 源: auto ===
+[2026-05-13 16:52:25] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 16:52:26] 私有日志成功: 1 条
+[2026-05-13 16:52:26] === 操作: check, 源: auto ===
+[2026-05-13 16:52:26] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778662346
+[2026-05-13 16:52:27] 私有检查成功: v2.0
+[2026-05-13 16:52:27] === 操作: check, 源: auto ===
+[2026-05-13 16:52:27] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778662347
+[2026-05-13 16:52:27] 私有检查成功: v2.0
+[2026-05-13 17:00:12] === 操作: changelog, 源: auto ===
+[2026-05-13 17:00:12] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:00:12] 私有日志成功: 1 条
+[2026-05-13 17:00:12] === 操作: check, 源: auto ===
+[2026-05-13 17:00:12] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778662812
+[2026-05-13 17:00:13] 私有检查成功: v2.0
+[2026-05-13 17:00:13] === 操作: check, 源: auto ===
+[2026-05-13 17:00:13] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778662813
+[2026-05-13 17:00:13] 私有检查成功: v2.0
+[2026-05-13 17:02:40] === 操作: changelog, 源: auto ===
+[2026-05-13 17:02:40] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:02:41] 私有日志成功: 1 条
+[2026-05-13 17:02:41] === 操作: check, 源: auto ===
+[2026-05-13 17:02:41] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778662961
+[2026-05-13 17:02:41] 私有检查成功: v2.0
+[2026-05-13 17:02:41] === 操作: check, 源: auto ===
+[2026-05-13 17:02:41] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778662961
+[2026-05-13 17:02:41] 私有检查成功: v2.0
+[2026-05-13 17:04:54] === 操作: changelog, 源: auto ===
+[2026-05-13 17:04:54] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:04:55] 私有日志成功: 1 条
+[2026-05-13 17:04:55] === 操作: check, 源: auto ===
+[2026-05-13 17:04:55] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663095
+[2026-05-13 17:04:56] 私有检查成功: v2.0
+[2026-05-13 17:04:56] === 操作: check, 源: auto ===
+[2026-05-13 17:04:56] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663096
+[2026-05-13 17:04:56] 私有检查成功: v2.0
+[2026-05-13 17:05:05] === 操作: changelog, 源: auto ===
+[2026-05-13 17:05:05] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:05:06] 私有日志成功: 1 条
+[2026-05-13 17:05:06] === 操作: check, 源: auto ===
+[2026-05-13 17:05:06] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663106
+[2026-05-13 17:05:06] 私有检查成功: v2.0
+[2026-05-13 17:05:06] === 操作: check, 源: auto ===
+[2026-05-13 17:05:06] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663106
+[2026-05-13 17:05:07] 私有检查成功: v2.0
+[2026-05-13 17:06:15] === 操作: changelog, 源: auto ===
+[2026-05-13 17:06:15] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:06:15] 私有日志成功: 1 条
+[2026-05-13 17:06:15] === 操作: check, 源: auto ===
+[2026-05-13 17:06:15] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663175
+[2026-05-13 17:06:16] 私有检查成功: v2.0
+[2026-05-13 17:06:16] === 操作: check, 源: auto ===
+[2026-05-13 17:06:16] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663176
+[2026-05-13 17:06:17] 私有检查成功: v2.0
+[2026-05-13 17:06:18] === 操作: changelog, 源: uhub ===
+[2026-05-13 17:06:18] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:06:19] 私有日志成功: 1 条
+[2026-05-13 17:06:19] === 操作: check, 源: uhub ===
+[2026-05-13 17:06:19] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663179
+[2026-05-13 17:06:19] 私有检查成功: v2.0
+[2026-05-13 17:06:19] === 操作: changelog, 源: auto ===
+[2026-05-13 17:06:19] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:06:20] 私有日志成功: 1 条
+[2026-05-13 17:06:20] === 操作: check, 源: auto ===
+[2026-05-13 17:06:20] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663180
+[2026-05-13 17:06:20] 私有检查成功: v2.0
+[2026-05-13 17:06:37] === 操作: changelog, 源: auto ===
+[2026-05-13 17:06:37] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:06:37] 私有日志成功: 1 条
+[2026-05-13 17:06:37] === 操作: check, 源: auto ===
+[2026-05-13 17:06:37] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663197
+[2026-05-13 17:06:38] 私有检查成功: v2.0
+[2026-05-13 17:06:38] === 操作: check, 源: auto ===
+[2026-05-13 17:06:38] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663198
+[2026-05-13 17:06:38] 私有检查成功: v2.0
+[2026-05-13 17:06:38] === 操作: changelog, 源: auto ===
+[2026-05-13 17:06:38] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:06:38] 私有日志成功: 1 条
+[2026-05-13 17:06:38] === 操作: check, 源: auto ===
+[2026-05-13 17:06:38] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663198
+[2026-05-13 17:06:39] 私有检查成功: v2.0
+[2026-05-13 17:06:39] === 操作: check, 源: auto ===
+[2026-05-13 17:06:39] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663199
+[2026-05-13 17:06:39] 私有检查成功: v2.0
+[2026-05-13 17:08:14] === 操作: changelog, 源: auto ===
+[2026-05-13 17:08:14] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:08:14] 私有日志成功: 1 条
+[2026-05-13 17:08:14] === 操作: check, 源: auto ===
+[2026-05-13 17:08:14] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663294
+[2026-05-13 17:08:15] 私有检查成功: v2.0
+[2026-05-13 17:08:15] === 操作: check, 源: auto ===
+[2026-05-13 17:08:15] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663295
+[2026-05-13 17:08:15] 私有检查成功: v2.0
+[2026-05-13 17:10:43] === 操作: changelog, 源: auto ===
+[2026-05-13 17:10:43] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:10:43] 私有日志成功: 1 条
+[2026-05-13 17:10:43] === 操作: check, 源: auto ===
+[2026-05-13 17:10:43] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663443
+[2026-05-13 17:10:44] 私有检查成功: v2.0
+[2026-05-13 17:10:44] === 操作: check, 源: auto ===
+[2026-05-13 17:10:44] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663444
+[2026-05-13 17:10:44] 私有检查成功: v2.0
+[2026-05-13 17:11:47] === 操作: changelog, 源: auto ===
+[2026-05-13 17:11:47] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:11:47] 私有日志成功: 1 条
+[2026-05-13 17:11:47] === 操作: check, 源: auto ===
+[2026-05-13 17:11:47] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663507
+[2026-05-13 17:11:47] 私有检查成功: v2.0
+[2026-05-13 17:11:47] === 操作: check, 源: auto ===
+[2026-05-13 17:11:47] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663507
+[2026-05-13 17:11:48] 私有检查成功: v2.0
+[2026-05-13 17:11:48] === 操作: changelog, 源: auto ===
+[2026-05-13 17:11:48] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:11:48] 私有日志成功: 1 条
+[2026-05-13 17:11:48] === 操作: check, 源: auto ===
+[2026-05-13 17:11:48] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663508
+[2026-05-13 17:11:48] 私有检查成功: v2.0
+[2026-05-13 17:11:49] === 操作: check, 源: auto ===
+[2026-05-13 17:11:49] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663509
+[2026-05-13 17:11:49] 私有检查成功: v2.0
+[2026-05-13 17:14:23] === 操作: changelog, 源: auto ===
+[2026-05-13 17:14:23] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 17:14:23] 私有日志成功: 2 条
+[2026-05-13 17:14:23] === 操作: check, 源: auto ===
+[2026-05-13 17:14:23] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663663
+[2026-05-13 17:14:23] 私有检查成功: v2.0
+[2026-05-13 17:14:23] === 操作: check, 源: auto ===
+[2026-05-13 17:14:23] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778663663
+[2026-05-13 17:14:23] 私有检查成功: v2.0
+[2026-05-13 19:30:20] === 操作: check, 源: auto ===
+[2026-05-13 19:30:20] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778671820
+[2026-05-13 19:30:20] 私有检查成功: v2.0
+[2026-05-13 20:24:31] === 操作: changelog, 源: auto ===
+[2026-05-13 20:24:31] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:24:32] 私有日志成功: 2 条
+[2026-05-13 20:24:32] === 操作: check, 源: auto ===
+[2026-05-13 20:24:32] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778675072
+[2026-05-13 20:24:33] 私有检查成功: v2.0
+[2026-05-13 20:24:33] === 操作: check, 源: auto ===
+[2026-05-13 20:24:33] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778675073
+[2026-05-13 20:24:35] 私有检查成功: v2.0
+[2026-05-13 20:38:10] === 操作: check, 源: auto ===
+[2026-05-13 20:38:10] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778675890
+[2026-05-13 20:38:11] 私有检查成功: v2.1
+[2026-05-13 20:38:11] === 操作: changelog, 源: auto ===
+[2026-05-13 20:38:11] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:38:11] 私有日志成功: 2 条
+[2026-05-13 20:38:11] === 操作: check, 源: auto ===
+[2026-05-13 20:38:11] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778675891
+[2026-05-13 20:38:12] 私有检查成功: v2.1
+[2026-05-13 20:38:18] === 操作: changelog, 源: auto ===
+[2026-05-13 20:38:18] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:38:18] 私有日志成功: 2 条
+[2026-05-13 20:38:18] === 操作: check, 源: auto ===
+[2026-05-13 20:38:18] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778675898
+[2026-05-13 20:38:18] 私有检查成功: v2.1
+[2026-05-13 20:38:18] === 操作: check, 源: auto ===
+[2026-05-13 20:38:18] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778675898
+[2026-05-13 20:38:18] 私有检查成功: v2.1
+[2026-05-13 20:38:31] === 操作: changelog, 源: auto ===
+[2026-05-13 20:38:31] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:38:31] 私有日志成功: 2 条
+[2026-05-13 20:38:31] === 操作: check, 源: auto ===
+[2026-05-13 20:38:31] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778675911
+[2026-05-13 20:38:31] 私有检查成功: v2.1
+[2026-05-13 20:38:31] === 操作: check, 源: auto ===
+[2026-05-13 20:38:31] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778675911
+[2026-05-13 20:38:32] 私有检查成功: v2.1
+[2026-05-13 20:44:41] === 操作: changelog, 源: auto ===
+[2026-05-13 20:44:41] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:44:42] 私有日志成功: 2 条
+[2026-05-13 20:44:42] === 操作: check, 源: auto ===
+[2026-05-13 20:44:42] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676282
+[2026-05-13 20:44:42] 私有检查成功: v2.1
+[2026-05-13 20:44:42] === 操作: check, 源: auto ===
+[2026-05-13 20:44:42] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676282
+[2026-05-13 20:44:43] 私有检查成功: v2.1
+[2026-05-13 20:49:53] === 操作: check, 源: auto ===
+[2026-05-13 20:49:53] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676593
+[2026-05-13 20:49:54] 私有检查成功: v2.1
+[2026-05-13 20:49:54] === 操作: changelog, 源: auto ===
+[2026-05-13 20:49:54] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:49:55] 私有日志成功: 2 条
+[2026-05-13 20:49:55] === 操作: check, 源: auto ===
+[2026-05-13 20:49:55] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676595
+[2026-05-13 20:49:56] 私有检查成功: v2.1
+[2026-05-13 20:49:56] === 操作: changelog, 源: auto ===
+[2026-05-13 20:49:56] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:49:59] 私有日志成功: 2 条
+[2026-05-13 20:50:00] === 操作: check, 源: auto ===
+[2026-05-13 20:50:00] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676600
+[2026-05-13 20:50:01] 私有检查成功: v2.1
+[2026-05-13 20:50:01] === 操作: check, 源: auto ===
+[2026-05-13 20:50:01] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676601
+[2026-05-13 20:50:03] 私有检查成功: v2.1
+[2026-05-13 20:50:09] === 操作: changelog, 源: github ===
+[2026-05-13 20:50:09] GitHub 节点跳过日志获取
+[2026-05-13 20:50:09] === 操作: check, 源: github ===
+[2026-05-13 20:50:11] GitHub commit检查: e71b303
+[2026-05-13 20:50:14] === 操作: check, 源: github ===
+[2026-05-13 20:50:14] GitHub commit检查: e71b303
+[2026-05-13 20:50:15] === 操作: check, 源: github ===
+[2026-05-13 20:50:15] GitHub commit检查: e71b303
+[2026-05-13 20:50:17] === 操作: changelog, 源: auto ===
+[2026-05-13 20:50:17] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:50:17] 私有日志成功: 2 条
+[2026-05-13 20:50:17] === 操作: check, 源: auto ===
+[2026-05-13 20:50:17] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676617
+[2026-05-13 20:50:19] 私有检查成功: v2.1
+[2026-05-13 20:50:20] === 操作: check, 源: github ===
+[2026-05-13 20:50:20] GitHub commit检查: e71b303
+[2026-05-13 20:50:20] === 操作: changelog, 源: github ===
+[2026-05-13 20:50:20] GitHub 节点跳过日志获取
+[2026-05-13 20:51:11] === 操作: changelog, 源: auto ===
+[2026-05-13 20:51:11] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:51:12] 私有日志成功: 2 条
+[2026-05-13 20:51:12] === 操作: check, 源: auto ===
+[2026-05-13 20:51:12] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676672
+[2026-05-13 20:51:12] 私有检查成功: v2.1
+[2026-05-13 20:51:15] === 操作: changelog, 源: auto ===
+[2026-05-13 20:51:15] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:51:16] 私有日志成功: 2 条
+[2026-05-13 20:51:16] === 操作: check, 源: auto ===
+[2026-05-13 20:51:16] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676676
+[2026-05-13 20:51:17] 私有检查成功: v2.1
+[2026-05-13 20:51:17] === 操作: check, 源: auto ===
+[2026-05-13 20:51:17] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676677
+[2026-05-13 20:51:18] 私有检查成功: v2.1
+[2026-05-13 20:53:21] === 操作: changelog, 源: auto ===
+[2026-05-13 20:53:21] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:53:21] 私有日志成功: 2 条
+[2026-05-13 20:53:21] === 操作: check, 源: auto ===
+[2026-05-13 20:53:21] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676801
+[2026-05-13 20:53:23] 私有检查成功: v2.1
+[2026-05-13 20:53:23] === 操作: check, 源: auto ===
+[2026-05-13 20:53:23] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778676803
+[2026-05-13 20:53:24] 私有检查成功: v2.1
+[2026-05-13 20:56:56] === 操作: check, 源: auto ===
+[2026-05-13 20:56:56] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677016
+[2026-05-13 20:56:57] 私有检查成功: v2.1
+[2026-05-13 20:56:57] === 操作: changelog, 源: auto ===
+[2026-05-13 20:56:57] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:56:58] 私有日志成功: 2 条
+[2026-05-13 20:56:58] === 操作: check, 源: auto ===
+[2026-05-13 20:56:58] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677018
+[2026-05-13 20:56:59] 私有检查成功: v2.1
+[2026-05-13 20:57:39] === 操作: changelog, 源: auto ===
+[2026-05-13 20:57:39] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:57:41] 私有日志成功: 2 条
+[2026-05-13 20:57:41] === 操作: check, 源: auto ===
+[2026-05-13 20:57:41] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677061
+[2026-05-13 20:57:44] 私有检查成功: v2.1
+[2026-05-13 20:57:44] === 操作: check, 源: auto ===
+[2026-05-13 20:57:44] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677064
+[2026-05-13 20:57:45] 私有检查成功: v2.1
+[2026-05-13 20:57:45] === 操作: changelog, 源: auto ===
+[2026-05-13 20:57:45] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:57:46] 私有日志成功: 2 条
+[2026-05-13 20:57:46] === 操作: check, 源: auto ===
+[2026-05-13 20:57:46] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677066
+[2026-05-13 20:57:48] 私有检查成功: v2.1
+[2026-05-13 20:57:48] === 操作: check, 源: auto ===
+[2026-05-13 20:57:48] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677068
+[2026-05-13 20:57:48] 私有检查成功: v2.1
+[2026-05-13 20:59:15] === 操作: changelog, 源: auto ===
+[2026-05-13 20:59:15] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:59:16] 私有日志成功: 2 条
+[2026-05-13 20:59:16] === 操作: check, 源: auto ===
+[2026-05-13 20:59:16] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677156
+[2026-05-13 20:59:16] 私有检查成功: v2.1
+[2026-05-13 20:59:16] === 操作: check, 源: auto ===
+[2026-05-13 20:59:16] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677156
+[2026-05-13 20:59:17] 私有检查成功: v2.1
+[2026-05-13 20:59:58] === 操作: changelog, 源: auto ===
+[2026-05-13 20:59:58] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 20:59:59] 私有日志成功: 2 条
+[2026-05-13 20:59:59] === 操作: check, 源: auto ===
+[2026-05-13 20:59:59] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677199
+[2026-05-13 21:00:02] 私有检查成功: v2.1
+[2026-05-13 21:00:02] === 操作: check, 源: auto ===
+[2026-05-13 21:00:02] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677202
+[2026-05-13 21:00:04] 私有检查成功: v2.1
+[2026-05-13 21:00:41] === 操作: check, 源: auto ===
+[2026-05-13 21:00:41] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677241
+[2026-05-13 21:00:44] 私有检查成功: v2.1
+[2026-05-13 21:00:44] === 操作: changelog, 源: auto ===
+[2026-05-13 21:00:44] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 21:00:45] 私有日志成功: 2 条
+[2026-05-13 21:00:45] === 操作: check, 源: auto ===
+[2026-05-13 21:00:45] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677245
+[2026-05-13 21:00:45] 私有检查成功: v2.1
+[2026-05-13 21:05:25] === 操作: changelog, 源: auto ===
+[2026-05-13 21:05:25] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 21:05:28] 私有日志成功: 2 条
+[2026-05-13 21:05:28] === 操作: check, 源: auto ===
+[2026-05-13 21:05:28] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677528
+[2026-05-13 21:05:28] 私有检查成功: v2.1
+[2026-05-13 21:05:28] === 操作: check, 源: auto ===
+[2026-05-13 21:05:28] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677528
+[2026-05-13 21:05:29] 私有检查成功: v2.1
+[2026-05-13 21:05:33] === 操作: changelog, 源: auto ===
+[2026-05-13 21:05:33] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-05-13 21:05:34] 私有日志成功: 2 条
+[2026-05-13 21:05:34] === 操作: check, 源: auto ===
+[2026-05-13 21:05:34] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677534
+[2026-05-13 21:05:34] 私有检查成功: v2.1
+[2026-05-13 21:05:34] === 操作: check, 源: auto ===
+[2026-05-13 21:05:34] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1778677534
+[2026-05-13 21:05:36] 私有检查成功: v2.1

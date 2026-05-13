@@ -7,47 +7,64 @@ if($islogin != 1) exit("<script>window.location.href=\"./login.php\";</script>")
 ob_start();
 ?>
 <style>
-.update-container { max-width: 400px; margin: 20px auto; font-size: 14px; }
+.update-container { max-width: 600px; margin: 20px auto; font-size: 14px; }
 .version-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
 .version-label { color: #666; }
 .version-value { font-family: monospace; font-weight: bold; }
-.controls { margin: 15px 0; }
-.controls button { padding: 8px 16px; border: 1px solid #ccc; background: #f5f5f5; border-radius: 4px; cursor: pointer; }
+.controls { margin: 15px 0; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.controls button { padding: 6px 14px; border: 1px solid #ccc; background: #f5f5f5; border-radius: 4px; cursor: pointer; font-size: 13px; }
 .controls button:hover { background: #eee; }
-.btn-primary { background: #337ab7; color: #fff; border-color: #2e6da4; }
-.btn-primary:hover { background: #286090; }
+.controls button:active { transform: scale(.97); }
+.controls button:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary { background: #337ab7; color: #fff; border: 2px solid #2e6da4; border-radius: 6px; }
+.btn-primary:hover { background: #286090; box-shadow: 0 2px 8px rgba(51,122,183,.3); }
+.btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+
+.source-row { margin-bottom: 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.source-select {
+    padding: 7px 32px 7px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 13px;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23666' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 10px center;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+.source-select:focus { border-color: #5b8def; box-shadow: 0 0 0 2px rgba(91,141,239,.2); }
+.source-hint { font-size: 12px; color: #999; }
+
 .result-box { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; animation: fadeSlideIn .3s ease; }
 .result-box.show { display: block; }
 .result-box.warning { background: #fcf8e3; border: 1px solid #faebcc; color: #8a6d3b; }
 .result-box.success { background: #dff0d8; border: 1px solid #d6e9c6; color: #3c763d; }
 .result-box.error { background: #f2dede; border: 1px solid #ebccd1; color: #a94442; }
 
-/* ── 进度模态框动画 ── */
+.changelog-section { margin-top: 20px; border-top: 1px solid #eee; padding-top: 16px; }
+.changelog-tabs { display:flex; gap:0; margin-bottom:12px; border-bottom:2px solid #eee; }
+.changelog-tab { padding:8px 18px; font-size:13px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; color:#999; transition:all .15s; }
+.changelog-tab:hover { color:#333; }
+.changelog-tab.active { color:#5b8def; border-bottom-color:#5b8def; font-weight:600; }
+.changelog-content { min-height: 60px; }
+.changelog-entry { margin-bottom:8px; padding:10px 12px; background:#f9f9f9; border-radius:6px; font-size:13px; }
+.changelog-entry .ver { font-weight:700; color:#5b8def; font-family:monospace; }
+.changelog-entry .time { color:#999; font-size:11px; margin-left:8px; }
+.changelog-entry .msg { margin-top:4px; color:#555; line-height:1.5; white-space:pre-wrap; font-size:12px; }
+.changelog-loading { text-align:center; padding:24px; color:#999; }
+
 .progress-modal {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,.45); z-index: 999998;
     justify-content: center; align-items: center;
-    animation: modalFadeIn .25s ease;
 }
 .progress-box {
     background: #fff; border-radius: 16px; padding: 36px 40px 32px;
     width: 400px; text-align: center;
     box-shadow: 0 20px 60px rgba(0,0,0,.35);
-    animation: modalBounceIn .35s cubic-bezier(.34,1.56,.64,1);
     position: relative;
 }
-@keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes modalBounceIn {
-    0%   { opacity: 0; transform: scale(.85) translateY(20px); }
-    60%  { transform: scale(1.02) translateY(-3px); }
-    100% { opacity: 1; transform: scale(1) translateY(0); }
-}
-@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeSlideOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
-
-.progress-box h3 { margin: 0 0 24px; font-size: 18px; color: #333; }
-
-/* ── 进度条 ── */
+.progress-box h3 { margin: 0 0 20px; font-size: 18px; color: #333; }
 .progress-bar {
     height: 26px; background: #f0f0f0; border-radius: 13px;
     overflow: hidden; margin-bottom: 12px; position: relative;
@@ -60,103 +77,103 @@ ob_start();
     transition: width .35s cubic-bezier(.4,0,.2,1);
     position: relative;
 }
-/* 条纹滚动动画 */
 .progress-fill::after {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-        -45deg, transparent, transparent 10px,
-        rgba(255,255,255,.25) 10px, rgba(255,255,255,.25) 20px
-    );
+    background: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,.25) 10px, rgba(255,255,255,.25) 20px);
     animation: stripeMove 1s linear infinite;
 }
-/* 运行中才显示条纹 */
 .progress-bar:not(.idle) .progress-fill::after { animation-play-state: running; }
 .progress-bar.idle .progress-fill::after { animation-play-state: paused; }
 
 @keyframes stripeMove { 0% { background-position: 0 0; } 100% { background-position: 28px 0; } }
 
-/* 光泽效果 */
 .progress-fill::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background: linear-gradient(180deg, rgba(255,255,255,.3) 0%, transparent 50%, rgba(0,0,0,.08) 100%);
     pointer-events: none;
 }
-
-/* 100% 完成时发光 */
-.progress-fill.done-glow {
-    box-shadow: 0 0 12px rgba(40,167,69,.5);
-}
-
+.progress-fill.done-glow { box-shadow: 0 0 12px rgba(40,167,69,.5); }
 .progress-percent {
     position: absolute; left: 0; right: 0; top: 0; bottom: 0;
     display: flex; align-items: center; justify-content: center;
     font-size: 13px; font-weight: 700; color: #333;
     text-shadow: 0 1px 2px rgba(255,255,255,.8);
-    transition: color .3s;
 }
-
-.progress-info {
-    font-size: 13px; color: #666; line-height: 1.9;
-    background: #f9f9f9; padding: 12px 14px; border-radius: 10px;
-    animation: fadeSlideIn .4s ease .1s both;
-}
+.progress-info { font-size: 13px; color: #666; line-height: 1.9; background: #f9f9f9; padding: 12px 14px; border-radius: 10px; }
 .progress-info .row { display: flex; justify-content: space-between; }
 .progress-info .row span:first-child { color: #999; }
-.progress-info .row span:last-child { font-weight: 600; color: #333; font-family: monospace; transition: color .3s; }
-
-.progress-status {
-    margin-top: 16px; font-size: 13px; color: #888; min-height: 22px;
-    transition: color .3s, font-weight .2s;
-    animation: fadeSlideIn .4s ease .15s both;
-}
+.progress-info .row span:last-child { font-weight: 600; color: #333; font-family: monospace; }
+.progress-status { margin-top: 16px; font-size: 13px; color: #888; min-height: 22px; transition: color .3s, font-weight .2s; }
 .progress-status.active { color: #337ab7; font-weight: 600; }
 .progress-status.success { color: #28a745; font-weight: 700; }
 .progress-status.error { color: #dc3545; font-weight: 700; }
 
-/* 完成时的庆祝动画 */
-@keyframes pulseGreen {
-    0%   { box-shadow: 0 0 0 0 rgba(40,167,69,.4); }
-    70%  { box-shadow: 0 0 0 12px rgba(40,167,69,0); }
-    100% { box-shadow: 0 0 0 0 rgba(40,167,69,0); }
-}
-.progress-box.complete { animation: pulseGreen 1s ease-out; }
-
-.controls { margin-top: 18px; display: flex; gap: 10px; justify-content: center; }
-.controls button {
-    padding: 9px 20px; border: 1px solid #ccc; background: #f5f5f5;
-    border-radius: 6px; cursor: pointer; font-size: 13px;
-    transition: background .2s, transform .1s, box-shadow .2s;
-}
-.controls button:hover { background: #eee; }
-.controls button:active { transform: scale(.97); }
-.controls button:disabled { opacity: .45; cursor: not-allowed; }
-.btn-primary { background: #337ab7; color: #fff; border-color: #2e6da4; }
-.btn-primary:hover { background: #286090; box-shadow: 0 2px 8px rgba(51,122,183,.3); }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 
-<div class="update-container">
-    <div class="version-row">
-        <span class="version-label">当前版本:</span>
-        <span class="version-value" id="localVersion">--</span>
+<div class="update-container" id="changelog-anchor">
+<div class="source-row">
+     <select id="sourceSelector" class="source-select">
+       <option value="auto">自动切换</option>
+       <option value="uhub">私人推送节点</option>
+       <option value="github">GitHub 节点</option>
+     </select>
+     <span class="source-hint" id="sourceHint">自动模式：优先私人节点，失败时自动切换至 GitHub</span>
+   </div>
+
+   <div class="link-config" id="linkConfig" style="margin-bottom:16px;padding:12px;background:#f9f9f9;border-radius:6px;display:none;">
+     <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:#333;">自定义更新链接</div>
+     <div style="margin-bottom:8px;">
+       <div style="font-size:12px;color:#666;margin-bottom:4px;">私人推送节点 URL</div>
+       <input type="text" id="uhubUrlInput" placeholder="https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/latest" style="width:100%;padding:7px 10px;border:1px solid #ccc;border-radius:4px;font-size:13px;box-sizing:border-box;">
+     </div>
+     <div style="margin-bottom:8px;">
+       <div style="font-size:12px;color:#666;margin-bottom:4px;">GitHub 仓库 (owner/repo)</div>
+       <input type="text" id="ghRepoInput" placeholder="xiaoxuanzz/zukicloud" style="width:100%;padding:7px 10px;border:1px solid #ccc;border-radius:4px;font-size:13px;box-sizing:border-box;">
+     </div>
+<div style="font-size:12px;color:#999;">修改后点击"保存"生效，非作者提供的新链接可能导致无法更新</div>
+      <button id="btnSaveLinks" onclick="saveCustomLinks()" style="margin-top:8px;padding:5px 14px;font-size:12px;cursor:pointer;">保存链接</button>
     </div>
-    <div class="version-row">
-        <span class="version-label">最新版本:</span>
-        <span class="version-value" id="latestVersion">--</span>
+
+  <div class="version-row">
+      <span class="version-label">当前版本:</span>
+      <span class="version-value" id="localVersion">--</span>
+  </div>
+  <div class="version-row">
+      <span class="version-label">最新版本:</span>
+      <span class="version-value" id="latestVersion">--</span>
+  </div>
+<div class="controls">
+       <button id="btnEditLinks" onclick="toggleLinkConfig()" style="font-size:13px;">修改更新链接</button>
+       <button id="btnCheck" onclick="checkUpdate()">检查更新</button>
+       <button id="btnUpdateNow" onclick="showUpdateConfirm()" style="display:none;">立即更新</button>
+       <label style="margin-left:10px;cursor:pointer;font-size:13px;">
+           <input type="checkbox" id="autoCheck" onchange="toggleAutoCheck()"> 自动检查
+       </label>
+   </div>
+  <div class="result-box" id="resultBox"></div>
+
+<div class="changelog-section" id="changelogSection">
+     <div style="font-size:14px;font-weight:700;color:#333;margin-bottom:8px;">历史更新日志</div>
+<div class="changelog-tabs" id="changelogTabs">
+        <div class="changelog-tab active" data-filter="all" onclick="switchChangelogTab(this,'all')">全部</div>
+       <div style="margin-left:auto;font-size:11px;color:#999;" id="changelogCount"></div>
+     </div>
+    <div class="changelog-content" id="changelogList">
+      <div class="changelog-loading">加载中...</div>
     </div>
-    <div class="controls">
-        <button id="btnCheck" onclick="checkUpdate()">检查更新</button>
-        <label style="margin-left:15px;cursor:pointer;">
-            <input type="checkbox" id="autoCheck" onchange="toggleAuto()"> 自动检查
-        </label>
+    <div style="text-align:center;margin-top:10px;">
+      <button class="btn-primary" id="btnLoadMore" onclick="loadMoreChangelog()" style="display:none;">加载更多</button>
+      <span id="changelogNoMore" style="font-size:12px;color:#999;display:none;">-- 已加载全部 --</span>
     </div>
-    <div class="result-box" id="resultBox"></div>
+  </div>
 </div>
 
 <div class="progress-modal" id="progressModal">
     <div class="progress-box" id="progressBox">
-        <h3 style="margin:0 0 20px;">正在更新...</h3>
+        <h3>正在更新...</h3>
         <div class="progress-bar idle" id="progressBarContainer">
             <div class="progress-fill" id="progressFill"></div>
             <div class="progress-percent" id="progressPercent">0%</div>
@@ -172,22 +189,143 @@ ob_start();
 
 <script>
 var STORAGE_KEY = 'zuki_update_hash';
-var AUTO_KEY = 'zuki_auto_check';
+var AUTO_CHECK_KEY = 'zuki_auto_check';
+var SOURCE_KEY  = 'zuki_update_source';
+var UHUB_URL_KEY = 'zuki_uhub_url';
+var GH_REPO_KEY  = 'zuki_gh_repo';
 var _latestInfo = null;
 var _checking = false;
-var _autoTimer = null;
 var _lastDownloaded = 0;
 var _lastTime = 0;
-var BRANCH = 'main';
-var _loadingDots = '';
-var _loadingTimer = null;
+var _currentSource = 'auto';
+
+var _defaultUhubUrl = 'https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud';
+var _defaultGhRepo  = 'xiaoxuanzz/zukicloud';
+var _customUhubUrl = null;
+var _customGhRepo  = null;
 
 function init() {
-    var autoOn = localStorage.getItem(AUTO_KEY) === '1';
-    document.getElementById('autoCheck').checked = autoOn;
-    loadLocalVersion();
-    fetchLatestVersion();
+      loadLocalVersion();
+      restoreSource();
+      restoreAutoCheck();
+      restoreCustomLinks();
+      updateSourceHint();
+      fetchChangelog();
+      fetchLatestVersion();
+
+     document.getElementById('sourceSelector').addEventListener('change', function() {
+         _currentSource = this.value;
+         localStorage.setItem(SOURCE_KEY, _currentSource);
+         updateSourceHint();
+         fetchChangelog();
+         fetchLatestVersion();
+         // 切换源后自动检查
+         checkUpdate();
+     });
+
+     // 进入页面强制检查一次
+     setTimeout(function() { checkUpdate(); }, 500);
+ }
+
+function restoreSource() {
+    var saved = localStorage.getItem(SOURCE_KEY);
+    if (saved && (saved === 'auto' || saved === 'uhub' || saved === 'github')) {
+        _currentSource = saved;
+        var sel = document.getElementById('sourceSelector');
+        if (sel) {
+            for (var i = 0; i < sel.options.length; i++) {
+                if (sel.options[i].value === saved) {
+                    sel.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+    }
 }
+
+function restoreAutoCheck() {
+      var autoOn = localStorage.getItem(AUTO_CHECK_KEY) === '1';
+      var cb = document.getElementById('autoCheck');
+      if (cb) cb.checked = autoOn;
+  }
+
+ function restoreCustomLinks() {
+     var savedUhub = localStorage.getItem(UHUB_URL_KEY);
+     var savedGh   = localStorage.getItem(GH_REPO_KEY);
+     var input1 = document.getElementById('uhubUrlInput');
+     var input2 = document.getElementById('ghRepoInput');
+     if (input1) input1.value = savedUhub || _defaultUhubUrl;
+     if (input2) input2.value = savedGh   || _defaultGhRepo;
+     _customUhubUrl = savedUhub || null;
+     _customGhRepo  = savedGh  || null;
+ }
+
+function toggleLinkConfig() {
+      var el = document.getElementById('linkConfig');
+      var btn = document.getElementById('btnEditLinks');
+      if (!el) return;
+      if (el.style.display === 'none') {
+          el.style.display = 'block';
+          if (btn) btn.textContent = '隐藏更新链接';
+      } else {
+          el.style.display = 'none';
+          if (btn) btn.textContent = '修改更新链接';
+      }
+  }
+
+ function saveCustomLinks() {
+     var input1 = document.getElementById('uhubUrlInput');
+     var input2 = document.getElementById('ghRepoInput');
+     var uhub = input1 ? input1.value.trim() : '';
+     var gh   = input2 ? input2.value.trim() : '';
+
+     if (uhub && uhub !== _defaultUhubUrl) {
+         if (!confirm('你修改了私人推送节点链接，非作者提供的新链接可能导致无法更新。\n确定要保存吗？')) return;
+         localStorage.setItem(UHUB_URL_KEY, uhub);
+         _customUhubUrl = uhub;
+     } else {
+         localStorage.removeItem(UHUB_URL_KEY);
+         _customUhubUrl = null;
+     }
+
+     if (gh && gh !== _defaultGhRepo) {
+         if (!confirm('你修改了 GitHub 仓库，非作者提供的新仓库可能导致无法更新。\n确定要保存吗？')) return;
+         localStorage.setItem(GH_REPO_KEY, gh);
+         _customGhRepo = gh;
+     } else {
+         localStorage.removeItem(GH_REPO_KEY);
+         _customGhRepo = null;
+     }
+
+     alert('链接已保存，刷新后生效');
+ }
+
+ function getAjaxParams() {
+     var p = {};
+     if (_customUhubUrl) p.uhub_url = _customUhubUrl;
+     if (_customGhRepo)  p.gh_repo  = _customGhRepo;
+     return p;
+ }
+
+ function buildQuery(base, params) {
+     if (!params || Object.keys(params).length === 0) return base;
+     var sep = base.indexOf('?') === -1 ? '?' : '&';
+     return base + sep + Object.keys(params).map(function(k) {
+         return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+     }).join('&');
+ }
+
+function updateSourceHint() {
+     var hint = document.getElementById('sourceHint');
+     if (!hint) return;
+     if (_currentSource === 'auto') {
+         hint.textContent = '自动模式：优先私人节点，失败时自动切换至 GitHub';
+     } else if (_currentSource === 'uhub') {
+         hint.textContent = '仅使用私人推送节点';
+     } else {
+         hint.textContent = '仅使用 GitHub 节点';
+     }
+ }
 
 function loadLocalVersion() {
     var hash = localStorage.getItem(STORAGE_KEY) || '';
@@ -195,59 +333,192 @@ function loadLocalVersion() {
 }
 
 function startLoadingDots(el) {
-    _loadingDots = '';
-    _loadingTimer = setInterval(function() {
-        _loadingDots = _loadingDots.length >= 5 ? '' : _loadingDots + '.';
-        if (el) el.textContent = '获取中' + _loadingDots;
+    if (!el) return;
+    el.dataset.dots = '0';
+    el._loadingTimer = setInterval(function() {
+        var dots = parseInt(el.dataset.dots || '0');
+        el.textContent = '获取中' + '.'.repeat((dots + 1) % 4 + 1);
+        el.dataset.dots = String(dots + 1);
     }, 400);
 }
 
-function stopLoadingDots() {
-    if (_loadingTimer) { clearInterval(_loadingTimer); _loadingTimer = null; }
+function stopLoadingDots(el) {
+    if (el && el._loadingTimer) { clearInterval(el._loadingTimer); el._loadingTimer = null; }
 }
 
-function toggleAuto() {
-    var cb = document.getElementById('autoCheck');
-    var isOn = cb.checked;
-    localStorage.setItem(AUTO_KEY, isOn ? '1' : '0');
-    if (isOn) startAutoCheck(); else stopAutoCheck();
+function fetchChangelog() {
+    var listEl = document.getElementById('changelogList');
+    var countEl = document.getElementById('changelogCount');
+    var sectionEl = document.getElementById('changelogSection');
+    if (listEl) listEl.innerHTML = '<div class="changelog-loading">加载中...</div>';
+    if (countEl) countEl.textContent = '';
+    if (sectionEl) sectionEl.style.display = 'block';
+
+var limit = 20;
+     var page = 1;
+     var url = buildQuery('ajax_update.php?act=changelog&source=' + _currentSource + '&limit=' + limit + '&page=' + page + '&_=' + Date.now(), getAjaxParams());
+     fetch(url)
+        .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function(data) {
+            if (data.code === 0) {
+                processChangelogData(data.data);
+            } else {
+                throw new Error(data.msg || '获取日志失败');
+            }
+        })
+        .catch(function(err) {
+            console.error('日志获取失败:', err);
+            if (listEl) listEl.innerHTML = '<div class="changelog-loading">获取日志失败：' + escapeHtml(err.message) + '</div>';
+            if (countEl) countEl.textContent = '';
+        });
 }
 
-function startAutoCheck() {
-    stopAutoCheck();
-    _autoTimer = setInterval(function() { checkUpdate(); }, 3600000);
+function processChangelogData(data) {
+    if (!data || !data.logs || data.logs.length === 0) {
+        var listEl = document.getElementById('changelogList');
+        if (listEl) listEl.innerHTML = '<div class="changelog-loading">暂无日志</div>';
+        var countEl = document.getElementById('changelogCount');
+        if (countEl) countEl.textContent = '共 0 条';
+        return;
+    }
+
+    if (!window._clState) window._clState = { allLogs: [], page: 1, filter: 'all', limit: 20 };
+    window._clState.allLogs = data.logs;
+    window._clState.total = data.count || data.logs.length;
+    window._clState.page = data.page || 1;
+    window._clState.limit = data.limit || 20;
+    window._clState.pages = data.pages || 1;
+    window._clState.filter = 'all';
+
+    applyChangelogFilter();
+
+    var countEl = document.getElementById('changelogCount');
+    if (countEl) countEl.textContent = '共 ' + window._clState.total + ' 条';
+
+    var btnMore = document.getElementById('btnLoadMore');
+    var noMore = document.getElementById('changelogNoMore');
+    if (btnMore && noMore) {
+        if (window._clState.page >= window._clState.pages) {
+            btnMore.style.display = 'none';
+            noMore.style.display = 'inline';
+        } else {
+            btnMore.style.display = 'inline-block';
+            noMore.style.display = 'none';
+        }
+    }
 }
 
-function stopAutoCheck() {
-    if (_autoTimer) { clearInterval(_autoTimer); _autoTimer = null; }
+function applyChangelogFilter() {
+    var state = window._clState;
+    if (!state) return;
+    var filtered = state.allLogs;
+    if (state.filter === 'live') filtered = filtered.filter(function(l) { return l.is_live; });
+    if (state.filter === 'unpush') filtered = filtered.filter(function(l) { return !l.is_live; });
+
+    var start = (state.page - 1) * state.limit;
+    var pageItems = filtered.slice(start, start + state.limit);
+
+    var html = '', count = 0;
+    pageItems.forEach(function(log) {
+        count++;
+        var lines = log.changelog ? log.changelog.split('\n').filter(function(l) { return l.trim(); }) : [];
+        html += '<div class="changelog-entry">';
+        html += '<div><span class="ver">v' + escapeHtml(log.version || '') + '</span><span class="time">' + escapeHtml(log.created_at ? log.created_at.substring(0, 10) : '') + '</span></div>';
+        if (lines.length > 0) {
+            lines.forEach(function(line) { html += '<div class="msg">' + escapeHtml(line) + '</div>'; });
+        } else {
+            html += '<div class="msg" style="color:#999;">暂无更新说明</div>';
+        }
+        html += '</div>';
+    });
+
+    var listEl = document.getElementById('changelogList');
+    if (listEl) {
+        if (count === 0) {
+            listEl.innerHTML = '<div class="changelog-loading">暂无符合条件的日志</div>';
+        } else {
+            listEl.innerHTML = html;
+        }
+    }
+
+    var btnMore = document.getElementById('btnLoadMore');
+    var noMore = document.getElementById('changelogNoMore');
+    if (btnMore && noMore) {
+        if (start + pageItems.length >= filtered.length && state.page >= state.pages) {
+            btnMore.style.display = 'none';
+            noMore.style.display = 'inline';
+        } else {
+            btnMore.style.display = 'inline-block';
+            noMore.style.display = 'none';
+        }
+    }
+}
+
+function switchChangelogTab(el, filter) {
+    if (el) {
+        var container = el.closest('.changelog-section');
+        if (container) container.querySelectorAll('.changelog-tab').forEach(function(t) { t.classList.remove('active'); });
+        el.classList.add('active');
+    }
+    if (window._clState) {
+        window._clState.filter = filter;
+        window._clState.page = 1;
+        applyChangelogFilter();
+    }
+}
+
+function loadMoreChangelog() {
+    if (!window._clState) return;
+    var nextPage = window._clState.page + 1;
+    if (nextPage > window._clState.pages) return;
+    var limit = window._clState.limit;
+    var url = buildQuery('ajax_update.php?act=changelog&source=' + _currentSource + '&limit=' + limit + '&page=' + nextPage + '&_=' + Date.now(), getAjaxParams());
+     fetch(url)
+        .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function(data) {
+            if (data.code === 0 && data.data && data.data.logs && data.data.logs.length > 0) {
+                var d = data.data;
+                window._clState.allLogs = window._clState.allLogs.concat(d.logs);
+                window._clState.page = nextPage;
+                window._clState.total = d.count || window._clState.total;
+                window._clState.pages = d.pages || window._clState.pages;
+                applyChangelogFilter();
+            }
+        })
+        .catch(function(err) { console.error('加载更多日志失败:', err); });
 }
 
 function fetchLatestVersion() {
     var el = document.getElementById('latestVersion');
+    if (!el) return;
     el.textContent = '获取中...';
     startLoadingDots(el);
-    
-    var url = 'https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=' + BRANCH + '&per_page=1';
-    var timer = setTimeout(function() { 
-        stopLoadingDots();
-        document.getElementById('latestVersion').textContent = '获取失败'; 
-    }, 10000);
-    
-    fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
-        .then(function(r) { clearTimeout(timer); if (!r.ok) throw new Error(); return r.json(); })
-        .then(function(data) {
-            stopLoadingDots();
-            if (Array.isArray(data) && data.length > 0) {
-                var c = data[0];
-                _latestInfo = { hash: c.sha, short: c.sha.substring(0, 7), message: c.commit.message.split('\n')[0] };
-                document.getElementById('latestVersion').textContent = _latestInfo.short;
+
+var url = buildQuery('ajax_update.php?act=check&source=' + _currentSource + '&_=' + Date.now(), getAjaxParams());
+     fetch(url)
+         .then(function(r) {
+             stopLoadingDots(el);
+             if (!r.ok) throw new Error('HTTP ' + r.status);
+             return r.json();
+         })
+         .then(function(resp) {
+            stopLoadingDots(el);
+            if (resp.code === 0 && resp.data && resp.data.version) {
+                var ver = resp.data.version;
+                _latestInfo = { hash: ver, short: ver };
+                el.textContent = ver;
+            } else if (resp.code === 0 && resp.data && resp.data.sha) {
+                var sha = resp.data.sha.substring(0, 7);
+                _latestInfo = { hash: resp.data.sha, short: sha };
+                el.textContent = sha;
             } else {
-                document.getElementById('latestVersion').textContent = '获取失败'; 
+                el.textContent = '获取失败';
             }
         })
-        .catch(function(e) { 
-            stopLoadingDots();
-            document.getElementById('latestVersion').textContent = '获取失败'; 
+        .catch(function(err) {
+            stopLoadingDots(el);
+            console.error('获取最新版本失败:', err);
+            if (el) el.textContent = '获取失败';
         });
 }
 
@@ -255,56 +526,147 @@ function checkUpdate() {
     if (_checking) return;
     _checking = true;
     var btn = document.getElementById('btnCheck');
-    btn.disabled = true;
-    btn.textContent = '检查中...';
-    
-    var url = 'https://api.github.com/repos/xiaoxuanzz/zukicloud/commits?sha=' + BRANCH + '&per_page=1';
-    var timer = setTimeout(function() { 
+    if (btn) { btn.disabled = true; btn.textContent = '检查中...'; }
+
+    var timer = setTimeout(function() {
         _checking = false;
-        btn.disabled = false;
-        btn.textContent = '检查更新';
-        showResult('error', '<strong>连接失败</strong> - 请检查网络');
+        if (btn) { btn.disabled = false; btn.textContent = '检查更新'; }
+        showResult('error', '<strong>连接超时</strong> - 请检查网络');
     }, 15000);
-    
-    fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
-        .then(function(r) { clearTimeout(timer); if (!r.ok) throw new Error(); return r.json(); })
-        .then(function(data) {
+
+var url = buildQuery('ajax_update.php?act=check&source=' + _currentSource + '&_=' + Date.now(), getAjaxParams());
+     fetch(url)
+         .then(function(r) { clearTimeout(timer); return r.json(); })
+        .then(function(resp) {
             _checking = false;
-            btn.disabled = false;
-            btn.textContent = '检查更新';
-            if (Array.isArray(data) && data.length > 0) {
-                var c = data[0];
-                var localHash = localStorage.getItem(STORAGE_KEY) || '';
-                var localShort = localHash ? localHash.substring(0, 7) : '无记录';
-                var short = c.sha.substring(0, 7);
-                if (localHash && localHash === c.sha) {
-                    showResult('success', '<strong>已是最新版本</strong> (' + short + ')');
-                } else {
-                    var html = localHash ? '<strong>发现新版本!</strong><br>本地:' + localShort + ' → 最新:' + short : '<strong>首次记录版本</strong><br>最新:' + short;
-                    html += '<br><br>';
-                    html += '<button class="btn btn-primary" onclick="showUpdateConfirm()">立即更新</button> ';
-                    html += '<button onclick="saveVersion(\'' + c.sha + '\')">仅记录版本</button>';
-                    if (localHash) html += ' <button onclick="clearVersion()">清除记录</button>';
-                    showResult('warning', html);
-                }
-                _latestInfo = { hash: c.sha, short: short, message: c.commit.message.split('\n')[0] };
-                document.getElementById('latestVersion').textContent = short;
+            if (btn) { btn.disabled = false; btn.textContent = '检查更新'; }
+            if (resp.code === 0 && resp.data) {
+                var sourceName = resp.source || '后端代理';
+                processCheckResult(resp.data, sourceName);
             } else {
-                showResult('error', '<strong>获取版本信息失败</strong>');
+                showResult('error', '<strong>检查失败</strong> - ' + (resp.msg || '未知错误'));
             }
         })
-        .catch(function(e) { 
+        .catch(function(err) {
+            clearTimeout(timer);
             _checking = false;
-            btn.disabled = false;
-            btn.textContent = '检查更新';
-            showResult('error', '<strong>连接失败</strong> - 请检查网络');
+            if (btn) { btn.disabled = false; btn.textContent = '检查更新'; }
+            showResult('error', '<strong>连接失败</strong> - ' + err.message);
         });
 }
 
-function showResult(type, html) {
-    var resultBox = document.getElementById('resultBox');
-    resultBox.className = 'result-box show ' + type;
-    resultBox.innerHTML = html;
+function processCheckResult(data, sourceName) {
+    if (!data) {
+        showResult('success', '<strong>当前已是最新版本</strong>（暂无更新日志）');
+        return;
+    }
+
+    var hasLogs = data.logs && Array.isArray(data.logs) && data.logs.length > 0;
+    var hasVersion = data.version || data.tag || data.sha;
+
+    if (!hasLogs && !hasVersion && !data.message) {
+        showResult('success', '<strong>当前已是最新版本</strong>（暂无更新日志）');
+        return;
+    }
+
+    var latest = data;
+    var localHash = localStorage.getItem(STORAGE_KEY) || '';
+    var displayVer = latest.version || latest.tag || latest.sha || '未知';
+    displayVer = displayVer.replace(/^v/i, '');
+
+    updateLatestVersionDisplay(displayVer);
+
+    if (localHash) {
+        var localCompare = localHash.replace(/^v/i, '');
+        var remoteCompare = displayVer;
+        var isSame = (localCompare === remoteCompare) || (localHash === (latest.version || latest.tag || latest.sha));
+        if (isSame) {
+            showResult('success', '<strong>已是最新版本</strong> (' + escapeHtml(localHash.substring(0, 7)) + ')');
+            return;
+        }
+    }
+
+    var html = '';
+    if (localHash) {
+        html = '<strong style="color:#f0883e;">发现新版本！</strong><br>本地: ' + escapeHtml(localHash.substring(0, 7)) + '  最新: ' + escapeHtml(displayVer);
+    } else {
+        html = '<strong>首次记录版本</strong><br>最新: ' + escapeHtml(displayVer);
+    }
+
+    if (latest.changelog) {
+        var lines = latest.changelog.split('\n');
+        html += '<div style="margin-top:12px;text-align:left;font-size:13px;max-height:200px;overflow-y:auto;">';
+        lines.forEach(function(line) { line = line.trim(); if (line) html += '<div style="margin:2px 0;font-size:12px;color:#555;">' + escapeHtml(line) + '</div>'; });
+        html += '</div>';
+    } else if (data.logs && data.logs.length > 0) {
+        var recent = data.logs.slice(0, 3);
+        html += '<div style="margin-top:12px;text-align:left;font-size:13px;max-height:200px;overflow-y:auto;">';
+        recent.forEach(function(log) {
+            var lines = log.changelog ? log.changelog.split('\n') : [];
+            html += '<div style="margin-bottom:8px;padding:8px;background:#f9f9f9;border-radius:6px;">';
+            html += '<div style="font-weight:600;color:#333;margin-bottom:4px;">v' + escapeHtml(log.version || log.sha || '') + ' <span style="color:#999;font-size:11px;">' + escapeHtml(log.created_at ? log.created_at.substring(0, 10) : '') + '</span></div>';
+            if (lines.length > 0) {
+                lines.forEach(function(line) { line = line.trim(); if (line) html += '<div style="margin:2px 0;font-size:12px;color:#555;">' + escapeHtml(line) + '</div>'; });
+            } else {
+                html += '<div style="font-size:12px;color:#999;">暂无更新说明</div>';
+            }
+            html += '</div>';
+        });
+        html += '</div>';
+        renderCheckChangelogPanel(data.logs);
+    }
+
+    html += '<div style="margin-top:10px;font-size:11px;color:#8b949e;">来源: ' + escapeHtml(sourceName) + '</div>';
+    html += '<br>';
+    html += '<button class="btn-primary" onclick="showUpdateConfirm()">立即更新</button> ';
+    html += '<button onclick="saveVersion(\'' + escapeHtml(displayVer) + '\')">仅记录版本</button>';
+    if (localHash) html += ' <button onclick="clearVersion()">清除记录</button>';
+
+    _latestInfo = { hash: displayVer, short: displayVer };
+    showResult('warning', html);
+}
+
+function updateLatestVersionDisplay(ver) {
+    var el = document.getElementById('latestVersion');
+    if (el) el.textContent = ver || '--';
+}
+
+function renderCheckChangelogPanel(logs) {
+    if (!logs || logs.length === 0) return;
+    if (!window._clStateChk) window._clStateChk = { allLogs: [], filter: 'all' };
+    window._clStateChk.allLogs = logs;
+    window._clStateChk.filter = 'all';
+    applyCheckChangelogFilter();
+}
+
+function applyCheckChangelogFilter() {
+    var state = window._clStateChk;
+    if (!state) return;
+    var filtered = state.allLogs;
+    if (state.filter === 'live') filtered = filtered.filter(function(l) { return l.is_live; });
+    if (state.filter === 'unpush') filtered = filtered.filter(function(l) { return !l.is_live; });
+
+    var html = '';
+    filtered.forEach(function(log) {
+        var lines = log.changelog ? log.changelog.split('\n').filter(function(l) { return l.trim(); }) : [];
+        html += '<div class="changelog-entry">';
+        html += '<div><span class="ver">v' + escapeHtml(log.version || log.sha || '') + '</span><span class="time">' + escapeHtml(log.created_at ? log.created_at.substring(0, 10) : '') + '</span></div>';
+        if (lines.length > 0) {
+            lines.forEach(function(line) { html += '<div class="msg">' + escapeHtml(line) + '</div>'; });
+        } else {
+            html += '<div class="msg" style="color:#999;">暂无更新说明</div>';
+        }
+        html += '</div>';
+    });
+
+    var listEl = document.getElementById('changelogList');
+    if (listEl) {
+        if (html === '') {
+            listEl.innerHTML = '<div class="changelog-loading">暂无符合条件的日志</div>';
+        } else {
+            listEl.innerHTML = html;
+        }
+    }
 }
 
 function showUpdateConfirm() {
@@ -314,134 +676,125 @@ function showUpdateConfirm() {
 
 function doUpdate() {
     var modal = document.getElementById('progressModal');
+    if (!modal) return;
     modal.style.display = 'block';
-    modal.style.position = 'fixed';
-    modal.style.top = '50%';
-    modal.style.left = '50%';
-    modal.style.transform = 'translate(-50%, -50%)';
-    modal.style.zIndex = '999999';
-
     var barContainer = document.getElementById('progressBarContainer');
-    barContainer.classList.remove('idle');
+    if (barContainer) barContainer.classList.remove('idle');
+    var ps = document.getElementById('progressStatus');
+    if (ps) { ps.textContent = '准备中...'; ps.className = 'progress-status active'; }
+    var tf = function(id, v) { var e = document.getElementById(id); if (e) e.textContent = v; };
+    tf('totalSize', '--'); tf('downloaded', '--'); tf('speed', '--');
+    var pf = document.getElementById('progressFill');
+    if (pf) { pf.style.width = '0%'; pf.classList.remove('done-glow'); }
+    var pb = document.getElementById('progressBox');
+    if (pb) pb.className = 'progress-box';
+    _lastDownloaded = 0; _lastTime = 0;
 
-    document.getElementById('progressStatus').textContent = '准备中...';
-    document.getElementById('progressStatus').className = 'progress-status active';
-    document.getElementById('totalSize').textContent = '--';
-    document.getElementById('downloaded').textContent = '--';
-    document.getElementById('speed').textContent = '--';
-    document.getElementById('progressFill').style.width = '0%';
-    document.getElementById('progressFill').classList.remove('done-glow');
-    document.getElementById('progressPercent').textContent = '0%';
-    document.getElementById('progressBox').className = 'progress-box';
-    _lastDownloaded = 0;
-    _lastTime = 0;
-    
-var progressTimer = setInterval(function() {
-        fetch('ajax_update.php?act=progress')
-            .then(function(r) { return r.json(); })
-            .then(function(resp) {
-                if (resp.code === 0 && resp.data) {
-                    var data = resp.data;
-                    var fill = document.getElementById('progressFill');
-                    var percent = document.getElementById('progressPercent');
-                    fill.style.width = data.percent + '%';
-                    percent.textContent = data.percent + '%';
-                    document.getElementById('progressStatus').textContent = data.msg;
-
-                    if (data.percent >= 100) {
-                        barContainer.classList.add('idle');
-                        fill.classList.add('done-glow');
-                        document.getElementById('progressBox').classList.add('complete');
-                        document.getElementById('progressStatus').className = 'progress-status success';
-                    } else if (data.percent < 0) {
-                        barContainer.classList.add('idle');
-                        document.getElementById('progressStatus').className = 'progress-status error';
-                    } else {
-                        document.getElementById('progressStatus').className = 'progress-status active';
-                    }
-                    if (data.total && data.total > 0) {
-                        document.getElementById('totalSize').textContent = formatSize(data.total);
-                    }
-                    if (data.downloaded && data.downloaded > 0) {
-                        document.getElementById('downloaded').textContent =
-                            formatSize(data.downloaded) + '/' + (data.total ? formatSize(data.total) : '?');
-                    }
-                    if (data.downloaded && data.total) {
-                        var now = Date.now() / 1000;
-                        if (_lastDownloaded > 0 && _lastTime > 0) {
-                            var deltaBytes = data.downloaded - _lastDownloaded;
-                            var deltaTime = Math.max(0.1, now - _lastTime);
-                            document.getElementById('speed').textContent = formatSize(Math.floor(deltaBytes / deltaTime)) + '/s';
-                        }
-                        _lastDownloaded = data.downloaded;
-                        _lastTime = now;
-                    }
+    var progressTimer = setInterval(function() {
+        fetch('ajax_update.php?act=progress').then(function(r) { return r.json(); }).then(function(resp) {
+            if (resp.code === 0 && resp.data) {
+                var data = resp.data;
+                if (pf) pf.style.width = data.percent + '%';
+                tf('progressPercent', data.percent + '%');
+                tf('progressStatus', data.msg);
+                if (data.percent >= 100) {
+                    if (barContainer) barContainer.classList.add('idle');
+                    if (pf) pf.classList.add('done-glow');
+                    if (pb) pb.classList.add('complete');
+                    if (ps) ps.className = 'progress-status success';
+                } else if (data.percent < 0) {
+                    if (barContainer) barContainer.classList.add('idle');
+                    if (ps) ps.className = 'progress-status error';
+                } else {
+                    if (ps) ps.className = 'progress-status active';
                 }
-            })
-            .catch(function() {});
+                if (data.total && data.total > 0) tf('totalSize', formatSize(data.total));
+                if (data.downloaded && data.downloaded > 0) tf('downloaded', formatSize(data.downloaded) + '/' + (data.total ? formatSize(data.total) : '?'));
+                if (data.downloaded && data.total) {
+                    var now = Date.now() / 1000;
+                    if (_lastDownloaded > 0 && _lastTime > 0) {
+                        var deltaBytes = data.downloaded - _lastDownloaded;
+                        var deltaTime = Math.max(0.1, now - _lastTime);
+                        tf('speed', formatSize(Math.floor(deltaBytes / deltaTime)) + '/s');
+                    }
+                    _lastDownloaded = data.downloaded;
+                    _lastTime = now;
+                }
+            }
+        }).catch(function() {});
     }, 1000);
 
-    var _lastDownloaded = 0;
-    var _lastTime = 0;
-
-    function formatSize(bytes) {
-        if (bytes < 1024) return bytes + 'B';
-        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + 'KB';
-        return (bytes / 1048576).toFixed(1) + 'MB';
-    }
-    
     var updateTimeout = setTimeout(function() {
         clearInterval(progressTimer);
-        document.getElementById('progressStatus').innerHTML = '<span style="color:red;">更新超时，请重试</span>';
+        tf('progressStatus', '<span style="color:red;">更新超时，请重试</span>');
     }, 600000);
-    
-    fetch('ajax_update.php?act=update', { method: 'POST' })
-        .then(function(r) { 
-            if (!r.ok) throw new Error('HTTP ' + r.status); 
-            return r.json(); 
-        })
-        .then(function(data) {
-            clearInterval(progressTimer);
-            clearTimeout(updateTimeout);
 
-            barContainer.classList.add('idle');
-
-            if (data.code === 0) {
-                document.getElementById('progressFill').classList.add('done-glow');
-                document.getElementById('progressBox').classList.add('complete');
-                document.getElementById('progressStatus').className = 'progress-status success';
-                document.getElementById('progressStatus').textContent = '✔ 更新成功！正在刷新...';
-                if (_latestInfo && _latestInfo.hash) {
-                    localStorage.setItem(STORAGE_KEY, _latestInfo.hash);
-                    loadLocalVersion();
-                }
-                setTimeout(function() {
-                    modal.style.animation = 'fadeSlideOut .3s ease forwards';
-                    setTimeout(function() { modal.style.display = 'none'; window.location.href = './update.php'; }, 300);
-                }, 2000);
-            } else {
-                document.getElementById('progressStatus').className = 'progress-status error';
-                document.getElementById('progressStatus').textContent = '✘ 更新失败: ' + (data.msg || '未知错误');
+    var url = buildQuery('ajax_update.php?act=update&source=' + _currentSource, getAjaxParams());
+     fetch(url, { method: 'POST' }).then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+    }).then(function(data) {
+        clearInterval(progressTimer);
+        clearTimeout(updateTimeout);
+        if (barContainer) barContainer.classList.add('idle');
+        if (data.code === 0) {
+            if (pf) { pf.classList.add('done-glow'); }
+            if (pb) { pb.classList.add('complete'); }
+            if (ps) { ps.className = 'progress-status success'; ps.textContent = '更新成功！正在刷新...'; }
+            if (_latestInfo && _latestInfo.hash) {
+                localStorage.setItem(STORAGE_KEY, _latestInfo.hash);
+                loadLocalVersion();
             }
-        })
-        .catch(function(e) {
-            clearInterval(progressTimer);
-            clearTimeout(updateTimeout);
-            var errMsg = e.message === 'Failed to fetch' ? '无法连接到服务器，请检查网络' : e.message;
-            document.getElementById('progressStatus').innerHTML = '<span style="color:red;">错误: ' + errMsg + '</span>';
-        });
+            setTimeout(function() {
+                if (modal) modal.style.display = 'none';
+                window.location.href = './update.php';
+            }, 2000);
+        } else {
+            if (ps) { ps.className = 'progress-status error'; ps.textContent = '更新失败: ' + (data.msg || '未知错误'); }
+        }
+    }).catch(function(e) {
+        clearInterval(progressTimer);
+        clearTimeout(updateTimeout);
+        var msg = '无法连接到服务器，请检查网络';
+        tf('progressStatus', '错误: ' + msg);
+    });
 }
 
-function saveVersion(hash) {
-    localStorage.setItem(STORAGE_KEY, hash);
-    loadLocalVersion();
+function saveVersion() {
+    var verEl = document.getElementById('latestVersion');
+    var hash = verEl ? verEl.textContent : '';
+    if (hash && hash !== '--' && hash !== '获取中...' && hash !== '获取失败') {
+        if (_latestInfo && _latestInfo.hash) hash = _latestInfo.hash;
+        localStorage.setItem(STORAGE_KEY, hash);
+        loadLocalVersion();
+    }
     showResult('success', '<strong>版本已保存</strong>');
 }
 
 function clearVersion() {
     localStorage.removeItem(STORAGE_KEY);
     loadLocalVersion();
-    document.getElementById('resultBox').className = 'result-box';
+    var rb = document.getElementById('resultBox');
+    if (rb) rb.className = 'result-box';
+}
+
+function showResult(type, html) {
+    var resultBox = document.getElementById('resultBox');
+    if (!resultBox) return;
+    resultBox.className = 'result-box show ' + type;
+    resultBox.innerHTML = html;
+}
+
+function escapeHtml(s) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(s));
+    return div.innerHTML;
+}
+
+function formatSize(bytes) {
+    if (bytes < 1024) return bytes + 'B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + 'KB';
+    return (bytes / 1048576).toFixed(1) + 'MB';
 }
 
 init();

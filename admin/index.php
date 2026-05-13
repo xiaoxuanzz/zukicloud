@@ -87,9 +87,41 @@ $(document).ready(function(){
         if(d.count2)$("#count2").html(d.count2);
         if(d.count4)$("#count4").html(d.count4);
     }});
-    
-    // 自动更新检测
+
+    // ── 自动更新检测 ──
+    var uhubApi = '';   // 留空则走 GitHub
     if (localStorage.getItem('zuki_auto_update') === '1') {
+        checkForUpdates();
+    }
+
+    function checkForUpdates() {
+        // 优先尝试 UpdateHub API
+        var slug = 'zukicloud';
+
+        if (uhubApi) {
+            fetch(uhubApi + '/api/' + slug + '/changelog?limit=5')
+                .then(function(r) { if (!r.ok) throw new Error(); return r.json(); })
+                .then(function(data) {
+                    if (data && data.logs && data.logs.length > 0) {
+                        var localHash = localStorage.getItem('zuki_update_hash') || '';
+                        var latestVer = data.logs[0].version;
+                        if (localHash && localHash === latestVer) {
+                            // 已是最新
+                        } else {
+                            showUpdateModalWithChangelog(data, localHash);
+                        }
+                    }
+                })
+                .catch(function() {
+                    // 降级 GitHub
+                    fetchFromGitHub();
+                });
+        } else {
+            fetchFromGitHub();
+        }
+    }
+
+    function fetchFromGitHub() {
         var giteeRepo = 'xiaoxuanzz/zukicloud';
         var branch = 'main';
         var gApiUrl = 'https://gitee.com/api/v5/repos/' + giteeRepo + '/commits?sha=' + encodeURIComponent(branch) + '&per_page=1';
@@ -102,17 +134,56 @@ $(document).ready(function(){
                     if (localHash !== c.sha) {
                         var shortHash = c.sha.substring(0, 7);
                         var msg = c.commit.message.split('\n')[0];
-                        showUpdateModal(shortHash, msg);
+                        // 构建简易 changelog 数据
+                        var logData = {
+                            logs: [{ version: shortHash, changelog: msg, created_at: c.commit.author.date, is_live: true }],
+                            count: 1
+                        };
+                        showUpdateModalWithChangelog(logData, localHash);
                     }
                 }
             })
             .catch(function() {});
     }
-    
-    function showUpdateModal(newVersion, newMsg) {
-        var localVersion = localStorage.getItem('zuki_update_hash') || '无记录';
-        var localShort = localVersion.substring ? localVersion.substring(0, 7) : localVersion;
-        
+
+    function showUpdateModalWithChangelog(data, localHash) {
+        var latest = data.logs[0];
+        var latestVer = latest.version;
+        var localShort = localHash ? localHash.substring(0, 7) : '无记录';
+
+        var html = '';
+        if (localHash) {
+            html = '<strong style="color:#f0883e;">发现新版本！</strong><br>本地: ' + localShort + ' → 最新: ' + latestVer;
+        } else {
+            html = '<strong>首次记录版本</strong><br>最新: ' + latestVer;
+        }
+
+        // 展示更新日志
+        if (data.logs && data.logs.length > 0) {
+            html += '<div style="margin-top:12px;text-align:left;font-size:13px;max-height:200px;overflow-y:auto;">';
+            data.logs.forEach(function(log) {
+                var lines = log.changelog ? log.changelog.split('\n') : [];
+                html += '<div style="margin-bottom:8px;padding:8px;background:#f9f9f9;border-radius:6px;">';
+                html += '<div style="font-weight:600;color:#333;margin-bottom:4px;">v' + esc(log.version) + ' <span style="color:#999;font-size:11px;">' + esc(log.created_at ? log.created_at.split('T')[0] : log.created_at || '') + '</span></div>';
+                if (lines.length > 0) {
+                    lines.forEach(function(line) {
+                        line = line.trim();
+                        if (!line) return;
+                        html += '<div style="margin:2px 0;font-size:12px;color:#555;">' + esc(line) + '</div>';
+                    });
+                } else {
+                    html += '<div style="font-size:12px;color:#999;">暂无更新说明</div>';
+                }
+                html += '</div>';
+            });
+            html += '</div>';
+        }
+
+        html += '<div style="margin-top:10px;font-size:11px;color:#8b949e;">来源: ' + (uhubApi ? 'UpdateHub' : 'GitHub') + '</div>';
+        html += '<br>';
+        html += '<button class="btn btn-primary" onclick="confirmUpdate()" style="flex:1;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;background:var(--zk-primary);color:#fff;">立即更新</button>';
+        html += '<button onclick="saveVersion(\'' + latestVer + '\')" style="flex:1;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;border:1px solid #ddd;cursor:pointer;background:#f5f7fa;color:#64748b;margin-left:8px;">仅记录</button>';
+
         var modalHtml = '<div id="zk-update-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0);z-index:999999;display:flex;align-items:center;justify-content:center;">' +
             '<div style="background:var(--zk-surface,#fff);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25);width:90%;max-width:420px;transform:scale(.9);transition:all .3s;">' +
             '<div style="padding:24px 24px 0;">' +
@@ -123,22 +194,20 @@ $(document).ready(function(){
             '<p style="font-size:13px;color:var(--zk-text-dim,#94a3b8);margin:0;">是否立即更新？</p></div></div>' +
             '<div style="background:var(--zk-bg,#f8fafc);border-radius:10px;padding:12px 16px;margin-bottom:16px;">' +
             '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:var(--zk-text-sub,#64748b);font-size:13px;">本地版本</span><code style="font-size:13px;">' + esc(localShort) + '</code></div>' +
-            '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:var(--zk-text-sub,#64748b);font-size:13px;">最新版本</span><code style="font-size:13px;color:var(--zk-primary,#5b8def);">' + esc(newVersion) + '</code></div>' +
-            '<div style="display:flex;gap:4px 8px;flex-wrap:wrap;"><span style="color:var(--zk-text-sub,#64748b);font-size:12px;">提交:</span><span style="font-size:12px;color:var(--zk-text,#1e293b);word-break:break-all;">' + esc(newMsg.substring(0, 50)) + '</span></div></div></div>' +
-            '<div style="display:flex;gap:10px;padding:0 24px 24px;">' +
-            '<button onclick="closeUpdateModal()" style="flex:1;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;background:var(--zk-bg,#f5f7fa);color:var(--zk-text-sub,#64748b);">取消</button>' +
-            '<button onclick="confirmUpdate()" style="flex:1;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;background:var(--zk-primary);color:#fff;">立即更新</button></div></div></div>';
-        
+            '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:var(--zk-text-sub,#64748b);font-size:13px;">最新版本</span><code style="font-size:13px;color:var(--zk-primary,#5b8def);">' + esc(latestVer) + '</code></div>' +
+            '</div>' + html +
+            '</div></div></div>';
+
         var modal = document.createElement('div');
         modal.innerHTML = modalHtml;
         document.body.appendChild(modal);
-        
+
         setTimeout(function() {
             document.getElementById('zk-update-modal').style.background = 'rgba(0,0,0,0.5)';
             document.getElementById('zk-update-modal').querySelector('div').style.transform = 'scale(1)';
         }, 10);
     }
-    
+
     window.closeUpdateModal = function() {
         var modal = document.getElementById('zk-update-modal');
         if (modal) {
@@ -147,12 +216,12 @@ $(document).ready(function(){
             setTimeout(function() { modal.remove(); }, 200);
         }
     };
-    
+
     window.confirmUpdate = function() {
         closeUpdateModal();
         window.location.href = './update.php';
     };
-    
+
     function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 });
 </script>

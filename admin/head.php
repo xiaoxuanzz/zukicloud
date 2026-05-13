@@ -54,7 +54,6 @@ if (!isset($currentPage)) {
         document.documentElement.style.setProperty('--zk-gradient', gradient);
       }
     } else if(savedTheme && savedTheme !== 'default'){
-      // 等待body加载后添加class
       document.addEventListener('DOMContentLoaded', function() {
         if(document.body) {
           document.body.classList.add(savedTheme);
@@ -67,7 +66,6 @@ if (!isset($currentPage)) {
   function showToast(msg, type, hideDelay) {
       type = type || 'info';
       hideDelay = hideDelay || 5000;
-      // 创建容器（如果不存在）
       var container = document.getElementById('toast-container');
       if (!container) {
           container = document.createElement('div');
@@ -75,7 +73,6 @@ if (!isset($currentPage)) {
           container.className = 'toast-container';
           document.body.appendChild(container);
       }
-      // 清除旧的
       var old = document.getElementById('zk-toast');
       if (old) old.remove();
       if (window._toastTimer) { clearTimeout(window._toastTimer); window._toastTimer = null; }
@@ -87,7 +84,6 @@ if (!isset($currentPage)) {
       el.innerHTML = '<i class="fa ' + (icons[type]||icons.info) + '"></i><span>' + msg + '</span>';
       el.onclick = function() { el.classList.add('toast-out'); setTimeout(function(){ el.remove(); }, 300); };
       container.appendChild(el);
-      // 动画启动
       requestAnimationFrame(function(){ el.style.opacity = '1'; });
       window._toastTimer = setTimeout(function() {
           el.classList.add('toast-out');
@@ -103,37 +99,18 @@ if (!isset($currentPage)) {
       var cancelText = opts.cancelText || '取消';
       var confirmClass = opts.confirmClass || 'btn-primary';
       var onConfirm = opts.onConfirm || function(){};
-      
       var modalHtml = '<div id="zk-confirm-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999998;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;" onclick="closeZkConfirm()"><div style="background:var(--zk-surface,#fff);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.2);width:90%;max-width:420px;transform:scale(.9) translateY(20px);transition:all .3s;" onclick="event.stopPropagation()"><div style="display:flex;align-items:center;gap:12px;padding:20px 24px 0;"><div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:' + (icon==='danger'?'#ef4444':'#f59e0b') + ';box-shadow:0 4px 12px rgba(0,0,0,.2);"><i class="fa fa-' + (icon==='danger'?'times':'exclamation-triangle') + '" style="font-size:22px;color:#fff;"></i></div><div><h3 style="font-size:18px;font-weight:700;color:var(--zk-text,#1e293b);margin:0 0 2px;">' + title + '</h3><p style="font-size:13px;color:var(--zk-text-dim,#94a3b8);margin:0;">' + subtitle + '</p></div></div><div style="display:flex;gap:10px;justify-content:flex-end;padding:16px 24px 20px;"><button onclick="closeZkConfirm()" style="padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;background:var(--zk-bg,#f5f7fa);color:var(--zk-text-sub,#64748b);">'+cancelText+'</button><button id="zk-confirm-ok" style="padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;' + (confirmClass==='btn-danger'?'background:#ef4444;color:#fff;':'background:var(--zk-primary,#5b8def);color:#fff;') + '">' + confirmText + '</button></div></div></div>';
-      
       var overlay = document.createElement('div');
       overlay.id = 'zk-confirm-overlay';
       overlay.innerHTML = modalHtml;
       document.body.appendChild(overlay);
-      
-      // 显示动画
-      setTimeout(function(){
-          overlay.style.opacity = '1';
-          overlay.querySelector('div').style.transform = 'scale(1) translateY(0)';
-      }, 10);
-      
-      // 确认按钮
-      document.getElementById('zk-confirm-ok').onclick = function() {
-          closeZkConfirm();
-          onConfirm();
-      };
-      
-      // 点击遮罩关闭
-      overlay.onclick = function(e) {
-          if(e.target === overlay) closeZkConfirm();
-      };
+      setTimeout(function(){ overlay.style.opacity = '1'; overlay.querySelector('div').style.transform = 'scale(1) translateY(0)'; }, 10);
+      document.getElementById('zk-confirm-ok').onclick = function() { closeZkConfirm(); onConfirm(); };
+      overlay.onclick = function(e) { if(e.target === overlay) closeZkConfirm(); };
   }
   function closeZkConfirm() {
       var overlay = document.getElementById('zk-confirm-overlay');
-      if(overlay) {
-          overlay.style.opacity = '0';
-          setTimeout(function(){ overlay.remove(); }, 300);
-      }
+      if(overlay) { overlay.style.opacity = '0'; setTimeout(function(){ overlay.remove(); }, 300); }
   }
   </script>
 </head>
@@ -162,7 +139,6 @@ if (!isset($currentPage)) {
     </ul>
   </nav>
   <div class="admin-content" style="flex:1;min-width:0;padding:20px;">
-    <!-- 移动端侧边栏展开按钮 - 汉堡菜单动画 -->
     <button class="hamburger-btn" onclick="toggleAdminSidebar()" style="display:none;position:fixed;top:10px;right:10px;z-index:10002;background:var(--zk-primary);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:0;">
       <span class="hamburger-icon">
         <span class="hamburger-line"></span>
@@ -174,116 +150,47 @@ if (!isset($currentPage)) {
     @media (max-width:767px) {
       .hamburger-btn { display: flex !important; align-items: center; justify-content: center; }
     }
-    .hamburger-icon {
-      display: flex; flex-direction: column; justify-content: center; align-items: center; width: 18px; height: 14px;
-      position: relative;
-    }
-    .hamburger-line {
-      display: block; width: 18px; height: 2px; background: #fff; border-radius: 2px;
-      position: absolute; transition: all 0.3s ease;
-    }
+    .hamburger-icon { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 18px; height: 14px; position: relative; }
+    .hamburger-line { display: block; width: 18px; height: 2px; background: #fff; border-radius: 2px; position: absolute; transition: all 0.3s ease; }
     .hamburger-line:nth-child(1) { top: 0; }
     .hamburger-line:nth-child(2) { top: 50%; transform: translateY(-50%); }
     .hamburger-line:nth-child(3) { bottom: 0; }
-    
-    /* 激活状态 - 三条线旋转成X */
-    .hamburger-btn.active .hamburger-line:nth-child(1) {
-      top: 50%; transform: translateY(-50%) rotate(45deg);
-    }
-    .hamburger-btn.active .hamburger-line:nth-child(2) {
-      opacity: 0; transform: translateX(-5px);
-    }
-    .hamburger-btn.active .hamburger-line:nth-child(3) {
-      bottom: 50%; transform: translateY(50%) rotate(-45deg);
-    }
+    .hamburger-btn.active .hamburger-line:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
+    .hamburger-btn.active .hamburger-line:nth-child(2) { opacity: 0; transform: translateX(-5px); }
+    .hamburger-btn.active .hamburger-line:nth-child(3) { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
     </style>
-    <!-- main content will be injected here by individual pages -->
     <?php
-    if (isset($content)) {
-      echo $content;
-    } else {
-      echo '<div class="panel panel-default" style="margin:20px;">
-              <div class="panel-heading"><strong>控制面板</strong></div>
-              <div class="panel-body">欢迎进入管理员后台。请选择左侧菜单进行操作。</div>
-            </div>';
-    }
+    if (isset($content)) { echo $content; }
+    else { echo '<div class="panel panel-default" style="margin:20px;"><div class="panel-heading"><strong>控制面板</strong></div><div class="panel-body">欢迎进入管理员后台。请选择左侧菜单进行操作。</div></div>'; }
     ?>
   </div>
-  <!-- Right side panel container (hidden by default) -->
   <div id="admin-right-overlay" class="admin-right-overlay" onclick="closeRightPanel()"></div>
   <div id="admin-right-panel" class="admin-right-panel" aria-label="API 开关区域"></div>
 </div>
 <?php } else { ?>
-  <nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-      <div class="navbar-header">
-        <a class="navbar-brand brand-link" href="https://space.bilibili.com/521205099" target="_blank"><?php echo $title ?></a>
-      </div>
+<nav class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand brand-link" href="https://space.bilibili.com/521205099" target="_blank"><?php echo $title ?></a>
     </div>
-  </nav>
-  <div class="container" style="padding-top:20px;">
-  <?php } ?>
-
-  <script>
-  function toggleAdminSidebar(){
-    var sidebar = document.getElementById('adminSidebar');
-    if(!sidebar) return;
-    sidebar.classList.toggle('open');
-    
-    // 切换汉堡按钮动画
-    var btn = document.querySelector('.hamburger-btn');
-    if(btn) btn.classList.toggle('active');
-    
-    var overlay = document.querySelector('.mobile-menu-overlay');
-    if(!overlay){
-      overlay = document.createElement('div');
-      overlay.className = 'mobile-menu-overlay';
-      overlay.onclick = function(){ toggleAdminSidebar(); };
-      document.body.appendChild(overlay);
-    }
-    overlay.classList.toggle('open');
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    var btn = document.querySelector('.hamburger-btn');
-    if(btn) btn.style.display = window.innerWidth <= 767 ? 'flex' : 'none';
-  });
-  window.addEventListener('resize', function(){
-    var btn = document.querySelector('.hamburger-btn');
-    if(btn) btn.style.display = window.innerWidth <= 767 ? 'flex' : 'none';
-  });
-  </script>
-  <script>
-  function openRightPanel(){
-    var panel = document.getElementById('admin-right-panel');
-    var overlay = document.getElementById('admin-right-overlay');
-    if (!panel || !overlay) return;
-    if (!panel.dataset.loaded){
-      fetch('./api_toggle_panel.php').then(r => r.text()).then(html => {
-        panel.innerHTML = html;
-        panel.dataset.loaded = '1';
-        panel.classList.add('open');
-        overlay.classList.add('open');
-      }).catch(() => {
-        panel.innerHTML = '<div style="padding:16px;">加载失败</div>';
-        panel.classList.add('open');
-        overlay.classList.add('open');
-      });
-    } else {
-      panel.classList.add('open');
-      overlay.classList.add('open');
-    }
-  }
-  function closeRightPanel(){
-    var panel = document.getElementById('admin-right-panel');
-    var overlay = document.getElementById('admin-right-overlay');
-    if (panel && overlay){ panel.classList.remove('open'); overlay.classList.remove('open'); }
-  }
-  // 监听 localStorage 变化，同步前台主题
-  window.addEventListener('storage', function(e){
-    if(e.key === 'theme-color' || e.key === 'theme-custom-color' || e.key === 'theme-gradient-start' || e.key === 'theme-gradient-end'){
-      location.reload();
-    }
-  });
-  </script>
+  </div>
+</nav>
+<div class="container" style="padding-top:20px;">
+<?php } ?>
+<script>
+function toggleAdminSidebar(){
+  var sidebar = document.getElementById('adminSidebar');
+  if(!sidebar) return; sidebar.classList.toggle('open');
+  var btn = document.querySelector('.hamburger-btn'); if(btn) btn.classList.toggle('active');
+  var overlay = document.querySelector('.mobile-menu-overlay');
+  if(!overlay){ overlay = document.createElement('div'); overlay.className = 'mobile-menu-overlay'; overlay.onclick = function(){ toggleAdminSidebar(); }; document.body.appendChild(overlay); }
+  overlay.classList.toggle('open');
+}
+document.addEventListener('DOMContentLoaded', function(){ var btn = document.querySelector('.hamburger-btn'); if(btn) btn.style.display = window.innerWidth <= 767 ? 'flex' : 'none'; });
+window.addEventListener('resize', function(){ var btn = document.querySelector('.hamburger-btn'); if(btn) btn.style.display = window.innerWidth <= 767 ? 'flex' : 'none'; });
+function openRightPanel(){ var panel=document.getElementById('admin-right-panel'),overlay=document.getElementById('admin-right-overlay'); if(!panel||!overlay)return; if(!panel.dataset.loaded){fetch('./api_toggle_panel.php').then(r=>r.text()).then(html=>{panel.innerHTML=html;panel.dataset.loaded='1';panel.classList.add('open');overlay.classList.add('open');}).catch(()=>{panel.innerHTML='<div style="padding:16px;">加载失败</div>';panel.classList.add('open');overlay.classList.add('open');});}else{panel.classList.add('open');overlay.classList.add('open');} }
+function closeRightPanel(){var panel=document.getElementById('admin-right-panel'),overlay=document.getElementById('admin-right-overlay');if(panel&&overlay){panel.classList.remove('open');overlay.classList.remove('open');}}
+window.addEventListener('storage', function(e){ if(e.key==='theme-color'||e.key==='theme-custom-color'||e.key==='theme-gradient-start'||e.key==='theme-gradient-end') location.reload(); });
+</script>
 </body>
 </html>
