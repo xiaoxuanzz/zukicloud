@@ -190,7 +190,7 @@
               <a href="./upload.php" class="nav-glider-tab <?php echo checkIfActive('upload') ? 'active' : '' ?>" data-index="1"><i class="fa fa-cloud-upload"></i> <span>上传文件</span></a>
               <a href="./?m=mine" class="nav-glider-tab <?php echo checkIfActive('mine') ? 'active' : '' ?>" data-index="2"><i class="fa fa-folder-open"></i> <span>我的文件</span></a>
               <a class="nav-glider-tab brand-link" href="https://www.bilibili.com/video/BV1HRXfBNE4q/" target="_blank" rel="noopener" data-index="3"><i class="fa fa-terminal"></i> <span>Python</span></a>
-              <a href="javascript:;" class="nav-glider-tab" onclick="alert('Android模块暂未开放')"><i class="fa fa-android"></i> <span>Android</span></a>
+              <a class="nav-glider-tab brand-link" href="https://www.bilibili.com/video/BV1fiLu6YEUv/" target="_blank"><i class="fa fa-android"></i> <span>Android</span></a>
               <a href="javascript:;" class="nav-glider-tab" onclick="alert('Harmony模块暂未开放')"><i class="fa fa-link"></i> <span>Harmony</span></a>
               <a class="nav-glider-tab brand-link" href="https://www.bilibili.com/video/BV1iK9FBoEWv" target="_blank"><i class="fa fa-microchip"></i> <span>stm32/cc2530</span></a>
               <span class="nav-glider"></span>
