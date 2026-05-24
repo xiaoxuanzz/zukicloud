@@ -88,142 +88,100 @@ $(document).ready(function(){
         if(d.count4)$("#count4").html(d.count4);
     }});
 
-    // ── 自动更新检测 ──
-    var uhubApi = '';   // 留空则走 GitHub
-    if (localStorage.getItem('zuki_auto_update') === '1') {
-        checkForUpdates();
-    }
-
-    function checkForUpdates() {
-        // 优先尝试 UpdateHub API
-        var slug = 'zukicloud';
-
-        if (uhubApi) {
-            fetch(uhubApi + '/api/' + slug + '/changelog?limit=5')
-                .then(function(r) { if (!r.ok) throw new Error(); return r.json(); })
-                .then(function(data) {
-                    if (data && data.logs && data.logs.length > 0) {
-                        var localHash = localStorage.getItem('zuki_update_hash') || '';
-                        var latestVer = data.logs[0].version;
-                        if (localHash && localHash === latestVer) {
-                            // 已是最新
-                        } else {
-                            showUpdateModalWithChangelog(data, localHash);
-                        }
-                    }
-                })
-                .catch(function() {
-                    // 降级 GitHub
-                    fetchFromGitHub();
-                });
-        } else {
-            fetchFromGitHub();
-        }
-    }
-
-    function fetchFromGitHub() {
-        var giteeRepo = 'xiaoxuanzz/zukicloud';
-        var branch = 'main';
-        var gApiUrl = 'https://gitee.com/api/v5/repos/' + giteeRepo + '/commits?sha=' + encodeURIComponent(branch) + '&per_page=1';
-        fetch(gApiUrl, { headers: { 'Accept': 'application/json' } })
-            .then(function(r) { if (!r.ok) throw new Error(); return r.json(); })
-            .then(function(data) {
-                if (Array.isArray(data) && data.length > 0) {
-                    var c = data[0];
-                    var localHash = localStorage.getItem('zuki_update_hash') || '';
-                    if (localHash !== c.sha) {
-                        var shortHash = c.sha.substring(0, 7);
-                        var msg = c.commit.message.split('\n')[0];
-                        // 构建简易 changelog 数据
-                        var logData = {
-                            logs: [{ version: shortHash, changelog: msg, created_at: c.commit.author.date, is_live: true }],
-                            count: 1
-                        };
-                        showUpdateModalWithChangelog(logData, localHash);
-                    }
-                }
-            })
-            .catch(function() {});
-    }
-
-    function showUpdateModalWithChangelog(data, localHash) {
-        var latest = data.logs[0];
-        var latestVer = latest.version;
-        var localShort = localHash ? localHash.substring(0, 7) : '无记录';
-
-        var html = '';
-        if (localHash) {
-            html = '<strong style="color:#f0883e;">发现新版本！</strong><br>本地: ' + localShort + ' → 最新: ' + latestVer;
-        } else {
-            html = '<strong>首次记录版本</strong><br>最新: ' + latestVer;
-        }
-
-        // 展示更新日志
-        if (data.logs && data.logs.length > 0) {
-            html += '<div style="margin-top:12px;text-align:left;font-size:13px;max-height:200px;overflow-y:auto;">';
-            data.logs.forEach(function(log) {
-                var lines = log.changelog ? log.changelog.split('\n') : [];
-                html += '<div style="margin-bottom:8px;padding:8px;background:#f9f9f9;border-radius:6px;">';
-                html += '<div style="font-weight:600;color:#333;margin-bottom:4px;">v' + esc(log.version) + ' <span style="color:#999;font-size:11px;">' + esc(log.created_at ? log.created_at.split('T')[0] : log.created_at || '') + '</span></div>';
-                if (lines.length > 0) {
-                    lines.forEach(function(line) {
-                        line = line.trim();
-                        if (!line) return;
-                        html += '<div style="margin:2px 0;font-size:12px;color:#555;">' + esc(line) + '</div>';
-                    });
-                } else {
-                    html += '<div style="font-size:12px;color:#999;">暂无更新说明</div>';
-                }
-                html += '</div>';
-            });
-            html += '</div>';
-        }
-
-        html += '<div style="margin-top:10px;font-size:11px;color:#8b949e;">来源: ' + (uhubApi ? 'UpdateHub' : 'GitHub') + '</div>';
-        html += '<br>';
-        html += '<button class="btn btn-primary" onclick="confirmUpdate()" style="flex:1;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;background:var(--zk-primary);color:#fff;">立即更新</button>';
-        html += '<button onclick="saveVersion(\'' + latestVer + '\')" style="flex:1;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;border:1px solid #ddd;cursor:pointer;background:#f5f7fa;color:#64748b;margin-left:8px;">仅记录</button>';
-
-        var modalHtml = '<div id="zk-update-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0);z-index:999999;display:flex;align-items:center;justify-content:center;">' +
-            '<div style="background:var(--zk-surface,#fff);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25);width:90%;max-width:420px;transform:scale(.9);transition:all .3s;">' +
-            '<div style="padding:24px 24px 0;">' +
-            '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">' +
-            '<div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--zk-primary);box-shadow:0 4px 12px rgba(0,0,0,.2);">' +
-            '<i class="fa fa-cloud-download" style="font-size:22px;color:#fff;"></i></div>' +
-            '<div><h3 style="font-size:18px;font-weight:700;color:var(--zk-text,#1e293b);margin:0 0 4px;">发现新版本</h3>' +
-            '<p style="font-size:13px;color:var(--zk-text-dim,#94a3b8);margin:0;">是否立即更新？</p></div></div>' +
-            '<div style="background:var(--zk-bg,#f8fafc);border-radius:10px;padding:12px 16px;margin-bottom:16px;">' +
-            '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:var(--zk-text-sub,#64748b);font-size:13px;">本地版本</span><code style="font-size:13px;">' + esc(localShort) + '</code></div>' +
-            '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:var(--zk-text-sub,#64748b);font-size:13px;">最新版本</span><code style="font-size:13px;color:var(--zk-primary,#5b8def);">' + esc(latestVer) + '</code></div>' +
-            '</div>' + html +
-            '</div></div></div>';
-
-        var modal = document.createElement('div');
-        modal.innerHTML = modalHtml;
-        document.body.appendChild(modal);
-
-        setTimeout(function() {
-            document.getElementById('zk-update-modal').style.background = 'rgba(0,0,0,0.5)';
-            document.getElementById('zk-update-modal').querySelector('div').style.transform = 'scale(1)';
-        }, 10);
-    }
-
-    window.closeUpdateModal = function() {
-        var modal = document.getElementById('zk-update-modal');
-        if (modal) {
-            modal.style.background = 'rgba(0,0,0,0)';
-            modal.querySelector('div').style.transform = 'scale(.9)';
-            setTimeout(function() { modal.remove(); }, 200);
-        }
+    // ── 自动更新检测（由页面底部独立检测模块负责，此处不再重复触发）──
+    // 保留 closeUpdateModal2 / goUpdate 供 update.php 跳转返回时使用
+    window.closeUpdateModal2 = function() {
+        var m = document.getElementById('zk-update-modal');
+        if (m) m.remove();
     };
-
-    window.confirmUpdate = function() {
-        closeUpdateModal();
+    window.goUpdate = function() {
         window.location.href = './update.php';
     };
-
-    function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 });
+
+// ── 独立检测模块（XMLHttpRequest，不依赖 jQuery，兼容所有浏览器）──
+(function(){
+    function doCheck() {
+        var xhr = new XMLHttpRequest();
+        var source = 'auto';
+        try { source = localStorage.getItem('zuki_update_source') || 'auto'; } catch(e) {}
+        var params = 'act=check&source=' + encodeURIComponent(source);
+        try {
+            var uhubUrl = localStorage.getItem('zuki_uhub_url');
+            var ghRepo  = localStorage.getItem('zuki_gh_repo');
+            if (uhubUrl) params += '&uhub_url=' + encodeURIComponent(uhubUrl);
+            if (ghRepo)  params += '&gh_repo='  + encodeURIComponent(ghRepo);
+        } catch(e) {}
+        xhr.open('GET', 'ajax_update.php?' + params, true);
+        xhr.onload = function() {
+            if (xhr.status !== 200) return;
+            var data;
+            try { data = JSON.parse(xhr.responseText); } catch(e) { return; }
+            if (data.code !== 0) return;
+            var info = data.data || data;
+            var remoteHash = info.hash || info.version || info.sha || '';
+            if (!remoteHash) return;
+            var localHash = '';
+            try { localHash = localStorage.getItem('zuki_update_hash') || ''; } catch(e) {}
+            var remoteVer = (info.version || info.tag || remoteHash).replace(/^v/i, '');
+            if (localHash && (localHash === remoteHash || localHash === remoteVer)) return;
+
+            showModal(info, data.source || source);
+        };
+        xhr.send();
+    }
+
+    function showModal(info, source) {
+        var version = (info.version || info.tag || '').replace(/^v/i, '');
+        if (!version && info.sha) version = info.sha.substring(0, 7);
+        var ov = document.createElement('div');
+        ov.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:999999;display:flex;align-items:center;justify-content:center;';
+        var ch = '';
+        if (info.changelog) {
+            ch += '<div style="background:#f8fafc;border-radius:10px;padding:12px 16px;margin-bottom:8px;font-size:13px;color:#555;max-height:200px;overflow-y:auto;">';
+            ch += '<div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:6px;">更新内容</div>';
+            var lines = info.changelog.split('\n');
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+                if (!line) continue;
+                if (line.match(/^[#*\-]\s/)) line = line.replace(/^[#*\-]\s/, '');
+                ch += '<div style="padding:2px 0;padding-left:12px;position:relative;"><span style="position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:#5b8def;"></span>' + escHtml(line) + '</div>';
+                if (i > 19) { ch += '<div style="color:#94a3b8;font-size:11px;padding-top:4px;">...</div>'; break; }
+            }
+            ch += '</div>';
+        }
+        ov.innerHTML = '<div style="background:rgba(0,0,0,0.45);position:absolute;inset:0;z-index:-1;"></div>' +
+            '<div style="background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25);width:90%;max-width:380px;overflow:hidden;">' +
+            '<div style="padding:20px 24px 24px;">' +
+            '<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">' +
+            '<div style="width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#5b8def;"><i class="fa fa-cloud-download" style="font-size:18px;color:#fff;"></i></div>' +
+            '<div><h3 style="font-size:17px;font-weight:700;color:#1e293b;margin:0 0 2px;">发现新版本</h3>' +
+            '<p style="font-size:12px;color:#94a3b8;margin:0;">有可用的版本更新</p></div></div>' +
+            '<div style="text-align:center;padding:8px 0 12px;">' +
+            '<div style="font-size:12px;color:#94a3b8;">最新版本</div>' +
+            '<div style="font-size:28px;font-weight:800;color:#5b8def;letter-spacing:1px;">v' + escHtml(version) + '</div></div>' +
+            ch +
+            '<div style="text-align:center;font-size:11px;color:#8b949e;padding:4px 0;">来源: ' + escHtml(source) + '</div>' +
+            '<div style="display:flex;gap:10px;margin-top:14px;">' +
+            '<button onclick="window.location.href=\'./update.php\';this.closest(\'#zk-modal-fallback\').remove()" style="flex:1;padding:12px 0;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;background:#5b8def;color:#fff;">立即更新</button>' +
+            '<button onclick="this.closest(\'#zk-modal-fallback\').remove()" style="flex:1;padding:12px 0;border-radius:10px;font-size:15px;font-weight:600;border:1px solid #ddd;cursor:pointer;background:#f5f7fa;color:#64748b;">稍后更新</button></div></div></div>';
+        ov.id = 'zk-modal-fallback';
+        document.body.appendChild(ov);
+    }
+
+    function escHtml(s) {
+        if (typeof s !== 'string') return '';
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', doCheck);
+    } else {
+        doCheck();
+    }
+})();
 </script>
 <?php
 $content = ob_get_clean();

@@ -1,8 +1,10 @@
 <?php
+if (function_exists('opcache_reset')) @opcache_reset();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 define("IN_ADMIN", true);
+$nosecu = true;
 @include_once("../includes/common.php");
 
 $action = isset($_GET['act']) ? $_GET['act'] : '';
@@ -273,7 +275,15 @@ if ($action === 'check') {
         }
     }
 
-    echo $result ? json_encode($result) : json_encode(['code' => 1, 'msg' => '检查更新失败，所有节点均无法连接']);
+    if (!$result) {
+        if ($source === 'uhub') {
+            echo json_encode(['code' => 1, 'msg' => '节点正在维护，暂未开放下载，可以尝试更换其他节点']);
+        } else {
+            echo json_encode(['code' => 1, 'msg' => '检查更新失败，所有节点均无法连接']);
+        }
+    } else {
+        echo json_encode($result);
+    }
     exit;
 }
 
@@ -315,6 +325,7 @@ if ($action === 'update') {
             $info = $infoBody ? @json_decode($infoBody, true) : null;
             if ($info && isset($info['download_url']) && $info['download_url']) {
                 $zipUrl = $info['download_url'];
+                update_log("私有下载链接: $zipUrl");
                 $fp = @fopen($zipFile, 'w');
                 if ($fp) {
                     $ch = curl_init();
@@ -330,7 +341,10 @@ if ($action === 'update') {
                     elseif (filesize($zipFile) < 100) { $lastError = '文件过小'; @unlink($zipFile); }
                     else { $downloaded = true; update_log("私有节点下载成功: " . filesize($zipFile) . " bytes"); save_progress('download', '下载完成', 55); }
                 }
-            } else { $lastError = '私有节点未返回下载地址'; }
+            } else {
+                $lastError = '私有节点未返回下载地址';
+                update_log("私有节点失败: 无 download_url，原始响应: " . ($infoBody ? substr($infoBody, 0, 200) : '空'));
+            }
         }
 
         if (!$downloaded && $src === 'github') {
@@ -390,36 +404,44 @@ if ($action === 'update') {
     foreach (scandir($tempDir) as $item) { if ($item !== '.' && $item !== '..' && is_dir($tempDir . '/' . $item)) { $extractDir = $tempDir . '/' . $item; break; } }
     if (!$extractDir) { @unlink($zipFile); echo json_encode(['code' => 1, 'msg' => '找不到解压目录']); exit; }
 
-    $excludeDirs = ['admin', 'data', 'cache'];
-    $excludeFiles = ['config.php', '.env'];
-    $excludePatterns = ['.git', 'node_modules', 'vendor'];
-
-    function countFiles($d, $ed, $ef, $ep) {
-        $n = 0;
-        foreach (scandir($d) as $i) {
-            if ($i === '.' || $i === '..') continue;
-            $p = $d . '/' . $i;
-            foreach ($ep as $pat) if (strpos($i, $pat) !== false) continue 2;
-            if (is_dir($p)) { if (!in_array($i, $ed)) $n += countFiles($p, $ed, $ef, $ep); }
-            else { if (!in_array($i, $ef)) $n++; }
-        }
-        return $n;
-    }
-    $totalFiles = countFiles($extractDir, $excludeDirs, $excludeFiles, $excludePatterns);
-    update_log("待复制: $totalFiles 个文件");
+    $excludeDirs = [];
+    $excludeFiles = ['config.php', basename(__FILE__), 'opcache_clear.php'];
+    $excludePatterns = [];
 
     function copyDir($src, $dst, &$copied, &$skipped, &$errs, $ed, $ef, $ep, $total, &$lp) {
         if (!is_dir($src)) { $errs[] = "无源目录: $src"; return; }
         if (!is_dir($dst) && !@mkdir($dst, 0777, true)) { $errs[] = "无法创建: $dst"; return; }
-        foreach (scandir($src) as $item) {
+        @chmod($dst, 0777);
+        $items = @scandir($src);
+        if (!$items) { $errs[] = "无法读取: $src"; return; }
+        foreach ($items as $item) {
             if ($item === '.' || $item === '..') continue;
             $sp = $src . '/' . $item; $dp = $dst . '/' . $item;
             foreach ($ep as $p) if (strpos($item, $p) !== false) { $skipped++; continue 2; }
-            if (is_dir($sp)) { if (!in_array($item, $ed)) copyDir($sp, $dp, $copied, $skipped, $errs, $ed, $ef, $ep, $total, $lp); else $skipped++; }
-            else {
+            if (is_dir($sp)) {
+                if (!in_array($item, $ed)) {
+                    copyDir($sp, $dp, $copied, $skipped, $errs, $ed, $ef, $ep, $total, $lp);
+                } else { $skipped++; }
+            } else {
                 if (in_array($item, $ef)) { $skipped++; continue; }
-                if (file_exists($dp)) @unlink($dp);
-                if (copy($sp, $dp)) $copied++; else { $skipped++; $errs[] = "复制失败: $sp"; }
+                $content = @file_get_contents($sp);
+                if ($content === false) { $skipped++; $errs[] = "读取失败: $sp"; continue; }
+                if (file_exists($dp)) {
+                    @chmod($dp, 0777);
+                    $retries = 3;
+                    $unlinked = false;
+                    while ($retries > 0) {
+                        if (@unlink($dp)) { $unlinked = true; break; }
+                        usleep(200000);
+                        $retries--;
+                    }
+                    if (!$unlinked) { $skipped++; $errs[] = "无法删除: $dp"; continue; }
+                }
+                $written = @file_put_contents($dp, $content);
+                if ($written === false) { $skipped++; $errs[] = "写入失败: $dp"; continue; }
+                @chmod($dp, 0644);
+                $copied++;
+                update_log("已覆盖: $item");
                 $pct = $total > 0 ? round(60 + ($copied / $total) * 35) : 90;
                 if ($pct > $lp + 2) { $lp = $pct; save_progress('copy', "更新中 ($copied/$total)...", $pct, $copied, $total); }
             }
@@ -428,6 +450,7 @@ if ($action === 'update') {
 
     $copied = $skipped = 0; $errors = [];
     $lp = 60;
+    $totalFiles = 0;
     update_log("复制文件...");
     copyDir($extractDir, $rootDir, $copied, $skipped, $errors, $excludeDirs, $excludeFiles, $excludePatterns, $totalFiles, $lp);
 

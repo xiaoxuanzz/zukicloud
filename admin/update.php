@@ -541,7 +541,7 @@ function processCheckResult(data, sourceName) {
     if (localHash) {
         html = '<strong style="color:#f0883e;">发现新版本！</strong><br>本地: ' + escapeHtml(localHash.substring(0, 7)) + '  最新: ' + escapeHtml(displayVer);
     } else {
-        html = '<strong>首次记录版本</strong><br>最新: ' + escapeHtml(displayVer);
+        html = '<strong>首次记录为已更新</strong><br>最新: ' + escapeHtml(displayVer);
     }
 
     if (latest.changelog) {
@@ -570,7 +570,7 @@ function processCheckResult(data, sourceName) {
     html += '<div style="margin-top:10px;font-size:11px;color:#8b949e;">来源: ' + escapeHtml(sourceName) + '</div>';
     html += '<br>';
     html += '<button class="btn-primary" onclick="showUpdateConfirm()">立即更新</button> ';
-    html += '<button onclick="saveVersion(\'' + escapeHtml(displayVer) + '\')">仅记录版本</button>';
+    html += '<button onclick="saveVersion(\'' + escapeHtml(displayVer) + '\')">记录为已更新</button>';
     if (localHash) html += ' <button onclick="clearVersion()">清除记录</button>';
 
     _latestInfo = { hash: displayVer, short: displayVer };

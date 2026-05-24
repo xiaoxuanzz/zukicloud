@@ -92,21 +92,42 @@ if (!isset($currentPage)) {
   }
   // ===== 确认框（后台版）=====
   function zkConfirm(opts) {
-      var icon = opts.icon || 'warning';
-      var title = opts.title || '确认操作';
-      var subtitle = opts.subtitle || '';
-      var confirmText = opts.confirmText || '确认';
-      var cancelText = opts.cancelText || '取消';
-      var confirmClass = opts.confirmClass || 'btn-primary';
-      var onConfirm = opts.onConfirm || function(){};
-      var modalHtml = '<div id="zk-confirm-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999998;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;" onclick="closeZkConfirm()"><div style="background:var(--zk-surface,#fff);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.2);width:90%;max-width:420px;transform:scale(.9) translateY(20px);transition:all .3s;" onclick="event.stopPropagation()"><div style="display:flex;align-items:center;gap:12px;padding:20px 24px 0;"><div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:' + (icon==='danger'?'#ef4444':'#f59e0b') + ';box-shadow:0 4px 12px rgba(0,0,0,.2);"><i class="fa fa-' + (icon==='danger'?'times':'exclamation-triangle') + '" style="font-size:22px;color:#fff;"></i></div><div><h3 style="font-size:18px;font-weight:700;color:var(--zk-text,#1e293b);margin:0 0 2px;">' + title + '</h3><p style="font-size:13px;color:var(--zk-text-dim,#94a3b8);margin:0;">' + subtitle + '</p></div></div><div style="display:flex;gap:10px;justify-content:flex-end;padding:16px 24px 20px;"><button onclick="closeZkConfirm()" style="padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;background:var(--zk-bg,#f5f7fa);color:var(--zk-text-sub,#64748b);">'+cancelText+'</button><button id="zk-confirm-ok" style="padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;' + (confirmClass==='btn-danger'?'background:#ef4444;color:#fff;':'background:var(--zk-primary,#5b8def);color:#fff;') + '">' + confirmText + '</button></div></div></div>';
-      var overlay = document.createElement('div');
-      overlay.id = 'zk-confirm-overlay';
-      overlay.innerHTML = modalHtml;
-      document.body.appendChild(overlay);
-      setTimeout(function(){ overlay.style.opacity = '1'; overlay.querySelector('div').style.transform = 'scale(1) translateY(0)'; }, 10);
-      document.getElementById('zk-confirm-ok').onclick = function() { closeZkConfirm(); onConfirm(); };
-      overlay.onclick = function(e) { if(e.target === overlay) closeZkConfirm(); };
+      console.log('[zkConfirm] called with title:', opts && opts.title);
+      try {
+          var icon = opts.icon || 'warning';
+          var title = opts.title || '确认操作';
+          var subtitle = opts.subtitle || '';
+          var confirmText = opts.confirmText || '确认';
+          var cancelText = opts.cancelText || '取消';
+          var confirmClass = opts.confirmClass || 'btn-primary';
+          var onConfirm = opts.onConfirm || function(){};
+          var modalHtml = '<div id="zk-confirm-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999998;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;" onclick="closeZkConfirm()"><div style="background:var(--zk-surface,#fff);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.2);width:90%;max-width:420px;transform:scale(.9) translateY(20px);transition:all .3s;" onclick="event.stopPropagation()"><div style="display:flex;align-items:center;gap:12px;padding:20px 24px 0;"><div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:' + (icon==='danger'?'#ef4444':'#f59e0b') + ';box-shadow:0 4px 12px rgba(0,0,0,.2);"><i class="fa fa-' + (icon==='danger'?'times':'exclamation-triangle') + '" style="font-size:22px;color:#fff;"></i></div><div><h3 style="font-size:18px;font-weight:700;color:var(--zk-text,#1e293b);margin:0 0 2px;">' + title + '</h3><p style="font-size:13px;color:var(--zk-text-dim,#94a3b8);margin:0;">' + subtitle + '</p></div></div><div style="display:flex;gap:10px;justify-content:flex-end;padding:16px 24px 20px;"><button onclick="closeZkConfirm()" style="padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;background:var(--zk-bg,#f5f7fa);color:var(--zk-text-sub,#64748b);">'+cancelText+'</button><button id="zk-confirm-ok" style="padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;' + (confirmClass==='btn-danger'?'background:#ef4444;color:#fff;':'background:var(--zk-primary,#5b8def);color:#fff;') + '">' + confirmText + '</button></div></div></div>';
+          console.log('[zkConfirm] modal HTML generated, length:', modalHtml.length);
+          var overlay = document.createElement('div');
+          overlay.id = 'zk-confirm-overlay';
+          overlay.innerHTML = modalHtml;
+          document.body.appendChild(overlay);
+          console.log('[zkConfirm] overlay appended to body');
+          setTimeout(function(){
+              console.log('[zkConfirm] fade-in timeout fired');
+              overlay.style.opacity = '1';
+              var innerDiv = overlay.querySelector('div');
+              if (innerDiv) {
+                  innerDiv.style.transform = 'scale(1) translateY(0)';
+                  console.log('[zkConfirm] inner div animated');
+              } else {
+                  console.warn('[zkConfirm] inner div not found');
+              }
+          }, 10);
+          var okBtn = document.getElementById('zk-confirm-ok');
+          console.log('[zkConfirm] okBtn found:', !!okBtn);
+          if (okBtn) {
+              okBtn.onclick = function() { closeZkConfirm(); onConfirm(); };
+          }
+          overlay.onclick = function(e) { if(e.target === overlay) closeZkConfirm(); };
+      } catch(e) {
+          console.error('[zkConfirm] ERROR:', e);
+      }
   }
   function closeZkConfirm() {
       var overlay = document.getElementById('zk-confirm-overlay');

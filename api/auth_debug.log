@@ -1,606 +1,113 @@
-[2026-05-08 09:38:22] extractApiKey: {
+
+[2026-05-22 20:01:50] authenticateAdmin: {
+    "providedKey": "SET (length: 32",
+    "adminKey": "SET"
+}
+
+[2026-05-22 20:01:53] authenticateAdmin: {
+    "providedKey": "SET (length: 32",
+    "adminKey": "SET"
+}
+
+[2026-05-23 11:41:14] authenticateAdmin: {
+    "providedKey": "SET (length: 32",
+    "adminKey": "SET"
+}
+
+[2026-05-23 11:41:30] authenticateAdmin: {
+    "providedKey": "SET (length: 32",
+    "adminKey": "SET"
+}
+
+[2026-05-23 11:41:33] authenticateAdmin: {
+    "providedKey": "SET (length: 32",
+    "adminKey": "SET"
+}
+
+[2026-05-23 16:38:26] extractApiKey: {
     "source": "X-API-KEY",
     "key": "1273e05283f805d7f6efa98360fd9c6b"
 }
 
-[2026-05-08 09:38:22] authenticateApi: {
+[2026-05-23 16:38:26] authenticateApi: {
     "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\\includes\/api\/keys.txt",
-    "validKeys": []
+    "keysFile": "E:\\cloud\/api\/keys.txt",
+    "validKeys": [
+        "d59d1c585e2de879d5a7b56f96fa55bf"
+    ]
 }
 
-[2026-05-08 09:38:22] respondUnauthorized: {
+[2026-05-23 16:38:26] respondUnauthorized: {
     "message": "Invalid API key"
 }
 
-[2026-05-08 09:38:39] extractApiKey: {
-    "source": "URL api_key",
+[2026-05-23 16:40:40] extractApiKey: {
+    "source": "X-API-KEY",
     "key": "1273e05283f805d7f6efa98360fd9c6b"
 }
 
-[2026-05-08 09:38:39] authenticateApi: {
+[2026-05-23 16:40:40] authenticateApi: {
     "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\\includes\/api\/keys.txt",
-    "validKeys": []
+    "keysFile": "E:\\cloud\/api\/keys.txt",
+    "validKeys": [
+        "d59d1c585e2de879d5a7b56f96fa55bf"
+    ]
 }
 
-[2026-05-08 09:38:39] respondUnauthorized: {
+[2026-05-23 16:40:40] respondUnauthorized: {
     "message": "Invalid API key"
 }
 
-[2026-05-08 09:39:21] extractApiKey: {
-    "source": "URL api_key",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:39:21] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:39:41] extractApiKey: {
+[2026-05-23 16:40:41] extractApiKey: {
     "source": "X-API-KEY",
     "key": "1273e05283f805d7f6efa98360fd9c6b"
 }
 
-[2026-05-08 09:39:41] authenticateApi: {
+[2026-05-23 16:40:41] authenticateApi: {
     "providedKey": "SET (length: 32",
     "keysFile": "E:\\cloud\/api\/keys.txt",
     "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
+        "d59d1c585e2de879d5a7b56f96fa55bf"
     ]
 }
 
-[2026-05-08 09:39:45] extractApiKey: {
+[2026-05-23 16:40:41] respondUnauthorized: {
+    "message": "Invalid API key"
+}
+
+[2026-05-23 16:40:44] extractApiKey: {
     "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
+    "key": "d59d1c585e2de879d5a7b56f96fa55bf"
 }
 
-[2026-05-08 09:39:45] authenticateApi: {
+[2026-05-23 16:40:44] authenticateApi: {
     "providedKey": "SET (length: 32",
     "keysFile": "E:\\cloud\/api\/keys.txt",
     "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
+        "d59d1c585e2de879d5a7b56f96fa55bf"
     ]
 }
 
-[2026-05-08 09:42:26] extractApiKey: {
-    "source": "URL api_key",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:42:26] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:42:36] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:42:36] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:42:37] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:42:37] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:43:17] extractApiKey: {
-    "source": "URL api_key",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:43:17] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:45:43] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:45:43] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:45:44] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:45:44] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:46:58] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:46:58] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:50:26] extractApiKey: {
-    "source": "URL api_key",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:50:26] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:50:44] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:50:44] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:50:51] authenticateAdmin: {
+[2026-05-23 16:40:53] authenticateAdmin: {
     "providedKey": "SET (length: 32",
     "adminKey": "SET"
 }
 
-[2026-05-08 09:51:27] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:51:27] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:51:27] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:51:27] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:51:28] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:51:28] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:55:22] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:55:22] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:55:23] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:55:23] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:55:23] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:55:23] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:55:44] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:55:44] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:58:37] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:58:37] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 09:58:38] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 09:58:38] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:01:30] authenticateAdmin: {
+[2026-05-23 16:40:56] authenticateAdmin: {
     "providedKey": "SET (length: 32",
     "adminKey": "SET"
 }
 
-[2026-05-08 10:01:50] authenticateAdmin: {
-    "providedKey": "SET (length: 32",
-    "adminKey": "SET"
-}
-
-[2026-05-08 10:02:04] extractApiKey: {
-    "source": "URL api_key",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 10:02:04] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:02:30] extractApiKey: {
-    "source": "URL api_key",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 10:02:30] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:03:58] extractApiKey: {
+[2026-05-23 16:40:57] extractApiKey: {
     "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
+    "key": "b3a015e6cc0257bff6acf1225068916f"
 }
 
-[2026-05-08 10:03:58] authenticateApi: {
+[2026-05-23 16:40:57] authenticateApi: {
     "providedKey": "SET (length: 32",
     "keysFile": "E:\\cloud\/api\/keys.txt",
     "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:03:58] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 10:03:58] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:04:01] authenticateAdmin: {
-    "providedKey": "SET (length: 32",
-    "adminKey": "SET"
-}
-
-[2026-05-08 10:04:02] authenticateAdmin: {
-    "providedKey": "SET (length: 32",
-    "adminKey": "SET"
-}
-
-[2026-05-08 10:04:08] authenticateAdmin: {
-    "providedKey": "SET (length: 32",
-    "adminKey": "SET"
-}
-
-[2026-05-08 10:04:17] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 10:04:17] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:04:18] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 10:04:18] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:04:26] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 10:04:26] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:06:02] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 10:06:02] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:06:13] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 10:06:13] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:06:18] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 10:06:18] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 10:06:46] extractApiKey: {
-    "source": "URL api_key",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 10:06:46] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 11:34:45] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 11:34:45] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 12:03:03] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 12:03:03] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 14:52:48] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 14:52:48] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 14:58:17] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 14:58:17] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 15:03:01] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 15:03:01] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 15:03:01] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 15:03:01] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 16:18:16] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 16:18:16] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 20:08:26] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 20:08:26] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-08 20:08:28] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-08 20:08:28] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
-    ]
-}
-
-[2026-05-11 16:00:10] extractApiKey: {
-    "source": "X-API-KEY",
-    "key": "1273e05283f805d7f6efa98360fd9c6b"
-}
-
-[2026-05-11 16:00:10] authenticateApi: {
-    "providedKey": "SET (length: 32",
-    "keysFile": "E:\\cloud\/api\/keys.txt",
-    "validKeys": [
-        "1273e05283f805d7f6efa98360fd9c6b"
+        "b3a015e6cc0257bff6acf1225068916f"
     ]
 }
 

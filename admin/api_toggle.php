@@ -47,6 +47,8 @@ $configPath = dirname(__DIR__) . '/api/config.json';
 // 当前状态
 $enabled = $configManager->isApiEnabled();
 
+ob_start();
+
 // 处理表单提交
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enabled'])) {
     $newEnabled = (bool)$_POST['enabled'];
@@ -101,7 +103,6 @@ if (empty($adminKey)) {
     file_put_contents($adminKeyFile, $adminKey, LOCK_EX);
 }
 
-ob_start();
 ?>
 
 <style>
@@ -250,7 +251,7 @@ ob_start();
 		
 		<div class="form-group">
 		    <div class="col-sm-offset-2 col-sm-10">
-		        <a href="../api_test.html" target="_blank">API调用测试界面（第三方编写时参考）</a>
+		        <a href="../api_test.php" target="_blank">API调用测试界面（第三方编写时参考）</a>
 		    </div>
 		</div>
         
@@ -301,7 +302,13 @@ ob_start();
                         <tr>
                             <td><code>regenerate_key</code></td>
                             <td>POST</td>
-                            <td>重新生成密钥</td>
+                            <td>重新生成API密钥</td>
+                            <td><span class="label label-danger">管理员</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>regenerate_admin_key</code></td>
+                            <td>POST</td>
+                            <td>重新生成管理员密钥</td>
                             <td><span class="label label-danger">管理员</span></td>
                         </tr>
                     </tbody>
@@ -313,7 +320,10 @@ ob_start();
 </div>
 
 <script>
+console.log('[api_toggle] script loaded OK');
+
 function copyText(text) {
+    console.log('[api_toggle] copyText called');
     var dummy = document.createElement("textarea");
     document.body.appendChild(dummy);
     dummy.value = text;
@@ -323,46 +333,49 @@ function copyText(text) {
     showToast('已复制到剪贴板', 'success');
 }
 
+function getApiBaseUrl() {
+    return window.location.origin + '/api/index.php';
+}
+
 function regenerateApiKey() {
-    zkConfirm({
-        icon: 'warning',
-        title: '确认重新生成API密钥',
-        subtitle: '旧密钥将失效，确定要重新生成吗？',
-        confirmText: '确认重新生成',
-        confirmClass: 'btn-danger',
-        onConfirm: function() {
-            fetch('../api/?action=regenerate_key', {
-                headers: {
-                    'X-Admin-Key': document.getElementById('adminKeyInput').value
-                }
-            })
-            .then(r => r.json())
-            .then(d => {
-                if (d.key) {
-                    document.getElementById('apiKeyInput').value = d.key;
-                    showToast('API密钥已重新生成', 'success');
-                } else {
-                    showToast('生成失败: ' + (d.error || '未知错误'), 'error');
-                }
-            })
-            .catch(e => {
-                showToast('请求失败: ' + e.message, 'error');
-            });
+    if (!confirm('旧密钥将失效，确定要重新生成API密钥吗？')) return;
+    var url = getApiBaseUrl() + '?action=regenerate_key';
+    fetch(url, {
+        method: 'POST',
+        headers: { 'X-Admin-Key': document.getElementById('adminKeyInput').value }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        if (d.key) {
+            document.getElementById('apiKeyInput').value = d.key;
+            showToast('API密钥已重新生成', 'success');
+        } else {
+            showToast('生成失败: ' + (d.error || '未知错误'), 'error');
         }
+    })
+    .catch(function(e) {
+        showToast('请求失败: ' + e.message, 'error');
     });
 }
 
 function regenerateAdminKey() {
-    zkConfirm({
-        icon: 'warning',
-        title: '确认重新生成管理员密钥',
-        subtitle: '旧密钥将失效，确定要重新生成吗？',
-        confirmText: '确认重新生成',
-        confirmClass: 'btn-danger',
-        onConfirm: function() {
-            // 这里应该调用一个专门的管理员接口来重新生成密钥
-            showToast('请联系系统管理员手动更新管理员密钥', 'warning');
+    if (!confirm('旧密钥将失效，确定要重新生成管理员密钥吗？')) return;
+    var url = getApiBaseUrl() + '?action=regenerate_admin_key';
+    fetch(url, {
+        method: 'POST',
+        headers: { 'X-Admin-Key': document.getElementById('adminKeyInput').value }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        if (d.key) {
+            document.getElementById('adminKeyInput').value = d.key;
+            showToast('管理员密钥已重新生成，请及时保存', 'success');
+        } else {
+            showToast('生成失败: ' + (d.error || '未知错误'), 'error');
         }
+    })
+    .catch(function(e) {
+        showToast('请求失败: ' + e.message, 'error');
     });
 }
 </script>

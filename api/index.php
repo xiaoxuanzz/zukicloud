@@ -129,7 +129,7 @@ if ($action === 'status') {
 }
 
 // 管理员操作
-if ($action === 'admin_toggle' || $action === 'regenerate_key') {
+if ($action === 'admin_toggle' || $action === 'regenerate_key' || $action === 'regenerate_admin_key') {
     try {
         $auth->authenticateAdmin();
     } catch (Exception $e) {
@@ -159,6 +159,19 @@ if ($action === 'admin_toggle' || $action === 'regenerate_key') {
         $keyManager = new \lib\Auth\ApiKeyManager();
         try {
             $newKey = $keyManager->regenerateKey();
+            respond(['success' => true, 'key' => $newKey]);
+        } catch (Exception $e) {
+            error_out('Failed: ' . $e->getMessage(), 500);
+        }
+    }
+
+    if ($action === 'regenerate_admin_key') {
+        $adminKeyFile = dirname(__DIR__) . '/api/admin_key.txt';
+        try {
+            $newKey = bin2hex(random_bytes(16));
+            if (file_put_contents($adminKeyFile, $newKey, LOCK_EX) === false) {
+                throw new \RuntimeException('Failed to write admin key file');
+            }
             respond(['success' => true, 'key' => $newKey]);
         } catch (Exception $e) {
             error_out('Failed: ' . $e->getMessage(), 500);
