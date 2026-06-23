@@ -59,7 +59,7 @@ function http_get($url, $timeout = 10) {
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_MAXREDIRS      => 5,
-        CURLOPT_ENCODING       => '',
+        CURLOPT_HTTPHEADER     => ['Accept-Encoding: identity'],
         CURLOPT_USERAGENT      => 'ZukiCloud-UpdateHub/1.0',
     ]);
     $body = curl_exec($ch);
@@ -110,9 +110,9 @@ function github_api_race(array $urls, $timeout = 8) {
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_MAXREDIRS      => 3,
-            CURLOPT_ENCODING       => '',
             CURLOPT_HTTPHEADER     => [
                 'Accept: application/vnd.github.v3+json',
+                'Accept-Encoding: identity',
                 'User-Agent: ZukiCloud-UpdateHub'
             ]
         ]);
@@ -151,10 +151,12 @@ function github_api_race(array $urls, $timeout = 8) {
 $uhubApi = 'https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud';
 if (isset($_REQUEST['uhub_url'])) {
     $input = rtrim(trim($_REQUEST['uhub_url']), '/');
-    if (filter_var($input, FILTER_VALIDATE_URL) && (str_starts_with($input, 'http://') || str_starts_with($input, 'https://'))) {
+    if (filter_var($input, FILTER_VALIDATE_URL) && (strpos($input, 'http://') === 0 || strpos($input, 'https://') === 0)) {
         $uhubApi = $input;
     }
 }
+// 规范化URL：去掉末尾的 /latest、/check 等路径
+$uhubApi = preg_replace('#/(latest|check|download)(\?.*)?$#i', '', rtrim($uhubApi, '/'));
 
 $ghRepo = 'xiaoxuanzz/zukicloud';
 if (isset($_REQUEST['gh_repo'])) {

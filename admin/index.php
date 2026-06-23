@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 define("IN_ADMIN", true);
 include("../includes/common.php");
 $title = "ZuKizZ云存储 · 管理中心";
@@ -106,9 +106,12 @@ $(document).ready(function(){
         var source = 'auto';
         try { source = localStorage.getItem('zuki_update_source') || 'auto'; } catch(e) {}
         var params = 'act=check&source=' + encodeURIComponent(source);
+        // 优先从表单读取，其次从localStorage读取
         try {
-            var uhubUrl = localStorage.getItem('zuki_uhub_url');
-            var ghRepo  = localStorage.getItem('zuki_gh_repo');
+            var formUrl = (document.querySelector('input[name="uhub_url"]') || {}).value || '';
+            var formRepo = (document.querySelector('input[name="github_repo"]') || {}).value || '';
+            var uhubUrl = formUrl || localStorage.getItem('zuki_uhub_url') || '';
+            var ghRepo  = formRepo || localStorage.getItem('zuki_gh_repo') || '';
             if (uhubUrl) params += '&uhub_url=' + encodeURIComponent(uhubUrl);
             if (ghRepo)  params += '&gh_repo='  + encodeURIComponent(ghRepo);
         } catch(e) {}
