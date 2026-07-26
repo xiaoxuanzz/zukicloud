@@ -7,7 +7,7 @@ if(!$row)exit('404 Not Found');
 if($row['block']!=0)exit('File is blocked!');
 $name = $row['name'];
 $type = $row['type'];
-$viewurl_all = $siteurl.'view.php/'.$row['hash'].'.'.$type;
+$downurl_all = $siteurl.'down.php/'.$row['hash'].'.'.$type.'?view=1';
 
 $view_type = get_view_type($type);
 
@@ -57,7 +57,7 @@ var ap = new APlayer({
   audio: [{
       title: '<?php echo $name?>',
       author: 'none',
-      url: '<?php echo $viewurl_all?>',
+      url: '<?php echo $downurl_all?>',
       cover: './assets/img/music.png',
   }]
 });
@@ -71,7 +71,7 @@ var ap = new APlayer({
   var videoObject = {
     container: '.videoplayer',
     plug:'<?php echo $plug?>',
-    video:'<?php echo $viewurl_all?>',
+    video:'<?php echo $downurl_all?>',
     webFull:true,
   };
   var player=new ckplayer(videoObject);

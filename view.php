@@ -58,7 +58,9 @@ $minetype = minetype($row['type']);
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
-                    <?php if(in_array($row['type'],array('mp4','m3u8','mp3'))){ ?>
+                    <?php
+                    $vtype = get_view_type($row['type']);
+                    if($vtype == 'audio' || $vtype == 'video'){ ?>
                         <div class="video_view">
                             <div id="player"></div>
                         </div>
@@ -76,7 +78,7 @@ $minetype = minetype($row['type']);
                                 volume: 0.7,
                                 audio: [{
                                     name: '<?php echo htmlspecialchars($filename); ?>',
-                                    url: '<?php echo $siteurl.'down.php/'.$row['hash'];?>',
+                                    url: '<?php echo $siteurl.'down.php/'.$row['hash'].'?view=1';?>',
                                     type: '<?php echo $minetype;?>'
                                 }]
                             });
@@ -87,7 +89,7 @@ $minetype = minetype($row['type']);
                         </script>
                     <?php }else{ ?>
                         <div class="image_view">
-                            <img src="<?php echo $siteurl.'down.php/'.$row['hash'];?>" class="image" alt="<?php echo htmlspecialchars($filename);?>">
+                            <img src="<?php echo $siteurl.'down.php/'.$row['hash'].'?view=1';?>" class="image" alt="<?php echo htmlspecialchars($filename);?>">
                         </div>
                     <?php }?>
                 </div>

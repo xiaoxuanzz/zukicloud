@@ -60,23 +60,23 @@ $view_type = get_view_type($type);
 if($view_type == 'image'){
   $filetype = 1;
   $title = '<i class="fa fa-picture-o"></i> 图片查看器';
-  $htmlcode = htmlspecialchars('<img src="'.$viewurl_all.'"/>');
-  $ubbcode = '[img]'.$viewurl_all.'[/img]';
+  $htmlcode = htmlspecialchars('<img src="'.$downurl_all.'?view=1"/>');
+  $ubbcode = '[img]'.$downurl_all.'?view=1[/img]';
   $linktitle = '图片链接';
 }elseif($view_type == 'audio'){
   $filetype = 2;
   $title = '<i class="fa fa-music"></i> 音乐播放器';
-  $htmlcode = htmlspecialchars('<audio id="bgmMusic" src="'.$viewurl_all.'" autoplay="autoplay" loop="loop" preload="auto"></audio>');
+  $htmlcode = htmlspecialchars('<audio id="bgmMusic" src="'.$downurl_all.'?view=1" autoplay="autoplay" loop="loop" preload="auto"></audio>');
   $htmlcode2 = htmlspecialchars('<iframe src="'.$siteurl.'player.php?hash='.$hash.'" width="407" scrolling="no"frameborder="0"height="70"></iframe>');
-  $ubbcode = '[audio=X]'.$viewurl_all.'[/audio]';
+  $ubbcode = '[audio=X]'.$downurl_all.'?view=1[/audio]';
   $linktitle = '音乐链接';
 }elseif($view_type == 'video'){
   $filetype = 3;
   $title = '<i class="fa fa-video-camera"></i> 视频播放器';
-  $htmlcode = htmlspecialchars('<video id="movies" src="'.$viewurl_all.'" autobuffer="true" controls="" width="100
+  $htmlcode = htmlspecialchars('<video id="movies" src="'.$downurl_all.'?view=1" autobuffer="true" controls="" width="100
   %"></video>');
   $htmlcode2 = htmlspecialchars('<iframe src="'.$siteurl.'player.php?hash='.$hash.'" width="800" height="500" scrolling="no" frameborder="0"></iframe>');
-  $ubbcode = '[movie=320*180]'.$viewurl_all.'[/movie]';
+  $ubbcode = '[movie=320*180]'.$downurl_all.'?view=1[/movie]';
   $linktitle = '视频链接';
 }else{
   $filetype = 0;
@@ -115,7 +115,7 @@ if($row['pwd']!=null && $row['pwd']!=$pwd){ ?>
 <div class="panel-body" align="center">
 <?php
 if($filetype==1){
-  echo '<div class="image_view"><a href="'.$viewurl.'" title="点击查看原图"><img alt="loading" src="'.$viewurl.'" class="image"></a></div>';
+  echo '<div class="image_view"><a href="'.$viewurl.'" title="点击查看原图"><img alt="loading" src="'.$downurl.'?view=1" class="image"></a></div>';
 }elseif($filetype==2){
   echo '<div class="view"><div id="aplayer"></div></div>';
 }elseif($filetype==3 && $row['block']==0){
@@ -270,7 +270,7 @@ var ap = new APlayer({
   audio: [{
       title: '<?php echo $name?>',
       author: 'none',
-      url: '<?php echo $viewurl_all?>',
+      url: '<?php echo $downurl_all?>?view=1',
       cover: './assets/img/music.png',
   }]
 });
@@ -283,7 +283,7 @@ var ap = new APlayer({
   var videoObject = {
     container: '.videoplayer',
     plug:'<?php echo $plug?>',
-    video:'<?php echo $viewurl_all?>',
+    video:'<?php echo $downurl_all?>?view=1',
     webFull:true,
   };
   var player=new ckplayer(videoObject);

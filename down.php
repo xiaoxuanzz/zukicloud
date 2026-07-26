@@ -79,8 +79,9 @@ if($stor->exists($hash))
 {
     $DB->exec("UPDATE `pre_file` SET `lasttime`=NOW(), `count`=`count`+1 WHERE `id`='{$row['id']}'");
     
+    $is_view = isset($_GET['view']);
     // For password-protected files, show download page with redirect
-    if($row['pwd']!=null && $row['pwd']!=''){
+    if(!$is_view && $row['pwd']!=null && $row['pwd']!=''){
         header('Content-Type: text/html; charset=utf-8');
         echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>下载中</title>';
         echo '<link href="https://s4.zstatic.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">';
@@ -97,7 +98,7 @@ if($stor->exists($hash))
         // Send file download headers
         file_output($hash, $row['type'], $row['size'], $row['name']);
     } else {
-        file_output($hash, $row['type'], $row['size'], $row['name']);
+        file_output($hash, $row['type'], $row['size'], $row['name'], $is_view);
     }
 }
 else{

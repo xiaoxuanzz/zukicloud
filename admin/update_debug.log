@@ -188,3 +188,33 @@
 [2026-06-22 20:39:01] === 操作: check, 源: uhub ===
 [2026-06-22 20:39:01] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1782131941
 [2026-06-22 20:39:01] 私有检查成功: v2.1.4
+[2026-06-25 10:37:29] === 操作: check, 源: uhub ===
+[2026-06-25 10:37:29] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1782355049
+[2026-06-25 10:37:30] 私有检查成功: v2.1.4
+[2026-06-25 10:37:31] === 操作: changelog, 源: uhub ===
+[2026-06-25 10:37:31] 私有节点日志: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/changelog&limit=20&page=1
+[2026-06-25 10:37:31] 私有日志成功: 5 条
+[2026-06-25 10:37:31] === 操作: check, 源: uhub ===
+[2026-06-25 10:37:31] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1782355051
+[2026-06-25 10:37:32] 私有检查成功: v2.1.4
+[2026-06-25 10:37:32] === 操作: check, 源: uhub ===
+[2026-06-25 10:37:32] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1782355052
+[2026-06-25 10:37:32] 私有检查成功: v2.1.4
+[2026-06-25 10:44:30] === 操作: check, 源: uhub ===
+[2026-06-25 10:44:30] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1782355470
+[2026-06-25 10:44:31] 私有检查成功: v2.1.4
+[2026-07-26 16:32:38] === 操作: check, 源: uhub ===
+[2026-07-26 16:32:38] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1785054758
+[2026-07-26 16:32:39] 私有检查成功: v2.1.4
+[2026-07-26 16:32:42] === 操作: check, 源: uhub ===
+[2026-07-26 16:32:42] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1785054762
+[2026-07-26 16:32:42] 私有检查成功: v2.1.4
+[2026-07-26 16:32:50] === 操作: check, 源: uhub ===
+[2026-07-26 16:32:50] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1785054770
+[2026-07-26 16:32:50] 私有检查成功: v2.1.4
+[2026-07-26 16:33:57] === 操作: check, 源: uhub ===
+[2026-07-26 16:33:57] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1785054837
+[2026-07-26 16:33:57] 私有检查成功: v2.1.4
+[2026-07-26 16:33:58] === 操作: check, 源: uhub ===
+[2026-07-26 16:33:58] 私有检查: https://update.xiaoxuanzz.cloud/index.php?route=api/zukicloud/check&_=1785054838
+[2026-07-26 16:33:58] 私有检查成功: v2.1.4
