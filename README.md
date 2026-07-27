@@ -281,3 +281,4 @@ UPDATE pre_config SET v = '新密码MD5值' WHERE k = 'admin_pwd';
 **联系作者**：https://space.bilibili.com/521205099
 
 如果觉得对你有帮助的，可以支持一下up哦，感激不尽
+https://raw.githubusercontent.com/xiaoxuanzz/zanshang/main/images/wx.png
