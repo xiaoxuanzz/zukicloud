@@ -173,18 +173,32 @@ function copyLink(url) {
 }
 </script>
 <?php if(!empty($conf['gonggao'])){?>
-<link href="https://s4.zstatic.net/ajax/libs/snackbarjs/1.1.0/snackbar.min.css" rel="stylesheet">
-<script src="https://s4.zstatic.net/ajax/libs/snackbarjs/1.1.0/snackbar.min.js"></script>
-<script src="https://s4.zstatic.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<!-- 原生公告组件：不依赖任何外部 JS 库 -->
+<div id="notice-mask" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:100000;backdrop-filter:blur(5px);">
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:400px;background:#fff;border-radius:15px;padding:25px;box-shadow:0 20px 50px rgba(0,0,0,0.3);animation: notice-in 0.3s ease-out;">
+        <h3 style="margin:0 0 15px;font-size:18px;color:#333;text-align:center;">重要公告</h3>
+        <div style="max-height:300px;overflow-y:auto;font-size:14px;line-height:1.6;color:#666;white-space:pre-wrap;"><?php echo htmlspecialchars($conf['gonggao']); ?></div>
+        <button onclick="closeNotice()" style="margin-top:20px;width:100%;padding:12px;background:#6366f1;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:bold;cursor:pointer;">我知道了</button>
+    </div>
+</div>
+<style>
+@keyframes notice-in { from { opacity:0; transform:translate(-50%,-45%); } to { opacity:1; transform:translate(-50%,-50%); } }
+</style>
 <script>
-$(function() {
-    if(!$.cookie('gonggao')){
-        $.snackbar({content: "<?php echo $conf['gonggao']?>", timeout: 10000});
-        var cookietime = new Date(); 
-        cookietime.setTime(cookietime.getTime() + (60*60*1000));
-        $.cookie('gonggao', false, { expires: cookietime });
+(function() {
+    var cookieName = "gonggao_force_v1";
+    // 检查原生 Cookie
+    if (document.cookie.indexOf(cookieName) === -1) {
+        document.getElementById('notice-mask').style.display = 'block';
     }
-});
+})();
+function closeNotice() {
+    document.getElementById('notice-mask').style.display = 'none';
+    // 设置 1 小时过期
+    var d = new Date();
+    d.setTime(d.getTime() + (60*60*1000));
+    document.cookie = "gonggao_force_v1=1; path=/; expires=" + d.toUTCString();
+}
 </script>
 <?php }?>
 </body>
